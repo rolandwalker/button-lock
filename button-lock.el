@@ -13,7 +13,9 @@
 ;; Button-lock buttons (links) can execute any function.
 ;;
 ;; See wiki-nav.el for a user-friendly library built on top of
-;; button-lock.el.
+;; button-lock.el.  Wiki-nav.el is available here:
+;;
+;;    https://github.com/rolandwalker/button-lock
 ;;
 ;;; Example usage
 ;;
@@ -135,8 +137,6 @@
 ;;     global-button-lock-mode is on.
 ;;
 ;;; TODO
-;;
-;;     URL for wiki-nav.el
 ;;
 ;;     Consider defining mode-wide button locks (pass the mode as the
 ;;     first argument of font-lock-add-keywords).  Could use functions

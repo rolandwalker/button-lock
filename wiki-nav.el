@@ -28,7 +28,10 @@
 ;; external links.
 ;;
 ;; Wiki-nav.el requires button-lock.el, which in turn requires
-;; font-lock.el.  Font-lock is provided with Emacs.
+;; font-lock.el.  Font-lock.el is provided with Emacs.
+;; Button-lock.el is available here
+;;
+;;    https://github.com/rolandwalker/button-lock
 ;;
 ;;; [[<Example usage]]
 ;;
@@ -163,8 +166,6 @@
 ;;     Tested only on GNU Emacs version 23.x
 ;;
 ;;; [[<Todo]]
-;;
-;;    include url for button-lock
 ;;
 ;;    remember position and undo last motion
 ;;
