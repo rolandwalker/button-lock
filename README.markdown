@@ -27,8 +27,8 @@ Button-lock has a simple interface that works like this
 However, button-lock does not create any buttons by default.  You must write
 some Lisp code to make it do anything.
 
-For much more information, see the source for button-lock.el and the doc
-string for button-lock-set-button.
+For much more information, see [the source for button-lock.el](https://github.com/rolandwalker/button-lock/blob/master/button-lock.el)
+and the doc string for button-lock-set-button (C-h f button-lock-set-button).
 
 wiki-nav
 --------
@@ -63,25 +63,25 @@ Advanced usage:
 
 Bracketed links may contain external URLs
 
-	[[http://google.com]]
+		[[http://google.com]]
 
 Or they may use various internally-recognized URI schemes:
 
-	visit: navigates to another file
+visit: navigates to another file
 
 		[[visit:/etc/hosts]]
 
 		[[visit:/path/to/another/file:NameOfLink]]
 
-	func: navigates to the definition of a function
+func: navigates to the definition of a function
 
 		[[func:main]]
 
-	line: navigates to a line number
+line: navigates to a line number
 
 		[[line:12]]
 
-	visit: may be combined with other schemes:
+visit: may be combined with other schemes:
 
 		[[visit:/path/to/another/file.c:func:main]]
 
@@ -91,7 +91,8 @@ Path names and similar strings are subjected to URI-style unescaping before
 lookup.  To link to a filename which contains a colon, substitute "%3A" for
 the colon character.
 
-For much more information, see the source for wiki-nav.el.
+For much more information, see [the source for wiki-nav.el](https://github.com/rolandwalker/button-lock/blob/master/wiki-nav.el).
+and the doc string for wiki-nav-mode (C-h f wiki-nav-mode).
 
 Prior Art
 ---------
