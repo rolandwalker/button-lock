@@ -1,5 +1,5 @@
 Overview
---------
+========
 
 Modern people using modern Emacs usually look at screens marked up with
 font-lock (aka syntax highlighting).  Sometimes modern people even use a
@@ -35,8 +35,8 @@ wiki-nav
 
 Wiki-nav is a user-friendly high-level interface to button-lock.  It
 provides a minor mode which recognizes [[wiki-style]] double-bracketed
-navigation links in any type of file. Links let the user jump between
-sections, between files, or open external URLs.
+navigation links in any type of file.  Wiki-nav links permit the user
+to jump between sections, between files, or open external URLs.
 
 Example usage:
 

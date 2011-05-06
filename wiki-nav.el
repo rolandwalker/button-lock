@@ -2,6 +2,7 @@
 ;;
 ;; D Roland Walker <walker@pobox.com>
 ;; (c) 2011, Simplified BSD License
+;; https://github.com/rolandwalker/button-lock
 ;;
 ;; Version 0.1
 ;;
@@ -40,12 +41,12 @@
 ;;        (require 'wiki-nav)
 ;;        (global-wiki-nav-mode 1)
 ;;
-;;     and place
+;;     and sprinkle
 ;;
 ;;        [[links]]
 ;;
-;;     in your files.  That's it.  There's more functionality, but
-;;     simple [[links]] may be all you need.
+;;     throughout your files.  That's it.  There's more functionality,
+;;     but simple [[links]] may be all you need.
 ;;
 ;;     Clicking a [[link]] will invoke a text search for the next
 ;;     matching link.  Double-clicking a link will search for matching

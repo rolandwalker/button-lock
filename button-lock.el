@@ -2,6 +2,7 @@
 ;;
 ;; D Roland Walker <walker@pobox.com>
 ;; (c) 2011, Simplified BSD License
+;; https://github.com/rolandwalker/button-lock
 ;;
 ;; Version 0.8
 ;;
