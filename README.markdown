@@ -55,33 +55,33 @@ directory named `~/.emacs.d/lisp`, and add this code to your `~/.emacs` file
 
 		[[links]]
 
-	in your files.  That's it.  There's more functionality, but simple [[links]]
-	may be all you need.  When you click on [[links]], Emacs jumps forward in
-        the file to the next matching link.
+	in your files.  That's it.  There's more functionality, but simple `[[links]]`
+	may be all you need.  When you click on `[[links]]`, Emacs jumps forward in
+        the file to the next matching wiki-nav link.
 
 Advanced usage:
 
-Bracketed links may contain external URLs
+Bracketed links may contain external URLs:
 
 		[[http://google.com]]
 
 Or they may use various internally-recognized URI schemes:
 
-visit: navigates to another file
+* visit: navigates to another file
 
 		[[visit:/etc/hosts]]
 
 		[[visit:/path/to/another/file:NameOfLink]]
 
-func: navigates to the definition of a function
+* func: navigates to the definition of a function
 
 		[[func:main]]
 
-line: navigates to a line number
+* line: navigates to a line number
 
 		[[line:12]]
 
-visit: may be combined with other schemes:
+* visit: may be combined with other schemes:
 
 		[[visit:/path/to/another/file.c:func:main]]
 
@@ -91,13 +91,13 @@ Path names and similar strings are subjected to URI-style unescaping before
 lookup.  To link to a filename which contains a colon, substitute "%3A" for
 the colon character.
 
-For much more information, see [the source for wiki-nav.el](https://github.com/rolandwalker/button-lock/blob/master/wiki-nav.el).
+For much more information, see [the source for wiki-nav.el](https://github.com/rolandwalker/button-lock/blob/master/wiki-nav.el)
 and the doc string for wiki-nav-mode (C-h f wiki-nav-mode).
 
 Prior Art
 ---------
 The following packages provide functionality that is similar to button-lock
-or wiki-nav.
+or wiki-nav:
 
 hi-lock.el   
 David M. Koppelman <koppel@ece.lsu.edu>
@@ -106,8 +106,10 @@ buttons.el
 Miles Bader <miles@gnu.org>
 
 linkd.el   
+[http://dto.github.com/notebook/linkd.html](http://dto.github.com/notebook/linkd.html)   
 David O'Toole <dto@gnu.org>
 
 org-mode   
+[http://orgmode.org](http://orgmode.org)   
 Carsten Dominik &lt;carsten at orgmode dot org&gt;
 
