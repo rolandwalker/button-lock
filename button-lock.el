@@ -686,6 +686,8 @@ mode is not active."
 (defun button-lock-set-global-button (args)
   "Add a global button-lock button definition, to be applied each time the button-lock minor mode is activated.
 
+ARGS is a list of arguments, following the form of `button-lock-set-button'.
+
 To see an effect, button-lock mode must be deactivated and
 reactivated."
   (add-to-list 'button-lock-global-button-list args))
