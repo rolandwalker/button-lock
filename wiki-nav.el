@@ -1,4 +1,4 @@
-;;; wiki-nav --- simple file navigation using [[WikiStrings]]
+;;; wiki-nav.el --- simple file navigation using [[WikiStrings]]
 ;;
 ;; Copyright (c) 2011 D Roland Walker
 ;;

@@ -1,4 +1,4 @@
-;;; button-lock --- clickable text defined by regular expression, controlled by font-lock
+;;; button-lock.el --- clickable text defined by regular expression, controlled by font-lock
 ;;
 ;; Copyright (c) 2011 D Roland Walker
 ;;
