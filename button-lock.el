@@ -3,7 +3,7 @@
 ;; Copyright (c) 2011 D Roland Walker
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
-;; URL: https://github.com/rolandwalker/button-lock
+;; URL: https://github.com/rolandwalker/button-lock/raw/master/button-lock.el
 ;; Version: 0.81
 ;; Last-Updated: 29 May 2011
 ;; EmacsWiki: ButtonLockMode
