@@ -1,10 +1,17 @@
 ;;; button-lock --- clickable text defined by regular expression, controlled by font-lock
 ;;
-;; D Roland Walker <walker@pobox.com>
-;; (c) 2011, Simplified BSD License
-;; https://github.com/rolandwalker/button-lock
+;; Copyright (c) 2011 D Roland Walker
 ;;
-;; Version 0.8
+;; Author: D Roland Walker <walker@pobox.com>
+;; Last-Updated: 29 May 2011
+;; Keywords: mouse, button, hyperlink
+;; URL: https://github.com/rolandwalker/button-lock
+;; EmacsWiki: ButtonLockMode
+;; Version: 0.81
+;;
+;; Simplified BSD License
+;;
+;;; Commentary:
 ;;
 ;; Button-lock is a minor mode which provides simple facilities to
 ;; define clickable text based regular expressions.  Button-lock.el
@@ -18,7 +25,7 @@
 ;;
 ;;    https://github.com/rolandwalker/button-lock
 ;;
-;;; Example usage
+;; Example usage
 ;;
 ;;    (require 'button-lock)
 ;;    (global-button-lock-mode 1)
@@ -80,15 +87,15 @@
 ;;
 ;;    M-x customize-group RET button-lock RET
 ;;
-;;; Prior Art
+;; Prior Art
 ;;
 ;;    hi-lock.el
-;;    David M. Koppelman <koppel@ece.lsu.edu>
+;;    David M.  Koppelman <koppel@ece.lsu.edu>
 ;;
 ;;    buttons.el
 ;;    Miles Bader <miles@gnu.org>
 ;;
-;;; Notes
+;; Notes
 ;;
 ;;    By default, button-lock uses newfangled left-clicks rather than
 ;;    Emacs-traditional middle clicks.
@@ -112,14 +119,14 @@
 ;;    Some differences between button-lock.el and buttons.el
 ;;
 ;;       * Buttons.el is for inserting individually defined
-;;         buttons. Button-lock.el is for changing all matching text
+;;         buttons.  Button-lock.el is for changing all matching text
 ;;         into a button.
 ;;
-;;; Compatibility
+;; Compatibility
 ;;
 ;;     Tested only on GNU Emacs version 23.x
 ;;
-;;; Bugs
+;; Bugs
 ;;
 ;;     Case-sensitivity of matches depends on how font-lock-defaults
 ;;     was called for the current mode (setting
@@ -137,7 +144,7 @@
 ;;     button-lock-mode gets activated twice for each buffer when
 ;;     global-button-lock-mode is on.
 ;;
-;;; TODO
+;; TODO
 ;;
 ;;     Consider defining mode-wide button locks (pass the mode as the
 ;;     first argument of font-lock-add-keywords).  Could use functions
@@ -151,7 +158,7 @@
 ;;
 ;;     button-down visual effects as with Emacs widgets
 ;;
-;;; License
+;; License
 ;;
 ;;    Simplified BSD License
 ;;
@@ -174,7 +181,7 @@
 ;;    This software is provided by D Roland Walker "AS IS" and any express
 ;;    or implied warranties, including, but not limited to, the implied
 ;;    warranties of merchantability and fitness for a particular
-;;    purpose are disclaimed. In no event shall D Roland Walker or
+;;    purpose are disclaimed.  In no event shall D Roland Walker or
 ;;    contributors be liable for any direct, indirect, incidental,
 ;;    special, exemplary, or consequential damages (including, but not
 ;;    limited to, procurement of substitute goods or services; loss of
@@ -189,7 +196,7 @@
 ;;    interpreted as representing official policies, either expressed
 ;;    or implied, of D Roland Walker.
 ;;
-;;; Code
+;;; Code:
 ;;
 
 (eval-when-compile
@@ -218,9 +225,9 @@ with modes that provide similar functionality."
 (defcustom button-lock-exclude-pattern "\\(^\\*.*\\*$\\)\\|^ "
   "Global button-lock will not be activated in buffers whose names match this regular expression.
 
-Buffers may be excluded for reasons of security (since buttons can
-execute arbitrary functions), efficiency, or to avoid conflicts
-with modes that provide similar functionality.
+Buffers may be excluded for reasons of security (since buttons
+can execute arbitrary functions), efficiency, or to avoid
+conflicts with modes that provide similar functionality.
 
 The default pattern is designed to match buffers which are
 programatically generated or internal to Emacs."
@@ -261,9 +268,9 @@ Button-lock uses `font-lock-mode' to create and maintain its text
 properties.  Therefore this mode can only be used where
 `font-lock-mode' is active.
 
-When button-lock mode is active, `button-lock-set-button' may be called
-to create a new button.  When button-lock mode is disabled, all
-button definition are cleared.
+When button-lock mode is active, `button-lock-set-button' may be
+called to create a new button.  When button-lock mode is
+disabled, all button definition are cleared.
 
 With no argument, this command toggles the mode. Non-null prefix
 argument turns on the mode.  Null prefix argument turns off the
@@ -317,7 +324,8 @@ mode."
 (defun maybe-local-button-lock (&optional arg)
   "Called by global-button-lock-mode to activate button-lock mode in a buffer if appropriate.
 
-If called with a negative ARG, deactivate button-lock mode in the buffer."
+If called with a negative ARG, deactivate button-lock mode in the
+buffer."
   (setq arg (or arg 1))
   (unless (or button-lock-mode
               (or noninteractive (eq (aref (buffer-name) 0) ?\s))
@@ -582,22 +590,24 @@ The button value can be passed to `button-lock-extend-binding'."
 (defmacro button-lock-unset-button (&rest args)
   "This is equivalent to running `button-lock-set-button' with :REMOVE set to true.
 
-The syntax is otherwise identical to `button-lock-set-button', which see."
+The syntax is otherwise identical to `button-lock-set-button',
+which see."
   `(button-lock-set-button ,@args :remove t))
 
 (defun button-lock-extend-binding (existing-button action mouse-binding &optional keyboard-binding)
-  "Add a binding to an existing button. The principal button
-creation function `button-lock-set-button' accepts only a limited
-subset of mouse bindings when binding multiple actions.  This
-function supports arbitrary key bindings for binding additional
-actions on a button.
+  "Add a binding to an existing button.
+
+The principal button creation function `button-lock-set-button'
+accepts only a limited subset of mouse bindings when binding
+multiple actions.  This function supports arbitrary key bindings
+for binding additional actions on a button.
 
 EXISTING-BUTTON is a button value as returned by
 `button-lock-set-button'.
 
 ACTION, MOUSE-BINDING and KEYBOARD-BINDING are as documented in
-`button-lock-set-button'. It is possible to pass a nil MOUSE-BINDING
-in order to set only a KEYBOARD-BINDING."
+`button-lock-set-button'.  It is possible to pass a nil
+MOUSE-BINDING in order to set only a KEYBOARD-BINDING."
   (if (and (not (member existing-button button-lock-button-list))
            (not (member (car existing-button) (cdr (cdr font-lock-keywords)))))
       (progn
@@ -686,7 +696,8 @@ mode is not active."
 (defun button-lock-set-global-button (args)
   "Add a global button-lock button definition, to be applied each time the button-lock minor mode is activated.
 
-ARGS is a list of arguments, following the form of `button-lock-set-button'.
+ARGS is a list of arguments, following the form of
+`button-lock-set-button'.
 
 To see an effect, button-lock mode must be deactivated and
 reactivated."
@@ -694,6 +705,9 @@ reactivated."
 
 (defun button-lock-unset-global-button (args)
   "Remove a global button-lock button definition.
+
+ARGS is a list of arguments, following the form of
+`button-lock-set-button'.
 
 To see an effect, button-lock mode must be deactivated and
 reactivated."
@@ -730,7 +744,8 @@ definitions removed, which should always be 1."
 (defun button-lock-unset-all-global-buttons ()
   "Unset all global button-lock buttons definitions.
 
-To see an effect, button-lock mode must be deactivated and reactivated."
+To see an effect, button-lock mode must be deactivated and
+reactivated."
   (interactive)
   (setq button-lock-global-button-list nil)
   t)
@@ -743,7 +758,8 @@ To see an effect, button-lock mode must be deactivated and reactivated."
 (defun button-lock-find-extent (&optional pos property)
   "Find the extent of a button-lock property around some point.
 
-POS defaults to the current point.
+POS defaults to the current point.  PROPERTY defaults to
+'button-lock.
 
 Returns list containing the start and end, or nil if there is no
 such property around the point."
@@ -765,20 +781,18 @@ such property around the point."
       (setq end (min (point-max) (+ end 1)))
       (list start end))))
 
-; This is a workaround for cperl mode, which clobbers
-; font-lock-unfontify-region-function.
 (defun button-lock-maybe-unbuttonify-buffer ()
+  "This is a workaround for cperl mode, which clobbers `font-lock-unfontify-region-function'."
   (when (and (boundp 'font-lock-fontified)
              font-lock-fontified
              (not (eq font-lock-unfontify-region-function 'font-lock-default-unfontify-region)))
     (font-lock-default-unfontify-region (point-min) (point-max))))
 
-; This is to avoid turning font-lock on if we are currently in the
-; process of disabling button-lock.
 (defun button-lock-maybe-fontify-buffer ()
+  "This is to avoid turning on font-lock if we are currently in the process of disabling button-lock."
   (when (and (boundp 'font-lock-fontified)
              font-lock-fontified)
     (font-lock-fontify-buffer)))
 
 (provide 'button-lock)
-; button-lock.el ends here
+;;; button-lock.el ends here

@@ -1,10 +1,19 @@
 ;;; wiki-nav --- simple file navigation using [[WikiStrings]]
 ;;
-;; D Roland Walker <walker@pobox.com>
-;; (c) 2011, Simplified BSD License
-;; https://github.com/rolandwalker/button-lock
+;; Copyright (c) 2011 D Roland Walker
 ;;
-;; Version 0.1
+;; Author: D Roland Walker <walker@pobox.com>
+;; Last-Updated: 29 May 2011
+;; Keywords: mouse, button, hyperlink
+;; URL: https://github.com/rolandwalker/button-lock
+;; EmacsWiki: WikiNavMode
+;; Version: 0.11
+;;
+;; Simplified BSD License
+;;
+;;; Commentary:
+;;
+;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Table of Contents
 ;;
@@ -34,7 +43,7 @@
 ;;
 ;;    https://github.com/rolandwalker/button-lock
 ;;
-;;; [[<Example usage]]
+;; [[<Example usage]]
 ;;
 ;;     Add the following to your ~/.emacs
 ;;
@@ -87,7 +96,7 @@
 ;;                      buffer to the previous link of any kind (need not
 ;;                      not match the current link)
 ;;
-;;; Advanced usage:
+;; Advanced usage:
 ;;
 ;;     Bracketed links may contain external URLs
 ;;
@@ -122,11 +131,11 @@
 ;;     See the documentation for the function wiki-nav for more
 ;;     information.
 ;;
-;;; [[<See Also]]
+;; [[<See Also]]
 ;;
 ;;     M-x customize-group RET wiki-nav RET
 ;;
-;;; [[<Prior Art]]
+;; [[<Prior Art]]
 ;;
 ;;     linkd.el
 ;;     David O'Toole <dto@gnu.org>
@@ -134,7 +143,7 @@
 ;;     org-mode
 ;;     Carsten Dominik <carsten at orgmode dot org>
 ;;
-;;; [[<Notes]]
+;; [[<Notes]]
 ;;
 ;;     wiki-nav uses industry-standard left-clicks rather than
 ;;     Emacs-traditional middle clicks.
@@ -144,7 +153,7 @@
 ;;     link and backspace into it.  Once the trailing delimiters have
 ;;     been modified, the link reverts to ordinary text.
 ;;
-;;; [[<Bugs]]
+;; [[<Bugs]]
 ;;
 ;;     Double-square-brackets represent a valid construct in some
 ;;     programming languages, and may be mistakenly linked.  Workaround:
@@ -162,11 +171,11 @@
 ;;     problems.  Auto-complete should be suppressed if the point is
 ;;     on a link?
 ;;
-;;; [[<Compatibility]]
+;; [[<Compatibility]]
 ;;
 ;;     Tested only on GNU Emacs version 23.x
 ;;
-;;; [[<Todo]]
+;; [[<Todo]]
 ;;
 ;;    remember position and undo last motion
 ;;
@@ -186,12 +195,14 @@
 ;;
 ;;    raised button style option
 ;;
+;;    break down monolithic dispatch function wiki-nav-action-1
+;;
 ;;    schemes to add
 ;;       search:
 ;;       regexp:
 ;;       elisp:
 ;;
-;;; [[<License]]
+;; [[<License]]
 ;;
 ;;    Simplified BSD License
 ;;
@@ -214,7 +225,7 @@
 ;;    This software is provided by D Roland Walker "AS IS" and any express
 ;;    or implied warranties, including, but not limited to, the implied
 ;;    warranties of merchantability and fitness for a particular
-;;    purpose are disclaimed. In no event shall D Roland Walker or
+;;    purpose are disclaimed.  In no event shall D Roland Walker or
 ;;    contributors be liable for any direct, indirect, incidental,
 ;;    special, exemplary, or consequential damages (including, but not
 ;;    limited to, procurement of substitute goods or services; loss of
@@ -229,7 +240,8 @@
 ;;    interpreted as representing official policies, either expressed
 ;;    or implied, of D Roland Walker.
 ;;
-;;; [[<Code]]
+;; [[<Code]]
+;;; Code:
 ;;
 
 (eval-when-compile
@@ -243,7 +255,7 @@
   :group 'button-lock)
 
 (defcustom wiki-nav-less-feedback nil
-  "Give less echo area feedback"
+  "Give less echo area feedback."
   :group 'wiki-nav
   :type 'boolean)
 
@@ -555,7 +567,9 @@ If called with a negative ARG, deactivate wiki-nav mode in the buffer."
     (wiki-nav-mode 1)))
 
 (defun wiki-nav-link-set (&optional arg)
-  "Use button-lock to set up wiki-nav links in a buffer."
+  "Use button-lock to set up wiki-nav links in a buffer.
+
+If called with negative ARG, remove the link."
   (setq arg (or arg 1))
   (unless button-lock-mode
     (button-lock-mode 1))
@@ -577,8 +591,7 @@ If called with a negative ARG, deactivate wiki-nav mode in the buffer."
       (button-lock-extend-binding button 'wiki-nav-find-any-previous-link  nil key))))
 
 (defun wiki-nav-point-before ()
-  "A utility function to return the position before the current
-point, or (point-min) if the point is at the minimum."
+  "Return the position before the current point, or (point-min) if the point is at the minimum."
   (if (> (point-min) (- (point) 1))
       (point-min)
     (- (point) 1)))
@@ -590,8 +603,8 @@ point, or (point-min) if the point is at the minimum."
 
 Automatically wraps past the end of the buffer.
 
-With a negative prefix argument, skip backward to the previous
-defined wiki-nav link."
+With a negative prefix argument ARG, skip backward to the
+previous defined wiki-nav link."
   (interactive "p")
   (let ((newpos nil)
         (skip-function 'next-single-property-change)
@@ -642,8 +655,8 @@ defined wiki-nav link."
 
 Automatically wraps past the beginning of the buffer.
 
-With a negative prefix argument, skip backward to the previous
-defined wiki-nav link."
+With a negative prefix argument ARG, skip backward to the
+previous defined wiki-nav link."
   (interactive)
   (wiki-nav-find-any-link -1))
 
@@ -800,10 +813,12 @@ defined wiki-nav link."
 
 
 (defun wiki-nav-flash-remove-overlay ()
+  "Remove the navigation flash overlay."
   (remove-hook 'pre-command-hook 'wiki-nav-flash-remove-overlay t)
   (delete-overlay wiki-nav-flash-overlay))
 
 (defun wiki-nav-flash-show ()
+  "Show the navigation flash overlay."
   (when (> wiki-nav-flash-delay 0)
     (move-overlay wiki-nav-flash-overlay (line-beginning-position) (1+ (line-end-position)))
     (add-hook 'pre-command-hook 'wiki-nav-flash-remove-overlay nil t)
