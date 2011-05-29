@@ -3,11 +3,11 @@
 ;; Copyright (c) 2011 D Roland Walker
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
-;; Last-Updated: 29 May 2011
-;; Keywords: mouse, button, hyperlink
 ;; URL: https://github.com/rolandwalker/button-lock
-;; EmacsWiki: WikiNavMode
 ;; Version: 0.11
+;; Last-Updated: 29 May 2011
+;; EmacsWiki: WikiNavMode
+;; Keywords: mouse, button, hyperlink, navigation
 ;;
 ;; Simplified BSD License
 ;;
