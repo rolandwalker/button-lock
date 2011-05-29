@@ -250,6 +250,7 @@
 
 (autoload 'button-lock-mode "button-lock" nil nil)
 
+;;;###autoload
 (defgroup wiki-nav nil
   "Wiki-style navigation links."
   :group 'button-lock)
@@ -299,6 +300,7 @@ with modes that provide similar functionality."
   :type 'symbol
   :group 'wiki-nav)
 
+;;;###autoload
 (defgroup wiki-nav-keys nil
   "Keyboard bindings used by wiki-nav"
   :group 'wiki-nav)
@@ -352,6 +354,7 @@ The format for key sequences is as defined by `kbd'."
   :group 'wiki-nav-keys
   :type '(repeat string))
 
+;;;###autoload
 (defgroup wiki-nav-faces nil
   "Strings and regular expressions used by wiki-nav to define links."
   :group 'wiki-nav)
@@ -371,6 +374,7 @@ The format for key sequences is as defined by `kbd'."
   "After jumping to a location via wiki-nav, the line of the new point location is briefly highlighted with this face."
   :group 'wik-nav-faces)
 
+;;;###autoload
 (defgroup wiki-nav-parsing nil
   "Strings and regular expressions used by wiki-nav to define links."
   :group 'wiki-nav)

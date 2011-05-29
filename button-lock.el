@@ -205,6 +205,7 @@
 (require 'cl)
 (autoload 'font-lock-remove-keywords "font-lock" nil nil)
 
+;;;###autoload
 (defgroup button-lock nil "Clickable text defined by regexp")
 
 (defcustom button-lock-modestring " bl"
