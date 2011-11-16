@@ -54,12 +54,12 @@
 ;;    ; activate hyperlinks
 ;;    (button-lock-set-button "\\<http://[^[:space:]\n]+"
 ;;                            'browse-url-at-mouse
-;;                            :face 'link :policy 'prepend)
+;;                            :face 'link :face-policy 'prepend)
 ;;
 ;;    ; activate hyperlinks only in lines that begin with a comment character
 ;;    (button-lock-set-button "^\\s-*\\s<.*?\\<\\(http://[^[:space:]\n]+\\)"
 ;;                            'browse-url-at-mouse
-;;                            :face 'link :policy 'prepend :grouping 1)
+;;                            :face 'link :face-policy 'prepend :grouping 1)
 ;;
 ;;    ; turn folding-mode delimiters into mouseable buttons
 ;;    (add-hook 'folding-mode-hook  #'(lambda ()
@@ -424,8 +424,8 @@ By default, :FACE has no properties, and :FACE-POLICY is :APPEND.
 This means that other, existing text properties will take
 priority, and that clickable text will not be distinguished
 without a mouseover.  To change this, try adding the arguments
-\":face 'link :policy 'prepend.\" Alternatively, `button-lock-face'
-may be customized.
+\":face 'link :face-policy 'prepend.\" Alternatively,
+`button-lock-face' may be customized.
 
 :MOUSE-FACE is the font face to set on mouseovers.  It defaults
 to `button-lock-mouse-face'.
