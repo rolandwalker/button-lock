@@ -4,8 +4,8 @@
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
 ;; URL: https://github.com/rolandwalker/button-lock/raw/master/button-lock.el
-;; Version: 0.81
-;; Last-Updated: 29 May 2011
+;; Version: 0.82
+;; Last-Updated: 16 Nov 2011
 ;; EmacsWiki: ButtonLockMode
 ;; Keywords: mouse, button, hyperlink
 ;;

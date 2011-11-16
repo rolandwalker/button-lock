@@ -4,8 +4,8 @@
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
 ;; URL: https://github.com/rolandwalker/button-lock/raw/master/wiki-nav.el
-;; Version: 0.11
-;; Last-Updated: 29 May 2011
+;; Version: 0.12
+;; Last-Updated: 16 Nov 2011
 ;; EmacsWiki: WikiNavMode
 ;; Keywords: mouse, button, hyperlink, navigation
 ;; Package-Requires: ((button-lock "0.8"))
