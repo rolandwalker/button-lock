@@ -44,6 +44,7 @@
 ;;    (button-lock-set-button "print" #'(lambda ()
 ;;                                        (interactive)
 ;;                                        (save-match-data
+;;                                          (deactivate-mark)
 ;;                                          (if (re-search-forward "print" nil t)
 ;;                                              (goto-char (match-beginning 0))
 ;;                                            (goto-char (point-min))

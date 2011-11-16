@@ -628,6 +628,7 @@ previous defined wiki-nav link."
                (setq newpos (funcall skip-function (point) 'wiki-nav)))
       (goto-char newpos))
     ; find the next link
+    (deactivate-mark)
     (if (funcall search-function (concat (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
                                          "\\("
                                          (regexp-quote wiki-nav-link-start)
@@ -643,6 +644,7 @@ previous defined wiki-nav link."
           (wiki-nav-flash-show))
       ; else
       (goto-char wrap-point)
+      (deactivate-mark)
       (when (funcall search-function (concat (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
                                              "\\("
                                              (regexp-quote wiki-nav-link-start)
@@ -749,6 +751,7 @@ previous defined wiki-nav link."
                        (setq found :line))))
              (t
               (setq string (regexp-quote (url-unhex-string string)))
+              (deactivate-mark)
               (if (funcall search-function (concat  (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
                                                    "\\("
                                                    (regexp-quote wiki-nav-link-start)
@@ -764,6 +767,7 @@ previous defined wiki-nav link."
                     (wiki-nav-flash-show))
                 ; else
                 (goto-char wrap-point)
+                (deactivate-mark)
                 (if (funcall search-function (concat (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
                                                      "\\("
                                                      (regexp-quote wiki-nav-link-start)
