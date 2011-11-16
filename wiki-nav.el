@@ -62,7 +62,7 @@
 ;;     matching link.  Double-clicking a link will search for matching
 ;;     links in all open buffers.
 ;;
-;;     Text matching between links is always case-insensitive.
+;;     Text-matching between links is always case-insensitive.
 ;;
 ;;     To navigate upward to a previous matching link, add a '<'
 ;;     symbol before the search text
@@ -174,7 +174,7 @@
 ;;
 ;; [[<Compatibility]]
 ;;
-;;     Tested only on GNU Emacs version 23.x
+;;     Tested on GNU Emacs 23 and 24
 ;;
 ;; [[<Todo]]
 ;;
