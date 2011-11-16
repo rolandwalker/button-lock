@@ -30,26 +30,27 @@
 ;;    (require 'button-lock)
 ;;    (global-button-lock-mode 1)
 ;;
-;;    ; add a button to the current buffer
-;;    (button-lock-set-button "\\<print\\>" 'beginning-of-line)
+;;    ; add a mouseable button to all occurences of a word
+;;    (button-lock-set-button "hello" 'beginning-of-line)
 ;;
-;;    ; to remove that button later, pass all the same arguments
-;;    ; to button-lock-unset-button
-;;    (button-lock-unset-button "\\<print\\>" 'beginning-of-line)
+;;    ; to remove that button later, pass all the same arguments to
+;;    ; button-lock-unset-button
+;;    (button-lock-unset-button "hello" 'beginning-of-line)
 ;;
-;;    ; or to remove the most recently added button
+;;    ; or, to remove the most recently added button
 ;;    (button-lock-pop-button)
 ;;
 ;;    ; create a fancy raised button
-;;    (button-lock-set-button "print" #'(lambda ()
-;;                                        (interactive)
-;;                                        (save-match-data
-;;                                          (deactivate-mark)
-;;                                          (if (re-search-forward "print" nil t)
-;;                                              (goto-char (match-beginning 0))
-;;                                            (goto-char (point-min))
-;;                                            (if (re-search-forward "print" nil t)
-;;                                                (goto-char (match-beginning 0))))))
+;;    (button-lock-set-button "hello" #'(lambda ()
+;;                                              (interactive)
+;;                                              (save-match-data
+;;                                                (deactivate-mark)
+;;                                                (if (re-search-forward "hello" nil t)
+;;                                                    (goto-char (match-beginning 0))
+;;                                                  (goto-char (point-min))
+;;                                                  (deactivate-mark)
+;;                                                  (if (re-search-forward "hello" nil t)
+;;                                                      (goto-char (match-beginning 0))))))
 ;;                            :face 'custom-button-face :mouse-face 'custom-button-mouse)
 ;;
 ;;    ; activate hyperlinks
@@ -82,7 +83,7 @@
 ;;                            :keyboard-binding "RET")
 ;;
 ;;    ; define a global button, to be set whenever the minor mode is activated
-;;    (button-lock-set-global-button '("\\<print\\>" 'beginning-of-line))
+;;    (button-lock-set-global-button '("hello" 'beginning-of-line))
 ;;
 ;; See Also
 ;;
