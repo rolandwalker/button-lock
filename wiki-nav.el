@@ -157,9 +157,10 @@
 ;; [[<Bugs]]
 ;;
 ;;     Double-square-brackets represent a valid construct in some
-;;     programming languages, and may be mistakenly linked.  Workaround:
-;;     don't click.  Second workaround: change delimiters to triple-
-;;     square-brackets via customize.
+;;     programming languages (especially shell), and may be mistakenly
+;;     linked.  Workaround: don't click.  Second workaround: add mode to
+;;     wiki-nav-comment-only-modes via customize.  Third workaround:
+;;     change delimiters triple-square-brackets via customize.
 ;;
 ;;     Newlines are not escaped in regexp fields in customize.
 ;;
@@ -171,6 +172,10 @@
 ;;     Auto-complete interacts and causes keyboard interaction
 ;;     problems.  Auto-complete should be suppressed if the point is
 ;;     on a link?
+;;
+;;     Difficult to reproduce: keystrokes sometimes leaking through to
+;;     the editor during keyboard navigation.  Tends to happen on first
+;;     navigation, when key is pressed quickly?
 ;;
 ;; [[<Compatibility]]
 ;;
