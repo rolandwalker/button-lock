@@ -126,7 +126,7 @@
 ;;
 ;; Compatibility
 ;;
-;;     Tested only on GNU Emacs version 23.x
+;;     Tested on GNU Emacs 22 - 24.
 ;;
 ;; Bugs
 ;;
@@ -286,11 +286,11 @@ mode."
          (font-lock-mode 1)
          (button-lock-maybe-fontify-buffer)
          (button-lock-maybe-activate-global-buttons)
-         (when (called-interactively-p)
+         (when (button-lock-called-interactively-p)
            (message "button-lock mode enabled")))
      (button-lock-unset-all-buttons t)
      (button-lock-maybe-fontify-buffer)
-     (when (called-interactively-p)
+     (when (button-lock-called-interactively-p)
        (message "button-lock mode disabled"))))
 
 ;; The define-globalized-minor-mode macro adds some complexity and causes some bugs.
@@ -667,7 +667,7 @@ which should always be 1."
          (button-lock-maybe-unbuttonify-buffer) ; cperl-mode workaround
          (button-lock-maybe-fontify-buffer)
          (setq num (- num (length button-lock-button-list)))
-         (when (called-interactively-p)
+         (when (button-lock-called-interactively-p)
            (message "removed %d button patterns" num))
          num))))
 
@@ -690,7 +690,7 @@ mode is not active."
       (button-lock-maybe-unbuttonify-buffer)   ; cperl-mode workaround
       (button-lock-maybe-fontify-buffer)
       (when (and
-             (called-interactively-p)
+             (button-lock-called-interactively-p)
              num)
         (message "removed %d button patterns" num))
       num)))
@@ -739,7 +739,7 @@ definitions removed, which should always be 1."
       (when first
         (setq button-lock-global-button-list (nreverse button-lock-global-button-list)))
       (setq num (- num (length button-lock-global-button-list)))
-      (when (called-interactively-p)
+      (when (button-lock-called-interactively-p)
         (message "removed %d button patterns" num))
       num)))
 
@@ -795,6 +795,19 @@ such property around the point."
   (when (and (boundp 'font-lock-fontified)
              font-lock-fontified)
     (font-lock-fontify-buffer)))
+
+(defun button-lock-called-interactively-p ()
+  (with-no-warnings
+    (if (>= emacs-major-version 23)
+        (called-interactively-p 'any)
+      (called-interactively-p))))
+
+;; string-match-p is new in 23.x and above
+(unless (fboundp 'string-match-p)
+  (defsubst string-match-p (regexp string &optional start)
+    "Same as `string-match' except this function does not change the match data."
+    (let ((inhibit-changing-match-data t))
+      (string-match regexp string start))))
 
 (provide 'button-lock)
 ;;; button-lock.el ends here

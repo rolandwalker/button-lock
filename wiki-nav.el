@@ -174,7 +174,7 @@
 ;;
 ;; [[<Compatibility]]
 ;;
-;;     Tested on GNU Emacs 23 and 24
+;;     Tested on GNU Emacs 22 - 24.
 ;;
 ;; [[<Todo]]
 ;;
@@ -527,10 +527,10 @@ mode."
   (if wiki-nav-mode
       (progn
         (wiki-nav-link-set)
-        (when (called-interactively-p)
+        (when (button-lock-called-interactively-p)
           (message "wiki-nav mode enabled")))
   (wiki-nav-link-set -1)
-  (when (called-interactively-p)
+  (when (button-lock-called-interactively-p)
     (message "wiki-nav mode disabled"))))
 
 (define-minor-mode global-wiki-nav-mode
