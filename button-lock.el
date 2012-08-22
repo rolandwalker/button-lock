@@ -202,11 +202,15 @@
 ;;; Code:
 ;;
 
-(eval-when-compile
-  (require 'font-lock))
+;;;
+;;; requires
+;;;
 
-(require 'cl)
-(autoload 'font-lock-remove-keywords "font-lock" nil nil)
+;; for callf, callf2, defun*, union
+(eval-when-compile
+  (require 'cl))
+
+(require 'font-lock)
 
 ;;;###autoload
 (defgroup button-lock nil "Clickable text defined by regexp")
