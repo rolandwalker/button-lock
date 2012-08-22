@@ -213,8 +213,13 @@
 (require 'font-lock)
 
 ;;;###autoload
-(defgroup button-lock nil "Clickable text defined by regexp")
-
+(defgroup button-lock nil
+  "Clickable text defined by regular expression."
+  :version "0.8.2"
+  :link '(emacs-commentary-link "button-lock")
+  :prefix "button-lock-"
+  :group 'navigation
+  :group 'extensions)
 (defcustom button-lock-modestring " bl"
   "This string appears in the modeline when button-lock mode is active."
   :group 'button-lock
