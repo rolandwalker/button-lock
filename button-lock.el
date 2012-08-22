@@ -127,7 +127,7 @@
 ;;
 ;; Compatibility
 ;;
-;;     Tested on GNU Emacs 22 - 24.
+;;     Tested only on GNU Emacs version 24.1
 ;;
 ;; Bugs
 ;;
