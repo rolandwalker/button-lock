@@ -255,6 +255,25 @@ The default pattern is designed to match buffers which are
 programatically generated or internal to Emacs."
   :type 'regexp
   :group 'button-lock)
+
+(defcustom button-lock-buffer-include-functions '()
+  "Do not activate minor mode in a buffer unless all functions evaluate non-nil.
+
+Each function should take a single argument (a buffer).
+
+Set this value to nil to disable."
+  :type '(repeat function)
+  :group 'button-lock)
+
+(defcustom button-lock-buffer-exclude-functions '()
+  "Do not activate minor mode in a buffer if any function evaluates non-nil.
+
+Each function should take a single argument (a buffer).
+
+Set this value to nil to disable."
+  :type '(repeat function)
+  :group 'button-lock)
+
   :type 'string
   :group 'button-lock)
 
