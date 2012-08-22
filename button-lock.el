@@ -1,10 +1,10 @@
-;;; button-lock.el --- clickable text defined by regular expression, controlled by font-lock
+;;; button-lock.el --- Clickable text defined by regular expression
 ;;
 ;; Copyright (c) 2011 D Roland Walker
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
 ;; URL: https://github.com/rolandwalker/button-lock/raw/master/button-lock.el
-;; Version: 0.82
+;; Version: 0.8.2
 ;; Last-Updated: 16 Nov 2011
 ;; EmacsWiki: ButtonLockMode
 ;; Keywords: mouse, button, hyperlink
@@ -30,17 +30,18 @@
 ;;    (require 'button-lock)
 ;;    (global-button-lock-mode 1)
 ;;
-;;    ; add a mouseable button to all occurences of a word
+;;    ;; add a mouseable button to all occurrences of a word
 ;;    (button-lock-set-button "hello" 'beginning-of-line)
 ;;
-;;    ; to remove that button later, pass all the same arguments to
-;;    ; button-lock-unset-button
+;;    ;; to remove that button later, pass all the same arguments to
+;;    ;; button-lock-unset-button
 ;;    (button-lock-unset-button "hello" 'beginning-of-line)
 ;;
-;;    ; or, to remove the most recently added button
-;;    (button-lock-pop-button)
+;;    ;; or, save the result and pass it back to the unset function
+;;    (setq mybutton (button-lock-set-button "hello" 'beginning-of-line))
+;;    (button-lock-unset-button mybutton)
 ;;
-;;    ; create a fancy raised button
+;;    ;; create a fancy raised button
 ;;    (button-lock-set-button "hello" #'(lambda ()
 ;;                                              (interactive)
 ;;                                              (save-match-data
@@ -53,17 +54,17 @@
 ;;                                                      (goto-char (match-beginning 0))))))
 ;;                            :face 'custom-button-face :mouse-face 'custom-button-mouse)
 ;;
-;;    ; activate hyperlinks
+;;    ;; activate hyperlinks
 ;;    (button-lock-set-button "\\<http://[^[:space:]\n]+"
 ;;                            'browse-url-at-mouse
 ;;                            :face 'link :face-policy 'prepend)
 ;;
-;;    ; activate hyperlinks only in lines that begin with a comment character
+;;    ;; activate hyperlinks only in lines that begin with a comment character
 ;;    (button-lock-set-button "^\\s-*\\s<.*?\\<\\(http://[^[:space:]\n]+\\)"
 ;;                            'browse-url-at-mouse
 ;;                            :face 'link :face-policy 'prepend :grouping 1)
 ;;
-;;    ; turn folding-mode delimiters into mouseable buttons
+;;    ;; turn folding-mode delimiters into mouseable buttons
 ;;    (add-hook 'folding-mode-hook  #'(lambda ()
 ;;                                      (button-lock-mode 1)
 ;;                                      (button-lock-set-button
@@ -73,7 +74,7 @@
 ;;                                       (concat "^" (regexp-quote (cadr (folding-get-mode-marks))))
 ;;                                       'folding-toggle-show-hide)))
 ;;
-;;    ; create a button that responds to the keyboard, but not the mouse
+;;    ;; create a button that responds to the keyboard, but not the mouse
 ;;    (button-lock-set-button "\\<http://[^[:space:]\n]+"
 ;;                            'browse-url-at-point
 ;;                            :mouse-binding     nil
@@ -82,8 +83,8 @@
 ;;                            :face-policy      'prepend
 ;;                            :keyboard-binding "RET")
 ;;
-;;    ; define a global button, to be set whenever the minor mode is activated
-;;    (button-lock-set-global-button '("hello" 'beginning-of-line))
+;;    ;; define a global button, to be set whenever the minor mode is activated
+;;    (button-lock-register-global-button "hello" 'beginning-of-line)
 ;;
 ;; See Also
 ;;
@@ -133,10 +134,10 @@
 ;;     Case-sensitivity of matches depends on how font-lock-defaults
 ;;     was called for the current mode (setting
 ;;     font-lock-keywords-case-fold-search).  So, it is safest to
-;;     assume that button-lock pattern matches are case-sensistive --
+;;     assume that button-lock pattern matches are case-sensitive --
 ;;     though they might not be.
 ;;
-;;     Return value for button-lock-set-global-button is inconsistent
+;;     Return value for button-lock-register-global-button is inconsistent
 ;;     with button-lock-set-button.  The global function does not
 ;;     return a button which could be later passed to
 ;;     button-lock-extend-binding.  The other global functions are
@@ -150,7 +151,7 @@
 ;;
 ;;     Consider defining mode-wide button locks (pass the mode as the
 ;;     first argument of font-lock-add-keywords).  Could use functions
-;;     named eg button-lock-set-mode-button.
+;;     named eg button-lock-set-modal-button.
 ;;
 ;;     language-specific navigation library (header files in C, etc)
 ;;
@@ -251,7 +252,7 @@ already provided by font-lock."
    :group 'button-lock)
 
 (defvar button-lock-global-button-list nil
-  "A list of global button definitions to be applied each time the button-lock minor-mode is activated.
+  "Global button definitions added to every button-lock buffer.
 
 The form is a list of lists, each member being a set of arguments
 to `button-lock-set-button'.
@@ -791,7 +792,10 @@ such property around the point."
     (font-lock-default-unfontify-region (point-min) (point-max))))
 
 (defun button-lock-maybe-fontify-buffer ()
-  "This is to avoid turning on font-lock if we are currently in the process of disabling button-lock."
+  "Fontify, but only if font-lock is already on.
+
+This is to avoid turning on font-lock if we are in the process of
+disabling button-lock."
   (when (and (boundp 'font-lock-fontified)
              font-lock-fontified)
     (font-lock-fontify-buffer)))
@@ -810,4 +814,16 @@ such property around the point."
       (string-match regexp string start))))
 
 (provide 'button-lock)
+
+;;
+;; Emacs
+;;
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; mangle-whitespace: t
+;; require-final-newline: t
+;; coding: utf-8
+;; End:
+;;
+
 ;;; button-lock.el ends here
