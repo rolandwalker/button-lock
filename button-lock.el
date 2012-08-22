@@ -220,10 +220,6 @@
   :prefix "button-lock-"
   :group 'navigation
   :group 'extensions)
-(defcustom button-lock-modestring " bl"
-  "This string appears in the modeline when button-lock mode is active."
-  :group 'button-lock
-  :type 'string)
 
 (defcustom button-lock-exclude-modes '(
                                        fundamental-mode
@@ -274,7 +270,13 @@ Set this value to nil to disable."
   :type '(repeat function)
   :group 'button-lock)
 
+(defcustom button-lock-mode-lighter " b-loc"
+  "This string appears in the mode-line when `button-lock-mode' is active.
+
+Set to nil or the empty string to disable the mode-line
+lighter for `button-lock-mode'."
   :type 'string
+  :risky t
   :group 'button-lock)
 
 (defface button-lock-button-face
