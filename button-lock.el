@@ -306,6 +306,15 @@ This variable should be set by calling `button-lock-set-global-button' and frien
 (make-variable-buffer-local 'button-lock-button-list)
 (put 'button-lock-button-list 'permanent-local t)
 
+(defmacro button-lock-called-interactively-p (&optional kind)
+  "A backward-compatible version of `called-interactively-p'.
+
+Optional KIND is as documented at `called-interactively-p'
+in GNU Emacs 24.1 or higher."
+  `(if (eq 0 (cdr (subr-arity (symbol-function 'called-interactively-p))))
+      (called-interactively-p)
+    (called-interactively-p ,kind)))
+
 (define-minor-mode button-lock-mode
   "Toggle button-lock-mode, a minor mode for making text clickable.
 
@@ -328,7 +337,7 @@ mode."
          (font-lock-mode 1)
          (button-lock-maybe-fontify-buffer)
          (button-lock-maybe-activate-global-buttons)
-         (when (button-lock-called-interactively-p)
+     (when (button-lock-called-interactively-p 'interactive)
            (message "button-lock mode enabled")))
      (button-lock-unset-all-buttons t)
      (button-lock-maybe-fontify-buffer)
@@ -840,12 +849,6 @@ disabling button-lock."
   (when (and (boundp 'font-lock-fontified)
              font-lock-fontified)
     (font-lock-fontify-buffer)))
-
-(defun button-lock-called-interactively-p ()
-  (with-no-warnings
-    (if (>= emacs-major-version 23)
-        (called-interactively-p 'any)
-      (called-interactively-p))))
 
 ;; string-match-p is new in 23.x and above
 (unless (fboundp 'string-match-p)
