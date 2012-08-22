@@ -220,9 +220,18 @@
   :group 'button-lock
   :type 'string)
 
-(defcustom button-lock-exclude-modes
-  '(rmail-mode mime/viewer-mode gnus-article-mode term-mode eshell-mode dired-mode bc-menu-mode)
-  "List of major modes in which global button-lock will not be activated.
+(defcustom button-lock-exclude-modes '(
+                                       fundamental-mode
+                                       Buffer-menu-mode
+                                       bm-show-mode
+                                       dired-mode
+                                       eshell-mode
+                                       gnus-article-mode
+                                       mime/viewer-mode
+                                       rmail-mode
+                                       term-mode
+                                       )
+  "Modes for which global button-lock will not be activated.
 
 Modes may be excluded for reasons of security (since buttons can
 execute arbitrary functions), efficiency, or to avoid conflicts
