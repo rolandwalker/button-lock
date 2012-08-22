@@ -244,8 +244,8 @@ with modes that provide similar functionality."
   :type '(repeat symbol)
   :group 'button-lock)
 
-(defcustom button-lock-exclude-pattern "\\(^\\*.*\\*$\\)\\|^ "
-  "Global button-lock will not be activated in buffers whose names match this regular expression.
+(defcustom button-lock-buffer-name-exclude-pattern "\\`[* ]"
+  "Do not activate minor made in buffers matching this regular expression.
 
 Buffers may be excluded for reasons of security (since buttons
 can execute arbitrary functions), efficiency, or to avoid
@@ -253,6 +253,8 @@ conflicts with modes that provide similar functionality.
 
 The default pattern is designed to match buffers which are
 programatically generated or internal to Emacs."
+  :type 'regexp
+  :group 'button-lock)
   :type 'string
   :group 'button-lock)
 
