@@ -680,6 +680,10 @@ If the function called by ACTION uses (interactive \"e\") it may
 receive the relevant mouse event.  Note that you may wish to use
 the mouse event to reposition the point.
 
+ACTION may alternatively contain a prepared keymap, in which case
+the convenience parameters :MOUSE-BINDING, :KEYBOARD-BINDING,
+and :KEYBOARD-ACTION will be ignored.
+
 Following PATTERN and ACTION is a Common Lisp-style series of
 keyword/value arguments:
 
@@ -731,9 +735,7 @@ to pass keyboard events into :MOUSE-BINDING and vice versa.
 :KEYBOARD-ACTION is an alternate event to be run by
 :KEYBOARD-BINDING.  The default is nil, meaning that
 :KEYBOARD-BINDING will invoke ACTION.  This is intended for cases
-where ACTION is dependent on the position of the mouse. See also
-`button-lock-extend-binding' for a general method of adding
-alternate bindings.
+where ACTION is dependent on the position of the mouse.
 
 :ADDITIONAL-PROPERTY defines an arbitrary text property which
 will be set to t in for text which matches PATTERN, as optionally
@@ -744,7 +746,8 @@ As a convenience, :MOUSE-2 through :MOUSE-5 can be used to attach
 an alternate ACTION, as can :M-MOUSE-1 ..., :A-MOUSE-1 ...,
 :DOUBLE-MOUSE-1 ..., :WHEEL-UP..., and :WHEEL-DOWN... The list is
 not exhaustive.  For a general method of adding alternate
-bindings, see `button-lock-extend-binding'.
+bindings, pass a keymap for :ACTION or use
+ `button-lock-extend-binding'.
 
 If :REAR-STICKY is non-nil, the rear-nonsticky text property will
 not be added, as it is by default.  Changing this setting is not
@@ -761,6 +764,10 @@ The button value can be passed to `button-lock-extend-binding'."
           (properties nil)
           (fl-keyword nil))
 
+    (if (keymapp action)
+        (setq map (copy-sequence action))
+
+      ;; else
       (define-key map `[,mouse-binding] action)
 
       (dolist (var '(
@@ -821,7 +828,7 @@ The button value can be passed to `button-lock-extend-binding'."
           (define-key map `[,var] (symbol-value var))))
 
       (when keyboard-binding
-      (define-key map (read-kbd-macro keyboard-binding) (or keyboard-action action)))
+        (define-key map (read-kbd-macro keyboard-binding) (or keyboard-action action))))
 
     (setq properties `(face ,face keymap ,map button-lock t))
       (add-to-list 'font-lock-extra-managed-props 'keymap)
