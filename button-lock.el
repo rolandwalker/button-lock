@@ -734,32 +734,15 @@ EXISTING-BUTTON is a button value as returned by
 ACTION, MOUSE-BINDING and KEYBOARD-BINDING are as documented in
 `button-lock-set-button'.  It is possible to pass a nil
 MOUSE-BINDING in order to set only a KEYBOARD-BINDING."
-  (if (and (not (member existing-button button-lock-button-list))
-           (not (member (car existing-button) (cdr (cdr font-lock-keywords)))))
-      (progn
-        (message "no such button")
-        nil)
-    ;; else
-    (let ((success nil)
-          (map nil))
-      (condition-case nil
-          (setq success (font-lock-remove-keywords nil existing-button))
-        (error nil))
-      (if (not success)
-          nil
-        ;; else
-        (setq map (nth 3 (nth 1 (nth 1 (nth 1 (car (car (member existing-button button-lock-button-list))))))))
+  (when (not (member existing-button button-lock-button-list))
+    (error "No such button"))
+  (let ((map (memq 'keymap (button-lock-button-properties (car (member existing-button button-lock-button-list))))))
+    (when button-lock-mode
+      (font-lock-remove-keywords nil (list existing-button)))
         (when mouse-binding
           (define-key map `[,mouse-binding] action))
         (when keyboard-binding
       (define-key map (read-kbd-macro keyboard-binding) action))
-        (setf (nth 3 (nth 1 (nth 1 (nth 1 (car (car (member existing-button button-lock-button-list))))))) map)
-        (setf (nth 3 (nth 1 (nth 1 (nth 1 (car existing-button))))) map)
-        (condition-case nil
-            (setq success (font-lock-add-keywords nil existing-button))
-          (error nil))
-        success))))
-
     (when button-lock-mode
       (font-lock-add-keywords nil (list existing-button)))))
 
