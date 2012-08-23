@@ -747,7 +747,7 @@ previous defined wiki-nav link."
 (defun wiki-nav-action-1 (pos)
   "Dispatch the default navigation action for the wiki-nav link at POS."
   (let ((bounds (button-lock-find-extent pos 'wiki-nav))
-        (string nil)
+        (str-val nil)
         (found nil)
         (visit nil)
         (search-function 're-search-forward)
@@ -759,41 +759,41 @@ previous defined wiki-nav link."
         (case-fold-search t)
         (search-upper-case nil))
     (when bounds
-      (setq string (buffer-substring-no-properties (car bounds) (cdr bounds)))
-      (when (string-match-p "^[[:space:]]*<" string)
+      (setq str-val (buffer-substring-no-properties (car bounds) (cdr bounds)))
+      (when (string-match-p "^[[:space:]]*<" str-val)
         (setq search-function 're-search-backward)
         (setq wrap-point (point-max))
         (setq wrap-message "Search wrapped past beginning of file"))
-      (setq string (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*\\'\\)" "" string))
+      (setq str-val (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*\\'\\)" "" str-val))
       (if (and wiki-nav-external-link-pattern
                (and (> (length wiki-nav-visit-link-pattern) 0)
-                    (not (string-match-p wiki-nav-visit-link-pattern string)))
+                    (not (string-match-p wiki-nav-visit-link-pattern str-val)))
                (and (> (length wiki-nav-function-link-pattern) 0)
-                    (not (string-match-p wiki-nav-function-link-pattern string)))
+                    (not (string-match-p wiki-nav-function-link-pattern str-val)))
                (and (> (length wiki-nav-line-number-link-pattern) 0)
-                    (not (string-match-p wiki-nav-line-number-link-pattern string)))
+                    (not (string-match-p wiki-nav-line-number-link-pattern str-val)))
                (and (> (length wiki-nav-external-link-pattern) 0)
-                    (string-match-p wiki-nav-external-link-pattern string)))
+                    (string-match-p wiki-nav-external-link-pattern str-val)))
           (progn
             (message "browsing to external URL...")
-            (browse-url string))
+            (browse-url str-val))
         (save-match-data
           (when (and (> (length wiki-nav-visit-link-pattern) 0)
-                     (string-match wiki-nav-visit-link-pattern string))
+                     (string-match wiki-nav-visit-link-pattern str-val))
             (let ((tmp ""))
-              (setq tmp (match-string 2 string))
-              (switch-to-buffer (find-file (expand-file-name (url-unhex-string (match-string 1 string)))))
-              (setq string tmp))
-            (when (and (= (length string) 0)
+              (setq tmp (match-string 2 str-val))
+              (switch-to-buffer (find-file (expand-file-name (url-unhex-string (match-string 1 str-val)))))
+              (setq str-val tmp))
+            (when (and (= (length str-val) 0)
                        (fboundp 'nav-flash-show))
               (nav-flash-show))
             (setq visit t))
-          (when (> (length string) 0)
+          (when (> (length str-val) 0)
             (cond
              ((and (> (length wiki-nav-function-link-pattern) 0)
-                   (string-match wiki-nav-function-link-pattern string))
+                    (string-match wiki-nav-function-link-pattern str-val))
                  ;; imenu return value is not helpful.  It also sometimes changes the mark. Wrap it in an excursion
-                 (when (and (setq new-point (save-excursion (imenu (url-unhex-string (match-string 1 string))) (point)))
+               (when (and (setq new-point (save-excursion (imenu (url-unhex-string (match-string 1 str-val))) (point)))
                             (not (= new-point (point))))
                    (goto-char new-point)
                  (when (fboundp 'nav-flash-show)
@@ -802,15 +802,15 @@ previous defined wiki-nav link."
                  ;; return to the original buffer on failure
                  (unless found
                    (when (and visit
-                              (> (length string) 0))
+                            (> (length str-val) 0))
                      (switch-to-buffer buffer-start)
                      (setq visit nil))
                    (goto-char point-start)))
              ((and (> (length wiki-nav-line-number-link-pattern) 0)
-                   (string-match wiki-nav-line-number-link-pattern string))
+                    (string-match wiki-nav-line-number-link-pattern str-val))
                  ;; For line-number scheme, go as far as possible, but don't set found unless successful.
                  ;; Don't worry about returning to original buffer on failure.
-                 (let ((ln (string-to-number (match-string 1 string))))
+               (let ((ln (string-to-number (match-string-no-properties 1 str-val))))
                    (widen)
                    (goto-char (point-min))
                    (forward-line (1- ln))
@@ -819,13 +819,13 @@ previous defined wiki-nav link."
                    (if (= (line-number-at-pos) ln)
                        (setq found :line))))
              (t
-              (setq string (regexp-quote (url-unhex-string string)))
+               (setq str-val (regexp-quote (url-unhex-string str-val)))
               (deactivate-mark)
                (if (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                                    "\\("
                                                    (regexp-quote wiki-nav-link-start)
                                                    "\\("
-                                                   "[[:space:]<>]*" string "[[:space:]]*"
+                                                    "[[:space:]<>]*" str-val "[[:space:]]*"
                                                    "\\)"
                                                    (regexp-quote wiki-nav-link-stop)
                                                    "\\)")
@@ -842,7 +842,7 @@ previous defined wiki-nav link."
                                                      "\\("
                                                      (regexp-quote wiki-nav-link-start)
                                                      "\\("
-                                                     "[[:space:]<>]*" string "[[:space:]]*"
+                                                      "[[:space:]<>]*" str-val "[[:space:]]*"
                                                      "\\)"
                                                      (regexp-quote wiki-nav-link-stop)
                                                      "\\)")
@@ -855,7 +855,7 @@ previous defined wiki-nav link."
               ;; return to the original buffer on failure
               (unless found
                 (when (and visit
-                           (> (length string) 0))
+                            (> (length str-val) 0))
                   (switch-to-buffer buffer-start)
                   (setq visit nil))
                 (goto-char point-start))))
@@ -877,17 +877,17 @@ previous defined wiki-nav link."
   "Dispatch the default double-click navigation action for the wiki-nav link at POS."
   (interactive "e")
   (let ((bounds (button-lock-find-extent (posn-point (event-end event)) 'wiki-nav))
-        (string nil)
+        (str-val nil)
         (case-fold-search t)
         (search-upper-case nil))
     (when bounds
-      (setq string (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*\\'\\)" ""
+      (setq str-val (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*\\'\\)" ""
                                              (buffer-substring-no-properties (car bounds) (cdr bounds))))
       (when (fboundp 'multi-occur-in-matching-buffers)
         (multi-occur-in-matching-buffers "\\`[^ *]"
                                          (concat
                                           (regexp-quote wiki-nav-link-start)
-                                          "[[:space:]<>]*" string "[[:space:]]*"
+                                          "[[:space:]<>]*" str-val "[[:space:]]*"
                                           (regexp-quote wiki-nav-link-stop))
                                           t)))))
 
