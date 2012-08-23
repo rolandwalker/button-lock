@@ -107,7 +107,7 @@
 ;; Prior Art
 ;;
 ;;    hi-lock.el
-;;    David M.  Koppelman <koppel@ece.lsu.edu>
+;;    David M. Koppelman <koppel@ece.lsu.edu>
 ;;
 ;;    buttons.el
 ;;    Miles Bader <miles@gnu.org>
@@ -405,13 +405,13 @@ the argument is 'toggle."
               (eq (aref (buffer-name) 0) ?\s))  ; there can be no font-lock
           (setq button-lock-mode nil)))
     (button-lock-mode
-         (font-lock-mode 1)
+     (font-lock-mode 1)
      (button-lock-merge-global-buttons-to-local)
      (add-hook 'font-lock-mode-hook 'button-lock-do-tell nil t)
      (button-lock-tell-font-lock)
-         (button-lock-maybe-fontify-buffer)
+     (button-lock-maybe-fontify-buffer)
      (when (button-lock-called-interactively-p 'interactive)
-           (message "button-lock mode enabled")))
+       (message "button-lock mode enabled")))
     (t
      (button-lock-tell-font-lock 'forget)
      (button-lock-maybe-unbuttonify-buffer)   ; cperl-mode workaround
@@ -786,9 +786,9 @@ If successful, this function returns the button which was added
 or removed from `font-lock-keywords'. Otherwise it returns nil.
 The button value can be passed to `button-lock-extend-binding'."
 
-    (let ((map (make-sparse-keymap))
-          (properties nil)
-          (fl-keyword nil))
+  (let ((map (make-sparse-keymap))
+        (properties nil)
+        (fl-keyword nil))
 
     (if (keymapp action)
         (setq map (copy-sequence action))
@@ -857,20 +857,20 @@ The button value can be passed to `button-lock-extend-binding'."
         (define-key map (read-kbd-macro keyboard-binding) (or keyboard-action action))))
 
     (setq properties `(face ,face keymap ,map button-lock t))
-      (add-to-list 'font-lock-extra-managed-props 'keymap)
-      (add-to-list 'font-lock-extra-managed-props 'button-lock)
+    (add-to-list 'font-lock-extra-managed-props 'keymap)
+    (add-to-list 'font-lock-extra-managed-props 'button-lock)
 
-      (when additional-property
+    (when additional-property
       (callf append properties `(,additional-property t))
-        (add-to-list 'font-lock-extra-managed-props additional-property))
+      (add-to-list 'font-lock-extra-managed-props additional-property))
 
-      (when mouse-face
+    (when mouse-face
       (callf append properties `(mouse-face ,mouse-face))
-        (add-to-list 'font-lock-extra-managed-props 'mouse-face))
+      (add-to-list 'font-lock-extra-managed-props 'mouse-face))
 
     (when (or help-echo help-text)
       (callf append properties `(help-echo ,(or help-echo help-text)))
-        (add-to-list 'font-lock-extra-managed-props 'help-echo))
+      (add-to-list 'font-lock-extra-managed-props 'help-echo))
 
     (when kbd-help
       (callf append properties `(kbd-help ,kbd-help))
@@ -886,7 +886,7 @@ The button value can be passed to `button-lock-extend-binding'."
 
     (setq fl-keyword `(,pattern (,grouping ',properties ,face-policy)))
 
-      (if remove
+    (if remove
         (button-lock-remove-from-button-list fl-keyword)
       (button-lock-add-to-button-list fl-keyword no-replace))))
 
@@ -929,9 +929,9 @@ to nil."
         (dolist (cell (cdr action))
           (define-key map (vector (car cell)) (cdr cell)))
       ;; else
-        (when mouse-binding
-          (define-key map `[,mouse-binding] action))
-        (when keyboard-binding
+      (when mouse-binding
+        (define-key map `[,mouse-binding] action))
+      (when keyboard-binding
         (define-key map (read-kbd-macro keyboard-binding) action)))
     (when button-lock-mode
       (font-lock-add-keywords nil (list existing-button)))))
@@ -945,12 +945,12 @@ mode is not active."
   (let ((num (length button-lock-button-list)))
     (button-lock-tell-font-lock 'forget)
     (setq button-lock-button-list nil)
-      (button-lock-maybe-unbuttonify-buffer)   ; cperl-mode workaround
-      (button-lock-maybe-fontify-buffer)
-      (when (and
+    (button-lock-maybe-unbuttonify-buffer)   ; cperl-mode workaround
+    (button-lock-maybe-fontify-buffer)
+    (when (and
            (button-lock-called-interactively-p 'interactive)
            (> num 0))
-        (message "removed %d button patterns" num))
+      (message "removed %d button patterns" num))
     num))
 
 (defun button-lock-register-global-button (&rest button)
