@@ -412,8 +412,6 @@ keywords with the 'button-lock property."
   (when (listp button)
     (car button)))
 
-(defun maybe-local-button-lock (&optional arg)
-  "Called by global-button-lock-mode to activate button-lock mode in a buffer if appropriate.
 (defun button-lock-button-grouping (button)
   "Return grouping for BUTTON."
   (when (listp button)
@@ -424,9 +422,19 @@ keywords with the 'button-lock property."
   (ignore-errors
     (car (memq 'button-lock (button-lock-button-properties button)))))
 
+(defun button-lock-maybe-turn-on (&optional arg)
+  "Activate `button-lock-mode' in a buffer if appropriate.
+
+button-lock mode will be activated in every buffer, except
+
+   minibuffers
+   buffers with names that begin with space
+   buffers excluded by `button-lock-exclude-modes'
+   buffers excluded by `button-lock-buffer-name-exclude-pattern'
+
 If called with a negative ARG, deactivate button-lock mode in the
 buffer."
-  (setq arg (or arg 1))
+  (callf or arg 1)
   (when (or (< arg 0)
             (button-lock-buffer-included-p (current-buffer)))
     (button-lock-mode arg)))
