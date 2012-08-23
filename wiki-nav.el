@@ -895,4 +895,15 @@ previous defined wiki-nav link."
 
 
 (provide 'wiki-nav)
+;;
+;; Emacs
+;;
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; mangle-whitespace: t
+;; require-final-newline: t
+;; coding: utf-8
+;; End:
+;;
+
 ;;; wiki-nav.el ends here
