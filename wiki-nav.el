@@ -697,8 +697,6 @@ If called with negative ARG, remove the links."
   "Return the position before the current point, or (point-min) if the point is at the minimum."
   (max (point-min) (1- (point))))
 
-;; was doing this by scanning text properties, but that
-;; fails when font-lock has not fontified the whole buffer
 (defun wiki-nav-find-any-link (&optional arg)
   "Skip forward to the next defined wiki-nav link.
 
@@ -708,13 +706,19 @@ With a negative prefix argument ARG, skip backward to the
 previous defined wiki-nav link."
   (interactive "p")
   (when wiki-nav-mode
-  (let ((newpos nil)
+    (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
+          (newpos nil)
           (orig-pos (point))
         (skip-function 'next-single-property-change)
         (search-function 're-search-forward)
         (look-function 'point)
         (wrap-point (point-min))
         (bounds nil))
+
+      ;; This is slow, but otherwise links get missed.  There
+      ;; must be a better way.
+      (font-lock-fontify-buffer)
+
     (when (and arg
                (< arg 0))
       (setq skip-function 'previous-single-property-change)
