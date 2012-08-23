@@ -602,7 +602,7 @@ The button value can be passed to `button-lock-extend-binding'."
           (define-key map `[,var] (symbol-value var))))
 
       (when keyboard-binding
-        (define-key map (eval `(kbd ,keyboard-binding)) (or keyboard-action action)))
+      (define-key map (read-kbd-macro keyboard-binding) (or keyboard-action action)))
 
       (setq props `(face ,face keymap ,map button-lock t))
       (add-to-list 'font-lock-extra-managed-props 'keymap)
@@ -680,7 +680,7 @@ MOUSE-BINDING in order to set only a KEYBOARD-BINDING."
         (when mouse-binding
           (define-key map `[,mouse-binding] action))
         (when keyboard-binding
-          (define-key map (eval `(kbd ,keyboard-binding)) action))
+      (define-key map (read-kbd-macro keyboard-binding) action))
         (setf (nth 3 (nth 1 (nth 1 (nth 1 (car (car (member existing-button button-lock-button-list))))))) map)
         (setf (nth 3 (nth 1 (nth 1 (nth 1 (car existing-button))))) map)
         (condition-case nil
