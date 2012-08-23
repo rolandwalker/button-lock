@@ -564,6 +564,7 @@ If NO-REPLACE is set, no replacement is made for a duplicate button."
                                  (face 'button-lock-face)
                                  (mouse-face 'button-lock-mouse-face)
                                  (face-policy 'append)
+                                 help-echo
                                  help-text
 
                                  (grouping 0)
@@ -665,8 +666,9 @@ to `button-lock-mouse-face'.
 values are nil, 'keep, 'prepend, and 'append (the default).  See
 the documentation for OVERRIDE in `font-lock-keywords'.
 
-:HELP-TEXT is applied to the help-echo text property, and may
+:HELP-ECHO is applied to the help-echo text property, and may
 become visible in a tooltip depending on your Emacs setup.
+:HELP-TEXT is a deprecated synonym.
 
 :GROUPING designates a subgroup in the pattern match to receive
 the new text properties.  Subgroups, delimited by parentheses,
@@ -791,8 +793,8 @@ The button value can be passed to `button-lock-extend-binding'."
       (callf append properties `(mouse-face ,mouse-face))
         (add-to-list 'font-lock-extra-managed-props 'mouse-face))
 
-      (when help-text
-      (callf append properties `(help-echo ,help-text))
+    (when (or help-echo help-text)
+      (callf append properties `(help-echo ,(or help-echo help-text)))
         (add-to-list 'font-lock-extra-managed-props 'help-echo))
 
     (unless rear-sticky
