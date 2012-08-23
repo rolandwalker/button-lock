@@ -796,7 +796,8 @@ previous defined wiki-nav link."
                  (when (and (setq new-point (save-excursion (imenu (url-unhex-string (match-string 1 string))) (point)))
                             (not (= new-point (point))))
                    (goto-char new-point)
-                   (wiki-nav-flash-show)
+                 (when (fboundp 'nav-flash-show)
+                   (nav-flash-show))
                    (setq found :func))
                  ;; return to the original buffer on failure
                  (unless found
