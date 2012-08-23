@@ -576,20 +576,9 @@ mode."
      (when (button-lock-called-interactively-p 'interactive)
        (message "wiki-nav mode disabled")))))
 
-(define-minor-mode global-wiki-nav-mode
-  "Toggle global `wiki-nav-mode'.
+(define-globalized-minor-mode global-wiki-nav-mode wiki-nav-mode wiki-nav-maybe-turn-on
+  :group 'wiki-nav)
 
-The global mode will cause button-lock to be activated in every buffer,
-unless specifically excluded by `wiki-nav-exclude-modes',
-`button-lock-exclude-modes' or `button-lock-exclude-pattern'.
-
-With no argument, this command toggles the mode. Non-null prefix
-argument turns on the mode.  Null prefix argument turns off the
-mode."
-
-  nil nil nil
-  :global t
-  :group 'wiki-nav
 (defun wiki-nav-maybe-turn-on (&optional arg)
   "Called by `global-wiki-nav-mode' to activate wiki-nav mode in a buffer if appropriate.
 
