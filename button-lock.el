@@ -552,7 +552,7 @@ If NO-REPLACE is set, no replacement is made for a duplicate button."
   (callf2 delete button button-lock-global-button-list))
 
 (defun button-lock-merge-global-buttons-to-local ()
-  "If there are any predefined, nonconflicting global buttons, add them to the local list."
+  "Add predefined, non-conflicting global buttons to the local list."
   (dolist (button button-lock-global-button-list)
     (unless (member button button-lock-button-list)
       (apply 'button-lock-set-button (append button '(:no-replace t))))))
@@ -904,6 +904,9 @@ deactivated and reactivated."
 ;; require-final-newline: t
 ;; coding: utf-8
 ;; End:
+;;
+;; LocalWords: ButtonLockMode mouseable mybutton keymap propertize
+;; LocalWords: callf cperl nonsticky
 ;;
 
 ;;; button-lock.el ends here
