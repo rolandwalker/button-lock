@@ -20,8 +20,10 @@
 ;;
 ;; Button-lock buttons (links) can execute any function.
 ;;
-;; See wiki-nav.el for a user-friendly library built on top of
-;; button-lock.el.  Wiki-nav.el is available here:
+;; There is little user-level interface for button-lock.el, which is
+;; intended to be used from Emacs Lisp.  See wiki-nav.el for a
+;; user-friendly library built on top of button-lock.el.  Wiki-nav.el
+;; is available here:
 ;;
 ;;    https://github.com/rolandwalker/button-lock
 ;;
@@ -890,16 +892,23 @@ EXISTING-BUTTON is a button value as returned by
 
 ACTION, MOUSE-BINDING and KEYBOARD-BINDING are as documented in
 `button-lock-set-button'.  It is possible to pass a nil
-MOUSE-BINDING in order to set only a KEYBOARD-BINDING."
+MOUSE-BINDING in order to set only a KEYBOARD-BINDING.
+
+When passing a prepared keymap for ACTION, set MOUSE-BINDING
+to nil."
   (when (not (member existing-button button-lock-button-list))
     (error "No such button"))
   (let ((map (memq 'keymap (button-lock-button-properties (car (member existing-button button-lock-button-list))))))
     (when button-lock-mode
       (font-lock-remove-keywords nil (list existing-button)))
+    (if (keymapp action)
+        (dolist (cell (cdr action))
+          (define-key map (vector (car cell)) (cdr cell)))
+      ;; else
         (when mouse-binding
           (define-key map `[,mouse-binding] action))
         (when keyboard-binding
-      (define-key map (read-kbd-macro keyboard-binding) action))
+        (define-key map (read-kbd-macro keyboard-binding) action)))
     (when button-lock-mode
       (font-lock-add-keywords nil (list existing-button)))))
 
