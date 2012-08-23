@@ -629,9 +629,11 @@ If called with a negative ARG, deactivate wiki-nav mode in the buffer."
 (defun wiki-nav-link-set (&optional arg)
   "Use button-lock to set up wiki-nav links in a buffer.
 
-If called with negative ARG, remove the link."
-  (setq arg (or arg 1))
-  (unless button-lock-mode
+If called with negative ARG, remove the links."
+  (callf or arg 1)
+  (when (and (>= arg 0)
+             (or (not boundp 'button-lock-mode)
+                 (not button-lock-mode)))
     (button-lock-mode 1))
     (setq wiki-nav-button (button-lock-set-button (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                                 (regexp-quote wiki-nav-link-start)
