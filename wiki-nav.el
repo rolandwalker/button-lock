@@ -289,6 +289,8 @@
 ;;; Code:
 ;;
 
+;;; requires
+
 ;; for callf, let*
 (eval-when-compile
   (require 'cl))
@@ -299,6 +301,7 @@
 
 (autoload 'button-lock-mode "button-lock" "Toggle button-lock-mode, a minor mode for making text clickable." nil)
 
+;;; customizable variables
 
 ;;;###autoload
 (defgroup wiki-nav nil
@@ -553,6 +556,8 @@ Set this value to the empty string to disable the feature entirely."
   :type 'regexp
   :group 'wiki-nav-parsing)
 
+;;; variables
+
 (defvar wiki-nav-button nil "Holds the buffer-local button definition when the mode is active.")
 (make-variable-buffer-local 'wiki-nav-button)
 
@@ -599,72 +604,31 @@ an exact duplicate of the current topmost mark onto `global-mark-ring'."
       (move-marker (car (nthcdr global-mark-ring-max global-mark-ring)) nil)
       (setcdr (nthcdr (1- global-mark-ring-max) global-mark-ring) nil)))))
 
-(define-minor-mode wiki-nav-mode
-  "Turn on navigation by bracketed [[WikiStrings]] within a document.
+;;; utility functions
 
-When wiki-nav links are activated, clicking on a bracketed link
-causes emacs to search the document for another link with text
-matching the inner string.  If a match is found, the cursor is
-moved to the location of the match.
+;; generic utility functions
+(defun wiki-nav-point-before ()
+  "Return the position before the current point, or (point-min) if the point is at the minimum."
+  (max (point-min) (1- (point))))
 
-If the string looks like it might be a URL (starts with
-alphabetical characters followed by a colon), an external browser
-will be spawned on the URL.  This behavior can be controlled by the
-customizable variable `wiki-nav-external-link-pattern'.
+(defun wiki-nav-comment-only-mode-p ()
+  "Return true if links should be constrained to comments in the current mode."
+  (delq nil (mapcar 'derived-mode-p wiki-nav-comment-only-modes)))
 
-If `multi-occur' is installed (standard with recent Emacs),
-double-clicking a wiki-nav link will search for matching links in
-all open file buffers.
-
-If the link follows the form
-
-   visit:/path/name:WikiString
-
-Emacs will visit the named file, and search for the navigation
-string there.  This behavior can be controlled by the customizable
-variable `wiki-nav-visit-link-pattern'.
-
-If the link follows the form
-
-   func:FunctionName
-
-the link will lead to the definition of the given function, as
-defined by imenu. This behavior can be controlled by the
-customizable variable `wiki-nav-function-link-pattern'.
-
-If the link follows the form
-
-   line:<digits>
-
-the link will lead to the given line number.  This behavior can
-be controlled by the customizable variable
-`wiki-nav-line-number-link-pattern'.
-
-The leading and trailing delimiters which define the navigation
-links may be customized, as may the regular expressions that
-match URLs and non-URL inner text.
-
-With no argument, this command toggles the mode.  Non-null prefix
-argument turns on the mode.  Null prefix argument turns off the
-mode."
-  nil wiki-nav-mode-lighter wiki-nav-mode-keymap
+(defun wiki-nav-alist-flatten (list)
+  "Flatten LIST which may contain other lists.  Do not flatten cons cells."
   (cond
-    ((and wiki-nav-mode
-          (or noninteractive                    ; never turn on wiki-nav where
-              (eq (aref (buffer-name) 0) ?\s))  ; there can be no font-lock
-          (setq wiki-nav-mode nil)))
-    (wiki-nav-mode
-        (wiki-nav-link-set)
-     (when (button-lock-called-interactively-p 'interactive)
-          (message "wiki-nav mode enabled")))
+    ((null list)
+     nil)
+    ((and (consp list)
+          (nthcdr (safe-length list) list))
+     (list list))
+    ((listp list)
+     (append (wiki-nav-alist-flatten (car list)) (wiki-nav-alist-flatten (cdr list))))
     (t
-  (wiki-nav-link-set -1)
-     (when (button-lock-called-interactively-p 'interactive)
-       (message "wiki-nav mode disabled")))))
+     (list list))))
 
-(define-globalized-minor-mode global-wiki-nav-mode wiki-nav-mode wiki-nav-maybe-turn-on
-  :group 'wiki-nav)
-
+;; buffer functions
 (defun wiki-nav-maybe-turn-on (&optional arg)
   "Called by `global-wiki-nav-mode' to activate wiki-nav mode in a buffer if appropriate.
 
@@ -705,10 +669,7 @@ If called with a negative ARG, deactivate wiki-nav mode in the buffer."
                    t))
         buf))))
 
-(defun wiki-nav-comment-only-mode-p ()
-  "Return true if links should be constrained to comments in the current mode."
-  (delq nil (mapcar 'derived-mode-p wiki-nav-comment-only-modes)))
-
+;; link functions
 (defun wiki-nav-link-set (&optional arg)
   "Use button-lock to set up wiki-nav links in a buffer.
 
@@ -737,85 +698,57 @@ If called with negative ARG, remove the links."
     (dolist (key wiki-nav-skip-to-previous-keys)
       (button-lock-extend-binding wiki-nav-button 'wiki-nav-find-any-previous-link  nil key))))
 
-(defun wiki-nav-point-before ()
-  "Return the position before the current point, or (point-min) if the point is at the minimum."
-  (max (point-min) (1- (point))))
+(defun wiki-nav-links (&optional buffer)
+  "Return an alist of all wiki-nav links in BUFFER (defaults to current buffer).
 
-(defun wiki-nav-find-any-link (&optional arg)
-  "Skip forward to the next defined wiki-nav link.
-
-Automatically wraps past the end of the buffer.
-
-With a negative prefix argument ARG, skip backward to the
-previous defined wiki-nav link."
-  (interactive "p")
+The return value is an alist of cells in the form (\"text\" buffer . start-pos)."
+  (callf or buffer (current-buffer))
+  (with-current-buffer buffer
   (when wiki-nav-mode
     (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
-          (newpos nil)
-          (orig-pos (point))
-        (skip-function 'next-single-property-change)
-        (search-function 're-search-forward)
-        (look-function 'point)
-        (wrap-point (point-min))
-        (bounds nil))
-
-      ;; This is slow, but otherwise links get missed.  There
-      ;; must be a better way.
+            (pos nil)
+            (links nil))
       (font-lock-fontify-buffer)
+        (setq pos (next-single-property-change (point-min) 'wiki-nav))
+        (while (and pos
+                    (< pos (point-max)))
+          (when (get-text-property pos 'wiki-nav)
+            (let ((start pos))
+              (while (and pos
+                          (< pos (point-max))
+                          (get-text-property pos 'wiki-nav))
+                (callf next-single-property-change pos 'wiki-nav))
+              (when (not (get-text-property pos 'wiki-nav))
+                (push (cons (buffer-substring-no-properties start pos) (cons buffer start)) links))))
+          (callf next-single-property-change pos 'wiki-nav))
+        links))))
 
-    (when (and arg
-               (< arg 0))
-      (setq skip-function 'previous-single-property-change)
-      (setq search-function 're-search-backward)
-      (setq wrap-point (point-max))
-      (setq look-function 'wiki-nav-point-before))
-    ;; get out of the current link if we are in one
-    (when (and (get-text-property (funcall look-function) 'wiki-nav)
-               (setq newpos (funcall skip-function (point) 'wiki-nav)))
-      (goto-char newpos))
-    ;; find the next link
-    (deactivate-mark)
-      (if (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
-                                         "\\("
-                                         (regexp-quote wiki-nav-link-start)
-                                         "\\("
-                                         wiki-nav-link-text
-                                         "\\)"
-                                         (regexp-quote wiki-nav-link-stop)
-                                         "\\)")
-                 nil t)
+(defun wiki-nav-links-all-buffers ()
+  "Return an alist of wiki-nav links in all buffers.  See `wiki-nav-links."
+  (with-temp-message "Searching ..."                             ; fontifying every buffer can take seconds
+    (wiki-nav-alist-flatten (mapcar 'wiki-nav-links (buffer-list)))))
 
-        (progn
-            (back-button-push-mark-local-and-global orig-pos t)
-          (goto-char (match-beginning 2))
-            (when (fboundp 'nav-flash-show)
-              (nav-flash-show)))
-      ;; else
-      (goto-char wrap-point)
-      (deactivate-mark)
-        (when (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
-                                             "\\("
-                                             (regexp-quote wiki-nav-link-start)
-                                             "\\("
-                                             wiki-nav-link-text
-                                             "\\)"
-                                             (regexp-quote wiki-nav-link-stop)
-                                             "\\)")
-                     nil t)
-          (back-button-push-mark-local-and-global orig-pos t)
-        (goto-char (match-beginning 2))
-          (when (fboundp 'nav-flash-show)
-            (nav-flash-show)))))))
+;; bindable action dispatch commands
+(defun wiki-nav-default-multi-action (event)
+  "Dispatch the default double-click navigation action.
 
-(defun wiki-nav-find-any-previous-link ()
-  "Skip backward to the previous defined wiki-nav link.
-
-Automatically wraps past the beginning of the buffer.
-
-With a negative prefix argument ARG, skip backward to the
-previous defined wiki-nav link."
-  (interactive)
-  (wiki-nav-find-any-link -1))
+The link used is that identified by the position at EVENT, a
+mouse event."
+  (interactive "e")
+  (let ((bounds (button-lock-find-extent (posn-point (event-end event)) 'wiki-nav))
+        (str-val nil)
+        (case-fold-search t)
+        (search-upper-case nil))
+    (when bounds
+      (setq str-val (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*\\'\\)" ""
+                                             (buffer-substring-no-properties (car bounds) (cdr bounds))))
+      (when (fboundp 'multi-occur-in-matching-buffers)
+        (multi-occur-in-matching-buffers "\\`[^ *]"
+                                         (concat
+                                          (regexp-quote wiki-nav-link-start)
+                                          "[[:space:]<>]*" str-val "[[:space:]]*"
+                                          (regexp-quote wiki-nav-link-stop))
+                                          t)))))
 
 (defun wiki-nav-mouse-action (event)
   "Dispatch the default action for the wiki-nav link at the mouse location.
@@ -964,70 +897,151 @@ Mouse location is defined by the mouse event EVENT."
                    (message wrap-message))))))))
     found))
 
-(defun wiki-nav-default-multi-action (event)
-  "Dispatch the default double-click navigation action.
+;;; minor mode definition
 
-The link used is that identified by the position at EVENT, a
-mouse event."
-  (interactive "e")
-  (let ((bounds (button-lock-find-extent (posn-point (event-end event)) 'wiki-nav))
-        (str-val nil)
-        (case-fold-search t)
-        (search-upper-case nil))
-    (when bounds
-      (setq str-val (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*\\'\\)" ""
-                                             (buffer-substring-no-properties (car bounds) (cdr bounds))))
-      (when (fboundp 'multi-occur-in-matching-buffers)
-        (multi-occur-in-matching-buffers "\\`[^ *]"
-                                         (concat
-                                          (regexp-quote wiki-nav-link-start)
-                                          "[[:space:]<>]*" str-val "[[:space:]]*"
-                                          (regexp-quote wiki-nav-link-stop))
-                                          t)))))
+(define-minor-mode wiki-nav-mode
+  "Turn on navigation by bracketed [[WikiStrings]] within a document.
 
+When wiki-nav links are activated, clicking on a bracketed link
+causes emacs to search the document for another link with text
+matching the inner string.  If a match is found, the cursor is
+moved to the location of the match.
 
+If the string looks like it might be a URL (starts with
+alphabetical characters followed by a colon), an external browser
+will be spawned on the URL.  This behavior can be controlled by the
+customizable variable `wiki-nav-external-link-pattern'.
 
-(defun wiki-nav-links (&optional buffer)
-  "Return an alist of all wiki-nav links in BUFFER (defaults to current buffer).
-The return value is an alist of cells in the form (\"text\" buffer . start-pos)."
-  (callf or buffer (current-buffer))
-  (with-current-buffer buffer
+If `multi-occur' is installed (standard with recent Emacs),
+double-clicking a wiki-nav link will search for matching links in
+all open file buffers.
+
+If the link follows the form
+
+   visit:/path/name:WikiString
+
+Emacs will visit the named file, and search for the navigation
+string there.  This behavior can be controlled by the customizable
+variable `wiki-nav-visit-link-pattern'.
+
+If the link follows the form
+
+   func:FunctionName
+
+the link will lead to the definition of the given function, as
+defined by imenu. This behavior can be controlled by the
+customizable variable `wiki-nav-function-link-pattern'.
+
+If the link follows the form
+
+   line:<digits>
+
+the link will lead to the given line number.  This behavior can
+be controlled by the customizable variable
+`wiki-nav-line-number-link-pattern'.
+
+The leading and trailing delimiters which define the navigation
+links may be customized, as may the regular expressions that
+match URLs and non-URL inner text.
+
+With no argument, this command toggles the mode.  Non-null prefix
+argument turns on the mode.  Null prefix argument turns off the
+mode."
+  nil wiki-nav-mode-lighter wiki-nav-mode-keymap
+  (cond
+    ((and wiki-nav-mode
+          (or noninteractive                    ; never turn on wiki-nav where
+              (eq (aref (buffer-name) 0) ?\s))  ; there can be no font-lock
+          (setq wiki-nav-mode nil)))
+    (wiki-nav-mode
+     (wiki-nav-link-set)
+     (when (button-lock-called-interactively-p 'interactive)
+       (message "wiki-nav mode enabled")))
+    (t
+     (wiki-nav-link-set -1)
+     (when (button-lock-called-interactively-p 'interactive)
+       (message "wiki-nav mode disabled")))))
+
+(define-globalized-minor-mode global-wiki-nav-mode wiki-nav-mode wiki-nav-maybe-turn-on
+  :group 'wiki-nav)
+
+;;; interactive commands
+
+(defun wiki-nav-find-any-link (&optional arg)
+  "Skip forward to the next defined wiki-nav link.
+
+Automatically wraps past the end of the buffer.
+
+With a negative prefix argument ARG, skip backward to the
+previous defined wiki-nav link."
+  (interactive "p")
     (when wiki-nav-mode
       (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
-            (pos nil)
-            (links nil))
+          (newpos nil)
+          (orig-pos (point))
+          (skip-function 'next-single-property-change)
+          (search-function 're-search-forward)
+          (look-function 'point)
+          (wrap-point (point-min))
+          (bounds nil))
+
+      ;; This is slow, but otherwise links get missed.  There
+      ;; must be a better way.
         (font-lock-fontify-buffer)
-        (setq pos (next-single-property-change (point-min) 'wiki-nav))
-        (while (and pos
-                    (< pos (point-max)))
-          (when (get-text-property pos 'wiki-nav)
-            (let ((start pos))
-              (while (and pos
-                          (< pos (point-max))
-                          (get-text-property pos 'wiki-nav))
-                (callf next-single-property-change pos 'wiki-nav))
-              (when (not (get-text-property pos 'wiki-nav))
-                (push (cons (buffer-substring-no-properties start pos) (cons buffer start)) links))))
-          (callf next-single-property-change pos 'wiki-nav))
-        links))))
 
-(defun wiki-nav-links-all-buffers ()
-  "Return an alist of wiki-nav links in all buffers.  See `wiki-nav-links."
-  (with-temp-message "Searching ..."                             ; fontifying every buffer can take seconds
-    (wiki-nav-alist-flatten (mapcar 'wiki-nav-links (buffer-list)))))
+      (when (and arg
+                 (< arg 0))
+        (setq skip-function 'previous-single-property-change)
+        (setq search-function 're-search-backward)
+        (setq wrap-point (point-max))
+        (setq look-function 'wiki-nav-point-before))
+      ;; get out of the current link if we are in one
+      (when (and (get-text-property (funcall look-function) 'wiki-nav)
+                 (setq newpos (funcall skip-function (point) 'wiki-nav)))
+        (goto-char newpos))
+      ;; find the next link
+      (deactivate-mark)
+      (if (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
+                                           "\\("
+                                           (regexp-quote wiki-nav-link-start)
+                                           "\\("
+                                           wiki-nav-link-text
+                                           "\\)"
+                                           (regexp-quote wiki-nav-link-stop)
+                                           "\\)")
+                   nil t)
 
-(defun wiki-nav-alist-flatten (list)
-  "Flatten LIST which may contain other lists.  Do not flatten cons cells."
-  (cond
-    ((null list)
-     nil)
-    ((and (consp list)
-          (nthcdr (safe-length list) list))
-     (list list))
-    ((listp list)
-     (append (wiki-nav-alist-flatten (car list)) (wiki-nav-alist-flatten (cdr list))))
-    (t
-     (list list))))
+          (progn
+            (back-button-push-mark-local-and-global orig-pos t)
+            (goto-char (match-beginning 2))
+            (when (fboundp 'nav-flash-show)
+              (nav-flash-show)))
+        ;; else
+        (goto-char wrap-point)
+        (deactivate-mark)
+        (when (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
+                                               "\\("
+                                               (regexp-quote wiki-nav-link-start)
+                                               "\\("
+                                               wiki-nav-link-text
+                                               "\\)"
+                                               (regexp-quote wiki-nav-link-stop)
+                                               "\\)")
+                       nil t)
+          (back-button-push-mark-local-and-global orig-pos t)
+          (goto-char (match-beginning 2))
+          (when (fboundp 'nav-flash-show)
+            (nav-flash-show)))))))
+
+(defun wiki-nav-find-any-previous-link ()
+  "Skip backward to the previous defined wiki-nav link.
+
+Automatically wraps past the beginning of the buffer.
+
+With a negative prefix argument ARG, skip backward to the
+previous defined wiki-nav link."
+  (interactive)
+  (wiki-nav-find-any-link -1))
 
 (defun wiki-nav-ido (arg)
   "Navigate to wiki-nav strings using `ido-completing-read'.
