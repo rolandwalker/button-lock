@@ -250,11 +250,14 @@
 ;;; Code:
 ;;
 
+;; for callf, let*
 (eval-when-compile
-  (require 'font-lock)
-  (require 'button-lock))
+  (require 'cl))
 
-(autoload 'button-lock-mode "button-lock" nil nil)
+  (require 'font-lock)
+
+(autoload 'button-lock-mode "button-lock" "Toggle button-lock-mode, a minor mode for making text clickable." nil)
+
 
 ;;;###autoload
 (defgroup wiki-nav nil
