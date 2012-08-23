@@ -8,7 +8,7 @@
 ;; Last-Updated: 16 Nov 2011
 ;; EmacsWiki: WikiNavMode
 ;; Keywords: mouse, button, hyperlink, navigation
-;; Package-Requires: ((button-lock "0.8"))
+;; Package-Requires: ((button-lock "0.8") (nav-flash "1.0.0"))
 ;;
 ;; Simplified BSD License
 ;;
@@ -194,8 +194,6 @@
 ;;    link any string <<<text>>> together within a file
 ;;    like org-mode radio links
 ;;
-;;    use pulse if present for more subtle flash overlay
-;;
 ;;    patch font-lock to support keyword searching in comment only,
 ;;    like 'keep, only different
 ;;
@@ -255,6 +253,7 @@
   (require 'cl))
 
   (require 'font-lock)
+(require 'nav-flash nil t)
 
 (autoload 'button-lock-mode "button-lock" "Toggle button-lock-mode, a minor mode for making text clickable." nil)
 
@@ -274,12 +273,6 @@
   :group 'wiki-nav
   :type 'boolean)
 
-(defcustom wiki-nav-flash-delay .5
-  "How many seconds to flash `wiki-nav-flash-face' after jumping to a new location via wiki-nav.
-
-Setting this to zero will turn off the indicator."
-  :group 'wiki-nav
-  :type 'number)
 (defcustom wiki-nav-mode-lighter " wikn"
   "This string appears in the mode-line when `wiki-nav-mode' is active.
 
@@ -431,11 +424,6 @@ The format for key sequences is as defined by `kbd'."
   "Face to highlight wiki-nav link mouseovers"
   :group 'wiki-nav-faces)
 
-(defface wiki-nav-flash-face
-   '((t (:inherit highlight)))
-  "After jumping to a location via wiki-nav, the line of the new point location is briefly highlighted with this face."
-  :group 'wik-nav-faces)
-
 ;;;###autoload
 (defgroup wiki-nav-parsing nil
   "Strings and regular expressions used by wiki-nav to define links."
@@ -524,14 +512,6 @@ Set this value to the empty string to disable the feature entirely."
     (dolist (key wiki-nav-find-any-previous-link-keys)
       (define-key map (eval `(kbd ,key)) 'wiki-nav-find-any-previous-link))
     map))
-
-(defvar wiki-nav-flash-overlay
-  ;; Create and immediately delete, to get "overlay in no buffer".
-  (let ((ol (make-overlay (point-min) (point-min))))
-    (delete-overlay ol)
-    (overlay-put ol 'face      'wiki-nav-flash-face)
-    (overlay-put ol 'priority  1000000)
-    ol))
 
 (define-minor-mode wiki-nav-mode
   "Turn on navigation by bracketed [[WikiStrings]] within a document.
@@ -702,7 +682,8 @@ previous defined wiki-nav link."
 
         (progn
           (goto-char (match-beginning 2))
-          (wiki-nav-flash-show))
+            (when (fboundp 'nav-flash-show)
+              (nav-flash-show)))
       ;; else
       (goto-char wrap-point)
       (deactivate-mark)
@@ -716,7 +697,8 @@ previous defined wiki-nav link."
                                              "\\)")
                      nil t)
         (goto-char (match-beginning 2))
-        (wiki-nav-flash-show)))))
+          (when (fboundp 'nav-flash-show)
+            (nav-flash-show)))))))
 
 (defun wiki-nav-find-any-previous-link ()
   "Skip backward to the previous defined wiki-nav link.
@@ -779,8 +761,9 @@ previous defined wiki-nav link."
               (setq tmp (match-string 2 string))
               (switch-to-buffer (find-file (expand-file-name (url-unhex-string (match-string 1 string)))))
               (setq string tmp))
-            (when (= (length string) 0)
-              (wiki-nav-flash-show))
+            (when (and (= (length string) 0)
+                       (fboundp 'nav-flash-show))
+              (nav-flash-show))
             (setq visit t))
           (when (> (length string) 0)
             (cond
@@ -807,7 +790,8 @@ previous defined wiki-nav link."
                    (widen)
                    (goto-char (point-min))
                    (forward-line (1- ln))
-                   (wiki-nav-flash-show)
+                 (when (fboundp 'nav-flash-show)
+                   (nav-flash-show))
                    (if (= (line-number-at-pos) ln)
                        (setq found :line))))
              (t
@@ -825,7 +809,8 @@ previous defined wiki-nav link."
                   (progn
                     (setq found :jump)
                     (goto-char (match-beginning 2))
-                    (wiki-nav-flash-show))
+                     (when (fboundp 'nav-flash-show)
+                       (nav-flash-show)))
                 ;; else
                 (goto-char wrap-point)
                 (deactivate-mark)
@@ -841,7 +826,8 @@ previous defined wiki-nav link."
                     (progn
                       (setq found :wrap)
                       (goto-char (match-beginning 2))
-                      (wiki-nav-flash-show))))
+                       (when (fboundp 'nav-flash-show)
+                         (nav-flash-show)))))
               ;; return to the original buffer on failure
               (unless found
                 (when (and visit
@@ -882,17 +868,7 @@ previous defined wiki-nav link."
                                           t)))))
 
 
-(defun wiki-nav-flash-remove-overlay ()
-  "Remove the navigation flash overlay."
-  (remove-hook 'pre-command-hook 'wiki-nav-flash-remove-overlay t)
-  (delete-overlay wiki-nav-flash-overlay))
 
-(defun wiki-nav-flash-show ()
-  "Show the navigation flash overlay."
-  (when (> wiki-nav-flash-delay 0)
-    (move-overlay wiki-nav-flash-overlay (line-beginning-position) (1+ (line-end-position)))
-    (add-hook 'pre-command-hook 'wiki-nav-flash-remove-overlay nil t)
-    (run-with-idle-timer wiki-nav-flash-delay nil 'wiki-nav-flash-remove-overlay)))
 
 (provide 'wiki-nav)
 ;;; wiki-nav.el ends here
