@@ -677,6 +677,9 @@ If called with negative ARG, remove the links."
              (or (not boundp 'button-lock-mode)
                  (not button-lock-mode)))
     (button-lock-mode 1))
+
+  (if (< arg 0)
+      (button-lock-unset-button wiki-nav-button)
     (setq wiki-nav-button (button-lock-set-button (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                                 (regexp-quote wiki-nav-link-start)
                                                 "\\(" wiki-nav-link-text "\\)"
