@@ -727,6 +727,28 @@ MOUSE-BINDING in order to set only a KEYBOARD-BINDING."
     (when button-lock-mode
       (font-lock-add-keywords nil (list existing-button)))))
 
+(defun button-lock-add-to-button-list (button &optional no-replace)
+  "Add BUTTON to `button-lock-button-list' and `font-lock-keywords'.
+
+The regexp used by the button is checked against the existing
+data structure.  If the regexp duplicates that of an existing button,
+the existing duplicate is replaced.
+
+If NO-REPLACE is set, no replacement is made for a duplicate button."
+  (let ((conflict (catch 'hit
+                    (dolist (b button-lock-button-list)
+                      (when (equal (car b) (car button))
+                        (throw 'hit b))))))
+    (if (and conflict no-replace)
+        conflict
+      (when (and conflict (not no-replace))
+        (button-lock-remove-from-button-list conflict))
+      (add-to-list 'button-lock-button-list button)
+      (when button-lock-mode
+        (font-lock-add-keywords nil (list button))
+        (button-lock-maybe-fontify-buffer))
+      button)))
+
 (defun button-lock-remove-from-button-list (button)
   "Remove BUTTON from `button-lock-button-list' and `font-lock-keywords'."
   (when button-lock-mode
