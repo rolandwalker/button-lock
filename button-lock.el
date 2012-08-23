@@ -778,7 +778,7 @@ mode is not active."
       (button-lock-maybe-unbuttonify-buffer)   ; cperl-mode workaround
       (button-lock-maybe-fontify-buffer)
       (when (and
-             (button-lock-called-interactively-p)
+           (button-lock-called-interactively-p 'interactive)
            (> num 0))
         (message "removed %d button patterns" num))
       num)))
