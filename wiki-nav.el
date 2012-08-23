@@ -450,7 +450,7 @@ The value should exclude newlines and start/stop delimiters."
   :group 'wiki-nav-parsing
   :type 'string)
 
-(defcustom wiki-nav-external-link-pattern "^[a-zA-Z]+:[^[:space:]]+"
+(defcustom wiki-nav-external-link-pattern "\\`[a-zA-Z]+:[^[:space:]]+"
 "A regular expression for recognizing URLs inside wiki-style navigation links.
 
 The default is very permissive. To be stricter, try \"^[a-zA-Z]+://[^[:space:]]+\",
@@ -461,7 +461,7 @@ entirely, suppressing the recognition of external URLs."
   :group 'wiki-nav-parsing
   :type 'string)
 
-(defcustom wiki-nav-visit-link-pattern "^visit:\\([^:\n]+?\\)\\(?:\\|:\\([^\n]*\\)\\)$"
+(defcustom wiki-nav-visit-link-pattern "\\`visit:\\([^:\n]+?\\)\\(?:\\|:\\([^\n]*\\)\\)\\'"
 "A regular expression for recognizing wiki-nav links outside the current file.
 
 The format defined by the default expression is delimited by colons
@@ -481,8 +481,8 @@ Set this value to the empty string to disable the feature entirely."
   :group 'wiki-nav-parsing
   :type 'string)
 
-(defcustom wiki-nav-function-link-pattern "^func\\(?:tion\\)?:\\([^\n]+\\)$"
 "A regular expression for recognizing wiki-nav links that point to function definitions.
+(defcustom wiki-nav-function-link-pattern "\\`func\\(?:tion\\)?:\\([^\n]+\\)\\'"
 
 The format defined by the default expression is delimited by colons
 
@@ -494,8 +494,8 @@ Set this value to the empty string to disable the feature entirely."
   :group 'wiki-nav-parsing
   :type 'string)
 
-(defcustom wiki-nav-line-number-link-pattern "^line:\\([0-9]+\\)$"
 "A regular expression for recognizing wiki-nav links that point to line numbers.
+(defcustom wiki-nav-line-number-link-pattern "\\`line:\\([0-9]+\\)\\'"
 
 The format defined by the default expression is delimited by colons
 
@@ -764,7 +764,7 @@ previous defined wiki-nav link."
         (setq search-function 're-search-backward)
         (setq wrap-point (point-max))
         (setq wrap-message "Search wrapped past beginning of file"))
-      (setq string (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*$\\)" "" string))
+      (setq string (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*\\'\\)" "" string))
       (if (and wiki-nav-external-link-pattern
                (and (> (length wiki-nav-visit-link-pattern) 0)
                     (not (string-match-p wiki-nav-visit-link-pattern string)))
@@ -881,10 +881,10 @@ previous defined wiki-nav link."
         (case-fold-search t)
         (search-upper-case nil))
     (when bounds
-      (setq string (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*$\\)" ""
-                                             (apply #'buffer-substring-no-properties bounds)))
+      (setq string (replace-regexp-in-string "\\(^[[:space:]<>]*\\|[[:space:]]*\\'\\)" ""
+                                             (buffer-substring-no-properties (car bounds) (cdr bounds))))
       (when (fboundp 'multi-occur-in-matching-buffers)
-        (multi-occur-in-matching-buffers "^[^ *]"
+        (multi-occur-in-matching-buffers "\\`[^ *]"
                                          (concat
                                           (regexp-quote wiki-nav-link-start)
                                           "[[:space:]<>]*" string "[[:space:]]*"
