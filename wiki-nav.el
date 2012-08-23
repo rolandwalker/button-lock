@@ -295,7 +295,7 @@
 (eval-when-compile
   (require 'cl))
 
-  (require 'font-lock)
+(require 'font-lock)
 (require 'nav-flash nil t)
 (require 'back-button nil t)
 
@@ -475,7 +475,7 @@ The format for key sequences is as defined by `kbd'."
   :group 'wiki-nav)
 
 (defcustom wiki-nav-link-start   "[["
-"A string (not a regular expression) which open a wiki-style navigation link.
+  "A string (not a regular expression) which open a wiki-style navigation link.
 
 Since the construct [[text]] can show up for other reasons, you
 might change this to \"[[[\"."
@@ -491,14 +491,14 @@ might change this to \"]]]\"."
   :group 'wiki-nav-parsing)
 
 (defcustom wiki-nav-link-text  "[^][\n]+"
-"A regular expression defining the text inside wiki-style navigation links.
+  "A regular expression defining the text inside wiki-style navigation links.
 
 The value should exclude newlines and start/stop delimiters."
   :type 'regexp
   :group 'wiki-nav-parsing)
 
 (defcustom wiki-nav-external-link-pattern "\\`[a-zA-Z]+:[^[:space:]]+"
-"A regular expression for recognizing URLs inside wiki-style navigation links.
+  "A regular expression for recognizing URLs inside wiki-style navigation links.
 
 The default is very permissive.  To be more strict, try
 
@@ -513,7 +513,7 @@ entirely, suppressing the recognition of external URLs."
   :group 'wiki-nav-parsing)
 
 (defcustom wiki-nav-visit-link-pattern "\\`visit:\\([^:\n]+?\\)\\(?:\\|:\\([^\n]*\\)\\)\\'"
-"A regular expression for recognizing wiki-nav links outside the current file.
+  "A regular expression for recognizing wiki-nav links outside the current file.
 
 The format defined by the default expression is delimited by colons
 
@@ -683,13 +683,13 @@ If called with negative ARG, remove the links."
   (if (< arg 0)
       (button-lock-unset-button wiki-nav-button)
     (setq wiki-nav-button (button-lock-set-button (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
-                                                (regexp-quote wiki-nav-link-start)
-                                                "\\(" wiki-nav-link-text "\\)"
-                                                (regexp-quote wiki-nav-link-stop))
-                                        'wiki-nav-mouse-action
-                                        :double-mouse-1 wiki-nav-multi-action-function
-                                        :face 'wiki-nav-link-face :mouse-face 'wiki-nav-mouse-face :face-policy 'prepend
-                                        :additional-property 'wiki-nav
+                                                          (regexp-quote wiki-nav-link-start)
+                                                          "\\(" wiki-nav-link-text "\\)"
+                                                          (regexp-quote wiki-nav-link-stop))
+                                                  'wiki-nav-mouse-action
+                                                  :double-mouse-1 wiki-nav-multi-action-function
+                                                  :face 'wiki-nav-link-face :mouse-face 'wiki-nav-mouse-face :face-policy 'prepend
+                                                  :additional-property 'wiki-nav
                                                   :grouping 1))
     (dolist (key wiki-nav-activate-keys)
       (button-lock-extend-binding wiki-nav-button 'wiki-nav-keyboard-action         nil key))
@@ -704,11 +704,11 @@ If called with negative ARG, remove the links."
 The return value is an alist of cells in the form (\"text\" buffer . start-pos)."
   (callf or buffer (current-buffer))
   (with-current-buffer buffer
-  (when wiki-nav-mode
-    (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
+    (when wiki-nav-mode
+      (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
             (pos nil)
             (links nil))
-      (font-lock-fontify-buffer)
+        (font-lock-fontify-buffer)
         (setq pos (next-single-property-change (point-min) 'wiki-nav))
         (while (and pos
                     (< pos (point-max)))
@@ -810,91 +810,91 @@ Mouse location is defined by the mouse event EVENT."
             (setq visit t))
           (when (> (length str-val) 0)
             (cond
-             ((and (> (length wiki-nav-function-link-pattern) 0)
+              ((and (> (length wiki-nav-function-link-pattern) 0)
                     (string-match wiki-nav-function-link-pattern str-val))
-                 ;; imenu return value is not helpful.  It also sometimes changes the mark. Wrap it in an excursion
+               ;; imenu return value is not helpful.  It also sometimes changes the mark. Wrap it in an excursion
                (when (and (setq new-point (save-excursion (imenu (url-unhex-string (match-string-no-properties 1 str-val))) (point)))
-                            (not (= new-point (point))))
+                          (not (= new-point (point))))
                  (back-button-push-mark-local-and-global point-start t)
-                   (goto-char new-point)
+                 (goto-char new-point)
                  (when (fboundp 'nav-flash-show)
                    (nav-flash-show))
-                   (setq found :func))
-                 ;; return to the original buffer on failure
-                 (unless found
-                   (when (and visit
+                 (setq found :func))
+               ;; return to the original buffer on failure
+               (unless found
+                 (when (and visit
                             (> (length str-val) 0))
-                     (switch-to-buffer buffer-start)
-                     (setq visit nil))
-                   (goto-char point-start)))
-             ((and (> (length wiki-nav-line-number-link-pattern) 0)
+                   (switch-to-buffer buffer-start)
+                   (setq visit nil))
+                 (goto-char point-start)))
+              ((and (> (length wiki-nav-line-number-link-pattern) 0)
                     (string-match wiki-nav-line-number-link-pattern str-val))
-                 ;; For line-number scheme, go as far as possible, but don't set found unless successful.
-                 ;; Don't worry about returning to original buffer on failure.
+               ;; For line-number scheme, go as far as possible, but don't set found unless successful.
+               ;; Don't worry about returning to original buffer on failure.
                (let ((ln (string-to-number (match-string-no-properties 1 str-val))))
-                   (widen)
+                 (widen)
                  (back-button-push-mark-local-and-global point-start t)
-                   (goto-char (point-min))
-                   (forward-line (1- ln))
+                 (goto-char (point-min))
+                 (forward-line (1- ln))
                  (when (fboundp 'nav-flash-show)
                    (nav-flash-show))
-                   (if (= (line-number-at-pos) ln)
-                       (setq found :line))))
-             (t
+                 (if (= (line-number-at-pos) ln)
+                     (setq found :line))))
+              (t
                (setq str-val (regexp-quote (url-unhex-string str-val)))
-              (deactivate-mark)
+               (deactivate-mark)
                (if (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
-                                                   "\\("
-                                                   (regexp-quote wiki-nav-link-start)
-                                                   "\\("
+                                                    "\\("
+                                                    (regexp-quote wiki-nav-link-start)
+                                                    "\\("
                                                     "[[:space:]<>]*" str-val "[[:space:]]*"
-                                                   "\\)"
-                                                   (regexp-quote wiki-nav-link-stop)
-                                                   "\\)")
-                           nil t)
-                  (progn
-                    (setq found :jump)
+                                                    "\\)"
+                                                    (regexp-quote wiki-nav-link-stop)
+                                                    "\\)")
+                            nil t)
+                   (progn
+                     (setq found :jump)
                      (back-button-push-mark-local-and-global point-start t)
-                    (goto-char (match-beginning 2))
+                     (goto-char (match-beginning 2))
                      (when (fboundp 'nav-flash-show)
                        (nav-flash-show)))
-                ;; else
-                (goto-char wrap-point)
-                (deactivate-mark)
+                 ;; else
+                 (goto-char wrap-point)
+                 (deactivate-mark)
                  (if (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
-                                                     "\\("
-                                                     (regexp-quote wiki-nav-link-start)
-                                                     "\\("
+                                                      "\\("
+                                                      (regexp-quote wiki-nav-link-start)
+                                                      "\\("
                                                       "[[:space:]<>]*" str-val "[[:space:]]*"
-                                                     "\\)"
-                                                     (regexp-quote wiki-nav-link-stop)
-                                                     "\\)")
-                             nil t)
-                    (progn
-                      (setq found :wrap)
+                                                      "\\)"
+                                                      (regexp-quote wiki-nav-link-stop)
+                                                      "\\)")
+                              nil t)
+                     (progn
+                       (setq found :wrap)
                        (back-button-push-mark-local-and-global point-start t)
-                      (goto-char (match-beginning 2))
+                       (goto-char (match-beginning 2))
                        (when (fboundp 'nav-flash-show)
                          (nav-flash-show)))))
-              ;; return to the original buffer on failure
-              (unless found
-                (when (and visit
+               ;; return to the original buffer on failure
+               (unless found
+                 (when (and visit
                             (> (length str-val) 0))
-                  (switch-to-buffer buffer-start)
-                  (setq visit nil))
-                (goto-char point-start))))
+                   (switch-to-buffer buffer-start)
+                   (setq visit nil))
+                 (goto-char point-start))))
             (cond
-             (visit
-                 (unless wiki-nav-less-feedback
-                   (message "followed link to new file")))
-             ((or (not found)
-                  (and (>= (point) (- (car bounds) (length wiki-nav-link-start)))
+              (visit
+               (unless wiki-nav-less-feedback
+                 (message "followed link to new file")))
+              ((or (not found)
+                   (and (>= (point) (- (car bounds) (length wiki-nav-link-start)))
                         (<= (point) (+ (cdr bounds) (length wiki-nav-link-stop)))))
-                 ;; give failure message even when wiki-nav-less-feedback is set
-                 (message "no matching link found"))
-             ((eq found :wrap)
-                 (unless wiki-nav-less-feedback
-                   (message wrap-message))))))))
+               ;; give failure message even when wiki-nav-less-feedback is set
+               (message "no matching link found"))
+              ((eq found :wrap)
+               (unless wiki-nav-less-feedback
+                 (message wrap-message))))))))
     found))
 
 ;;; minor mode definition
@@ -975,8 +975,8 @@ Automatically wraps past the end of the buffer.
 With a negative prefix argument ARG, skip backward to the
 previous defined wiki-nav link."
   (interactive "p")
-    (when wiki-nav-mode
-      (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
+  (when wiki-nav-mode
+    (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
           (newpos nil)
           (orig-pos (point))
           (skip-function 'next-single-property-change)
@@ -987,7 +987,7 @@ previous defined wiki-nav link."
 
       ;; This is slow, but otherwise links get missed.  There
       ;; must be a better way.
-        (font-lock-fontify-buffer)
+      (font-lock-fontify-buffer)
 
       (when (and arg
                  (< arg 0))
@@ -1062,6 +1062,7 @@ With universal prefix ARG, navigate to wiki-nav strings in all buffers."
          (nav-flash-show)))))
 
 (provide 'wiki-nav)
+
 ;;
 ;; Emacs
 ;;
