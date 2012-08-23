@@ -724,9 +724,19 @@ The return value is an alist of cells in the form (\"text\" buffer . start-pos).
         links))))
 
 (defun wiki-nav-links-all-buffers ()
-  "Return an alist of wiki-nav links in all buffers.  See `wiki-nav-links."
-  (with-temp-message "Searching ..."                             ; fontifying every buffer can take seconds
-    (wiki-nav-alist-flatten (mapcar 'wiki-nav-links (buffer-list)))))
+  "Return an alist of wiki-nav links in all buffers.  See `wiki-nav-links'.
+
+Note that this function fontifies every buffer, which can take
+seconds to complete."
+  (let ((reporter (make-progress-reporter "Searching ..." 0 (length (buffer-list))))
+        (counter 0)
+        (l-alist nil))
+    (dolist (buf (buffer-list))
+      (unless wiki-nav-less-feedback
+        (progress-reporter-update reporter (incf counter)))
+      (push (wiki-nav-links buf) l-alist))
+    (progress-reporter-done reporter)
+    (wiki-nav-alist-flatten l-alist)))
 
 ;; bindable action dispatch commands
 (defun wiki-nav-default-multi-action (event)
