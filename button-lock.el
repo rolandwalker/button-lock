@@ -604,23 +604,23 @@ The button value can be passed to `button-lock-extend-binding'."
       (when keyboard-binding
       (define-key map (read-kbd-macro keyboard-binding) (or keyboard-action action)))
 
-      (setq props `(face ,face keymap ,map button-lock t))
+    (setq properties `(face ,face keymap ,map button-lock t))
       (add-to-list 'font-lock-extra-managed-props 'keymap)
       (add-to-list 'font-lock-extra-managed-props 'button-lock)
 
       (when additional-property
-        (setq props (append props `(,additional-property t)))
+      (callf append properties `(,additional-property t))
         (add-to-list 'font-lock-extra-managed-props additional-property))
 
       (when mouse-face
-        (setq props (append props `(mouse-face ,mouse-face)))
+      (callf append properties `(mouse-face ,mouse-face))
         (add-to-list 'font-lock-extra-managed-props 'mouse-face))
 
       (when help-text
-        (setq props (append props `(help-echo ,help-text)))
+      (callf append properties `(help-echo ,help-text))
         (add-to-list 'font-lock-extra-managed-props 'help-echo))
 
-      (setq fl-keyword `((,pattern (,grouping ',props ,face-policy))))
+    (setq fl-keyword `(,pattern (,grouping ',properties ,face-policy)))
 
       (if remove
           (progn
