@@ -824,11 +824,6 @@ deactivated and reactivated."
   (setq button-lock-global-button-list nil)
   t)
 
-(defun button-lock-maybe-activate-global-buttons ()
-  "If there are any predefined global buttons, activate them."
-  (dolist (button button-lock-global-button-list)
-    (eval `(button-lock-set-button ,@button))))
-
 (defun button-lock-add-to-global-button-list (button &optional no-replace)
   "Add BUTTON to `button-lock-global-button-list'.
 
@@ -849,6 +844,12 @@ If NO-REPLACE is set, no replacement is made for a duplicate button."
 (defun button-lock-remove-from-global-button-list (button)
   "Remove BUTTON from `button-lock-global-button-list'."
   (callf2 delete button button-lock-global-button-list))
+
+(defun button-lock-merge-global-buttons-to-local ()
+  "If there are any predefined, nonconflicting global buttons, add them to the local list."
+  (dolist (button button-lock-global-button-list)
+    (unless (member button button-lock-button-list)
+      (apply 'button-lock-set-button (append button '(:no-replace t))))))
 
 (defun button-lock-find-extent (&optional pos property)
   "Find the extent of a button-lock property around some point.
