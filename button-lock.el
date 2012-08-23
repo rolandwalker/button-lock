@@ -160,17 +160,41 @@
 ;;
 ;; TODO
 ;;
+;;     Validate arguments to button-lock-register-global-button.
+;;     maybe split set-button into create/set functions, where
+;;     the create function does all validation and returns a
+;;     button object.  Pass in button object to unset as well.
+;;
+;;     Why are mouse and keyboard separate, can't mouse be passed
+;;     through kbd macro?  The issue may have been just surrounding
+;;     mouse events with "<>" before passing to kbd.
+;;
+;;     Look into new syntax-propertize-function variable (Emacs 24.x).
+;;
+;;     A refresh function to toggle every buffer?
+;;
+;;     Peek into font-lock-keywords and deduplicate based on the
+;;     stored patterns.
+;;
+;;     Substitute a function for regexp to make properties invisible
+;;     unless button-lock mode is on - esp for keymaps.
+;;
+;;     Add predicate argument to button-set where predicate is
+;;     evaluated during matcher.  This could be used to test for
+;;     comment-only.
+;;
 ;;     Consider defining mode-wide button locks (pass the mode as the
 ;;     first argument of font-lock-add-keywords).  Could use functions
 ;;     named eg button-lock-set-modal-button.
 ;;
-;;     language-specific navigation library (header files in C, etc)
+;;     Add a language-specific navigation library (header files in C,
+;;     etc).
 ;;
-;;     example of exchanging text values on wheel event
+;;     Example of exchanging text values on wheel event.
 ;;
-;;     right-click menus
+;;     Convenience parameters for right-click menus.
 ;;
-;;     button-down visual effects as with Emacs widgets
+;;     Button-down visual effects as with Emacs widgets.
 ;;
 ;; License
 ;;
