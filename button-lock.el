@@ -641,12 +641,18 @@ The button value can be passed to `button-lock-extend-binding'."
           fl-keyword
         nil))))
 
-(defmacro button-lock-unset-button (&rest args)
-  "This is equivalent to running `button-lock-set-button' with :REMOVE set to true.
+(defun button-lock-unset-button (&rest button)
+  "Equivalent to running `button-lock-set-button' with :REMOVE set to true.
 
 The syntax is otherwise identical to `button-lock-set-button',
-which see."
-  `(button-lock-set-button ,@args :remove t))
+which see.
+
+A single argument BUTTON object may also be passed, which was returned
+from `button-lock-set-button'."
+  (if (and (= 1 (length button))
+           (button-lock-button-p (car button)))
+      (button-lock-remove-from-button-list (car button))
+    (apply 'button-lock-set-button (append button '(:remove t)))))
 
 (defun button-lock-extend-binding (existing-button action mouse-binding &optional keyboard-binding)
   "Add a binding to an existing button.
