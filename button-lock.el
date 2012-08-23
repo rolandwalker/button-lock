@@ -859,11 +859,11 @@ definitions removed, which should always be 1."
         (message "removed %d button patterns" num))
       num)))
 
-(defun button-lock-unset-all-global-buttons ()
-  "Unset all global button-lock buttons definitions.
+(defun button-lock-unregister-all-global-buttons ()
+  "Remove all global button-lock buttons definitions.
 
-To see an effect, button-lock mode must be deactivated and
-reactivated."
+To see an effect in any given buffer, button-lock mode must be
+deactivated and reactivated."
   (interactive)
   (setq button-lock-global-button-list nil)
   t)
