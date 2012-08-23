@@ -508,9 +508,9 @@ Set this value to the empty string to disable the feature entirely."
 (defvar wiki-nav-mode-keymap
   (let ((map (make-sparse-keymap)))
     (dolist (key wiki-nav-find-any-link-keys)
-      (define-key map (eval `(kbd ,key))  'wiki-nav-find-any-link))
+      (define-key map (read-kbd-macro key)  'wiki-nav-find-any-link))
     (dolist (key wiki-nav-find-any-previous-link-keys)
-      (define-key map (eval `(kbd ,key)) 'wiki-nav-find-any-previous-link))
+      (define-key map (read-kbd-macro key) 'wiki-nav-find-any-previous-link))
     map))
 
 (define-minor-mode wiki-nav-mode
