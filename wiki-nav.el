@@ -8,7 +8,7 @@
 ;; Last-Updated: 16 Nov 2011
 ;; EmacsWiki: WikiNavMode
 ;; Keywords: mouse, button, hyperlink, navigation
-;; Package-Requires: ((button-lock "0.8") (nav-flash "1.0.0"))
+;; Package-Requires: ((button-lock "0.8") (nav-flash "1.0.0") (back-button "0.5.0"))
 ;;
 ;; Simplified BSD License
 ;;
@@ -254,6 +254,7 @@
 
   (require 'font-lock)
 (require 'nav-flash nil t)
+(require 'back-button nil t)
 
 (autoload 'button-lock-mode "button-lock" "Toggle button-lock-mode, a minor mode for making text clickable." nil)
 
@@ -522,6 +523,41 @@ Set this value to the empty string to disable the feature entirely."
       (define-key map (read-kbd-macro key) 'wiki-nav-find-any-previous-link))
     map))
 
+;;; compatibility functions
+
+(unless (fboundp 'back-button-push-mark-local-and-global)
+  (fset 'back-button-push-mark (symbol-function 'push-mark))
+  (defun back-button-push-mark-local-and-global (&optional location nomsg activate consecutives)
+  "Push mark at LOCATION, and unconditionally add to `global-mark-ring'.
+
+This function differs from `push-mark' in that `global-mark-ring'
+is always updated.
+
+LOCATION is optional, and defaults to the current point.
+
+NOMSG and ACTIVATE are as documented at `push-mark'.
+
+When CONSECUTIVES is set to 'limit and the new mark is in the same
+buffer as the first entry in `global-mark-ring', the first entry
+in `global-mark-ring' will be replaced.  Otherwise, a new entry
+is pushed onto `global-mark-ring'.
+
+When CONSECUTIVES is set to 'allow-dupes, it is possible to push
+an exact duplicate of the current topmost mark onto `global-mark-ring'."
+  (callf or location (point))
+  (back-button-push-mark location nomsg activate)
+  (when (or (eq consecutives 'allow-dupes)
+            (not (equal (mark-marker)
+                        (car global-mark-ring))))
+    (when (and (eq consecutives 'limit)
+               (eq (marker-buffer (car global-mark-ring)) (current-buffer)))
+      (move-marker (car global-mark-ring) nil)
+      (pop global-mark-ring))
+    (push (copy-marker (mark-marker)) global-mark-ring)
+    (when (> (length global-mark-ring) global-mark-ring-max)
+      (move-marker (car (nthcdr global-mark-ring-max global-mark-ring)) nil)
+      (setcdr (nthcdr (1- global-mark-ring-max) global-mark-ring) nil)))))
+
 (define-minor-mode wiki-nav-mode
   "Turn on navigation by bracketed [[WikiStrings]] within a document.
 
@@ -673,6 +709,7 @@ previous defined wiki-nav link."
   (interactive "p")
   (when wiki-nav-mode
   (let ((newpos nil)
+          (orig-pos (point))
         (skip-function 'next-single-property-change)
         (search-function 're-search-forward)
         (look-function 'point)
@@ -701,6 +738,7 @@ previous defined wiki-nav link."
                  nil t)
 
         (progn
+            (back-button-push-mark-local-and-global orig-pos t)
           (goto-char (match-beginning 2))
             (when (fboundp 'nav-flash-show)
               (nav-flash-show)))
@@ -716,6 +754,7 @@ previous defined wiki-nav link."
                                              (regexp-quote wiki-nav-link-stop)
                                              "\\)")
                      nil t)
+          (back-button-push-mark-local-and-global orig-pos t)
         (goto-char (match-beginning 2))
           (when (fboundp 'nav-flash-show)
             (nav-flash-show)))))))
@@ -783,6 +822,7 @@ Mouse location is defined by the mouse event EVENT."
               (setq tmp (match-string-no-properties 2 str-val))
               (switch-to-buffer (find-file (expand-file-name (url-unhex-string (match-string-no-properties 1 str-val)))))
               (setq str-val tmp))
+            (back-button-push-mark-local-and-global point-start t)
             (when (and (= (length str-val) 0)
                        (fboundp 'nav-flash-show))
               (nav-flash-show))
@@ -794,6 +834,7 @@ Mouse location is defined by the mouse event EVENT."
                  ;; imenu return value is not helpful.  It also sometimes changes the mark. Wrap it in an excursion
                (when (and (setq new-point (save-excursion (imenu (url-unhex-string (match-string-no-properties 1 str-val))) (point)))
                             (not (= new-point (point))))
+                 (back-button-push-mark-local-and-global point-start t)
                    (goto-char new-point)
                  (when (fboundp 'nav-flash-show)
                    (nav-flash-show))
@@ -811,6 +852,7 @@ Mouse location is defined by the mouse event EVENT."
                  ;; Don't worry about returning to original buffer on failure.
                (let ((ln (string-to-number (match-string-no-properties 1 str-val))))
                    (widen)
+                 (back-button-push-mark-local-and-global point-start t)
                    (goto-char (point-min))
                    (forward-line (1- ln))
                  (when (fboundp 'nav-flash-show)
@@ -831,6 +873,7 @@ Mouse location is defined by the mouse event EVENT."
                            nil t)
                   (progn
                     (setq found :jump)
+                     (back-button-push-mark-local-and-global point-start t)
                     (goto-char (match-beginning 2))
                      (when (fboundp 'nav-flash-show)
                        (nav-flash-show)))
@@ -848,6 +891,7 @@ Mouse location is defined by the mouse event EVENT."
                              nil t)
                     (progn
                       (setq found :wrap)
+                       (back-button-push-mark-local-and-global point-start t)
                       (goto-char (match-beginning 2))
                        (when (fboundp 'nav-flash-show)
                          (nav-flash-show)))))
