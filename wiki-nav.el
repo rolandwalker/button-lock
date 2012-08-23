@@ -261,8 +261,13 @@
 
 ;;;###autoload
 (defgroup wiki-nav nil
-  "Wiki-style navigation links."
-  :group 'button-lock)
+  "Simple file navigation using [[WikiStrings]]."
+  :version "0.1.2"
+  :link '(emacs-commentary-link "wiki-nav")
+  :prefix "wiki-nav-"
+  :group 'button-lock
+  :group 'navigation
+  :group 'extensions)
 
 (defcustom wiki-nav-less-feedback nil
   "Give less echo area feedback."
