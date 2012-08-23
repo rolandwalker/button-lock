@@ -693,7 +693,7 @@ previous defined wiki-nav link."
       (goto-char newpos))
     ;; find the next link
     (deactivate-mark)
-    (if (funcall search-function (concat (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
+      (if (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                          "\\("
                                          (regexp-quote wiki-nav-link-start)
                                          "\\("
@@ -710,7 +710,7 @@ previous defined wiki-nav link."
       ;; else
       (goto-char wrap-point)
       (deactivate-mark)
-      (when (funcall search-function (concat (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
+        (when (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                              "\\("
                                              (regexp-quote wiki-nav-link-start)
                                              "\\("
@@ -821,7 +821,7 @@ previous defined wiki-nav link."
              (t
               (setq string (regexp-quote (url-unhex-string string)))
               (deactivate-mark)
-              (if (funcall search-function (concat  (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
+               (if (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                                    "\\("
                                                    (regexp-quote wiki-nav-link-start)
                                                    "\\("
@@ -838,7 +838,7 @@ previous defined wiki-nav link."
                 ;; else
                 (goto-char wrap-point)
                 (deactivate-mark)
-                (if (funcall search-function (concat (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
+                 (if (funcall search-function (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                                      "\\("
                                                      (regexp-quote wiki-nav-link-start)
                                                      "\\("
