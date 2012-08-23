@@ -375,9 +375,54 @@ mode."
     (dolist (buf (buffer-list))
       (with-current-buffer buf
         (maybe-local-button-lock -1)))))
+(defun button-lock-do-tell ()
+  "Run `button-lock-tell-font-lock' appropriately in hooks."
+  (when button-lock-mode
+    (if font-lock-mode
+        (button-lock-tell-font-lock)
+      (button-lock-tell-font-lock 'forget))))
+
+(defun button-lock-tell-font-lock (&optional forget)
+  "Tell `font-lock-keywords' about the buttons in `button-lock-button-list'.
+
+When FORGET is set, tell `font-lock-keywords' to forget about
+the buttons in `button-lock-button-list', as well as any other
+keywords with the 'button-lock property."
+  (if forget
+      (let ((keywords (copy-tree font-lock-keywords)))
+        (when (eq t (car keywords))
+          ;; get uncompiled keywords
+          (setq keywords (cadr keywords)))
+        (dolist (kw (union keywords button-lock-button-list))
+          (when (button-lock-button-p kw)
+            (font-lock-remove-keywords nil (list kw)))))
+  (unless button-lock-mode
+    (error "Button-lock mode is not in effect"))
+  (dolist (button button-lock-button-list)
+    (font-lock-remove-keywords nil (list button))
+    (font-lock-add-keywords nil (list button)))))
+
+(defun button-lock-button-properties (button)
+  "Return list of properties for BUTTON."
+  (when (listp button)
+    (cadr (cadr (cadr button)))))
+
+(defun button-lock-button-pattern (button)
+  "Return pattern for BUTTON."
+  (when (listp button)
+    (car button)))
 
 (defun maybe-local-button-lock (&optional arg)
   "Called by global-button-lock-mode to activate button-lock mode in a buffer if appropriate.
+(defun button-lock-button-grouping (button)
+  "Return grouping for BUTTON."
+  (when (listp button)
+    (car (cadr button))))
+
+(defun button-lock-button-p (button)
+  "Return t if BUTTON is a button-lock button."
+  (ignore-errors
+    (car (memq 'button-lock (button-lock-button-properties button)))))
 
 If called with a negative ARG, deactivate button-lock mode in the
 buffer."
