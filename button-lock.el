@@ -382,11 +382,31 @@ mode."
 If called with a negative ARG, deactivate button-lock mode in the
 buffer."
   (setq arg (or arg 1))
-  (unless (or button-lock-mode
-              (or noninteractive (eq (aref (buffer-name) 0) ?\s))
-              (memq major-mode button-lock-exclude-modes)
-              (string-match-p button-lock-exclude-pattern (buffer-name (current-buffer))))
+  (when (or (< arg 0)
+            (button-lock-buffer-included-p (current-buffer)))
     (button-lock-mode arg)))
+
+(defun button-lock-buffer-included-p (buf)
+  "Return BUF if global button-lock should enable button-lock in BUF."
+  (when (and (not noninteractive)
+             (bufferp buf)
+             (buffer-name buf))
+    (with-current-buffer buf
+      (when (and (not (minibufferp buf))
+                 (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
+                 (not (memq major-mode button-lock-exclude-modes))
+                 (not (string-match-p button-lock-buffer-name-exclude-pattern (buffer-name buf)))
+                 (catch 'success
+                   (dolist (filt button-lock-buffer-exclude-functions)
+                     (when (funcall filt buf)
+                       (throw 'success nil)))
+                   t)
+                 (catch 'failure
+                   (dolist (filt button-lock-buffer-include-functions)
+                     (unless (funcall filt buf)
+                       (throw 'failure nil)))
+                   t))
+        buf))))
 
 (defun* button-lock-set-button (pattern action &key
 
