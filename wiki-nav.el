@@ -280,9 +280,12 @@
 Setting this to zero will turn off the indicator."
   :group 'wiki-nav
   :type 'number)
+(defcustom wiki-nav-mode-lighter " wikn"
+  "This string appears in the mode-line when `wiki-nav-mode' is active.
 
-(defcustom wiki-nav-modestring " wn"
-  "This string appears in the modeline when wiki-nav mode is active."
+Set to nil or the empty string to disable the mode-line
+lighter for `wiki-nav-mode'."
+  :risky t
   :group 'wiki-nav
   :type 'string)
 
