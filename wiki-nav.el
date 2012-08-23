@@ -8,7 +8,7 @@
 ;; Last-Updated: 16 Nov 2011
 ;; EmacsWiki: WikiNavMode
 ;; Keywords: mouse, button, hyperlink, navigation
-;; Package-Requires: ((button-lock "0.8") (nav-flash "1.0.0") (back-button "0.5.0"))
+;; Package-Requires: ((button-lock "0.8.0") (nav-flash "1.0.0") (back-button "0.5.0"))
 ;;
 ;; Simplified BSD License
 ;;
