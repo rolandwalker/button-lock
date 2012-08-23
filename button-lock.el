@@ -724,40 +724,17 @@ MOUSE-BINDING in order to set only a KEYBOARD-BINDING."
           (error nil))
         success))))
 
-(defun button-lock-pop-button (&optional first force)
-"Unset the most recently added button-lock button.
+    (when button-lock-mode
+      (font-lock-add-keywords nil (list existing-button)))))
 
-If FIRST is non-nil, instead unset the earliest-added button.
-
-If FORCE is non-nil, try to remove buttons even when the minor
-mode is not active.
-
-When successful, returns the number of button patterns removed,
-which should always be 1."
-  (interactive)
-   (if (and (not force)
-            (not button-lock-mode))
-       (progn
-         (message "button-lock mode is not active")
-         nil)
-     ;; else
-     (if (not button-lock-button-list)
-         nil
-       ;; else
-       (let ((fl-keyword nil)
-             (num (length button-lock-button-list)))
-         (when first
-           (setq button-lock-button-list (nreverse button-lock-button-list)))
-         (setq fl-keyword (pop button-lock-button-list))
-         (when first
-           (setq button-lock-button-list (nreverse button-lock-button-list)))
-         (font-lock-remove-keywords nil fl-keyword)
+(defun button-lock-remove-from-button-list (button)
+  "Remove BUTTON from `button-lock-button-list' and `font-lock-keywords'."
+  (when button-lock-mode
+    (font-lock-remove-keywords nil (list button))
          (button-lock-maybe-unbuttonify-buffer) ; cperl-mode workaround
-         (button-lock-maybe-fontify-buffer)
-         (setq num (- num (length button-lock-button-list)))
-         (when (button-lock-called-interactively-p)
-           (message "removed %d button patterns" num))
-         num))))
+    (button-lock-maybe-fontify-buffer))
+  (callf2 delete button button-lock-button-list)
+  nil)
 
 (defun button-lock-unset-all-buttons (&optional force)
   "Unset all active button-lock buttons.
