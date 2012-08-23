@@ -354,36 +354,9 @@ the argument is 'toggle."
      (when (button-lock-called-interactively-p 'interactive)
        (message "button-lock mode disabled")))))
 
-;; The define-globalized-minor-mode macro adds some complexity and causes some bugs.
-;; Specifically, it will cause multiple cycles of on/off toggling at each open, particularly
-;; when used by both wiki-nav.el and button-lock.el.
-;;
-;; This setup does not eliminate multiple invocations of the minor mode.  However it seems
-;; that the second invocation is the needed one, so no questions asked.
-(define-minor-mode global-button-lock-mode
-  "Toggle global `button-lock-mode'.
+(define-globalized-minor-mode global-button-lock-mode button-lock-mode button-lock-maybe-turn-on
+  :group 'button-lock)
 
-The global mode will cause button-lock to be activated in every buffer,
-unless specifically excluded by `button-lock-exclude-modes' or
-`button-lock-exclude-pattern',
-
-With no argument, this command toggles the mode. Non-null prefix
-argument turns on the mode.  Null prefix argument turns off the
-mode."
-  nil nil nil
-  :global t
-  :group 'button-lock
-  (if global-button-lock-mode
-      (progn
-         (dolist (buf (buffer-list))
-           (with-current-buffer buf
-             (maybe-local-button-lock)))
-         ;; seems to work fine without find-file hooks
-        (add-hook 'after-change-major-mode-hook 'maybe-local-button-lock))
-    (remove-hook 'after-change-major-mode-hook  'maybe-local-button-lock)
-    (dolist (buf (buffer-list))
-      (with-current-buffer buf
-        (maybe-local-button-lock -1)))))
 (defun button-lock-do-tell ()
   "Run `button-lock-tell-font-lock' appropriately in hooks."
   (when button-lock-mode
