@@ -424,6 +424,7 @@ buffer."
                                  rear-sticky
 
                                  remove
+                                 no-replace
 
                                  mouse-2
                                  mouse-3
@@ -493,6 +494,10 @@ the mouse event to reposition the point.
 
 Following PATTERN and ACTION is a Common Lisp-style series of
 keyword/value arguments:
+
+Setting :NO-REPLACE causes the function to have no effect when
+a button already exists using the given PATTERN.  By default,
+any existing button using PATTERN will be replaced.
 
 :FACE is a font face to set on matching text, like hi-lock mode.
 By default, :FACE has no properties, and :FACE-POLICY is :APPEND.
@@ -565,7 +570,6 @@ The button value can be passed to `button-lock-extend-binding'."
     ;; else (not button-lock-mode)
     (let ((map (make-sparse-keymap))
           (properties nil)
-          (success nil)
           (fl-keyword nil))
 
       (define-key map `[,mouse-binding] action)
@@ -653,23 +657,8 @@ The button value can be passed to `button-lock-extend-binding'."
     (setq fl-keyword `(,pattern (,grouping ',properties ,face-policy)))
 
       (if remove
-          (progn
-            (condition-case nil
-                (setq success (font-lock-remove-keywords nil fl-keyword))
-              (error nil))
-            (when success
-              (setq button-lock-button-list (delete fl-keyword button-lock-button-list)))
-            (button-lock-maybe-unbuttonify-buffer))   ; cperl-mode workaround
-        ;; else
-        (condition-case nil
-            (setq success (font-lock-add-keywords nil fl-keyword))
-          (error nil))
-        (when success
-          (add-to-list 'button-lock-button-list fl-keyword)))
-      (button-lock-maybe-fontify-buffer)
-      (if success
-          fl-keyword
-        nil))))
+        (button-lock-remove-from-button-list fl-keyword)
+      (button-lock-add-to-button-list fl-keyword no-replace))))
 
 (defun button-lock-unset-button (&rest button)
   "Equivalent to running `button-lock-set-button' with :REMOVE set to true.
