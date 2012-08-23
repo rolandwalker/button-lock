@@ -305,7 +305,10 @@ multi-line comments or multi-character comment delimiters."
   :group 'wiki-nav
   :type '(repeat symbol))
 
-(defcustom wiki-nav-exclude-modes  '(org-mode)
+(defcustom wiki-nav-exclude-modes  '(
+                                     fundamental-mode
+                                     org-mode
+                                     )
   "List of major modes in which global wiki-nav will not be activated.
 
 This is in addition to any modes listed in `button-lock-exclude-modes'.
