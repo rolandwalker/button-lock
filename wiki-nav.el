@@ -608,7 +608,9 @@ an exact duplicate of the current topmost mark onto `global-mark-ring'."
 
 ;; generic utility functions
 (defun wiki-nav-point-before ()
-  "Return the position before the current point, or (point-min) if the point is at the minimum."
+  "Return the position before the current point.
+
+Returns `point-min' if the point is at the minimum."
   (max (point-min) (1- (point))))
 
 (defun wiki-nav-comment-only-mode-p ()
@@ -630,7 +632,7 @@ an exact duplicate of the current topmost mark onto `global-mark-ring'."
 
 ;; buffer functions
 (defun wiki-nav-maybe-turn-on (&optional arg)
-  "Called by `global-wiki-nav-mode' to activate wiki-nav mode in a buffer if appropriate.
+  "Called by `global-wiki-nav-mode' to activate wiki-nav mode in a buffer.
 
 wiki-nav mode will be activated in every buffer, except
 
@@ -1056,7 +1058,8 @@ previous defined wiki-nav link."
 (defun wiki-nav-ido (arg)
   "Navigate to wiki-nav strings using `ido-completing-read'.
 
-With universal prefix ARG, navigate to wiki-nav strings in all buffers."
+With universal prefix ARG, navigate to wiki-nav strings in all
+buffers."
   (interactive "P")
   (let* ((links (if (consp arg) (wiki-nav-links-all-buffers) (wiki-nav-links)))
          (str-list (delete-dups (mapcar 'car links)))
