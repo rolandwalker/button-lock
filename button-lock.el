@@ -741,29 +741,22 @@ If NO-REPLACE is set, no replacement is made for a duplicate button."
   (callf2 delete button button-lock-button-list)
   nil)
 
-(defun button-lock-unset-all-buttons (&optional force)
-  "Unset all active button-lock buttons.
+(defun button-lock-clear-all-buttons ()
+  "Remove and deactivate all button-lock buttons in the buffer.
 
 If FORCE is non-nil, try to remove buttons even when the minor
 mode is not active."
   (interactive)
-  (if (and (not force)
-           (not button-lock-mode))
-      (progn
-        (message "button-lock mode is not active")
-        nil)
-    ;; else
-    (let ((fl-keyword nil)
-          (num (length button-lock-button-list)))
-      (while (setq fl-keyword (pop button-lock-button-list))
-        (font-lock-remove-keywords nil fl-keyword))
+  (let ((num (length button-lock-button-list)))
+    (button-lock-tell-font-lock 'forget)
+    (setq button-lock-button-list nil)
       (button-lock-maybe-unbuttonify-buffer)   ; cperl-mode workaround
       (button-lock-maybe-fontify-buffer)
       (when (and
            (button-lock-called-interactively-p 'interactive)
            (> num 0))
         (message "removed %d button patterns" num))
-      num)))
+    num))
 
 (defun button-lock-set-global-button (args)
   "Add a global button-lock button definition, to be applied each time the button-lock minor mode is activated.
