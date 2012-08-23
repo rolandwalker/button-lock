@@ -666,6 +666,7 @@ Automatically wraps past the end of the buffer.
 With a negative prefix argument ARG, skip backward to the
 previous defined wiki-nav link."
   (interactive "p")
+  (when wiki-nav-mode
   (let ((newpos nil)
         (skip-function 'next-single-property-change)
         (search-function 're-search-forward)
