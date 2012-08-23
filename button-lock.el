@@ -4,8 +4,8 @@
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
 ;; URL: https://github.com/rolandwalker/button-lock/raw/master/button-lock.el
-;; Version: 0.8.2
-;; Last-Updated: 16 Nov 2011
+;; Version: 0.9.5
+;; Last-Updated: 23 Aug 2012
 ;; EmacsWiki: ButtonLockMode
 ;; Keywords: mouse, button, hypermedia
 ;;
@@ -85,6 +85,18 @@
 ;;
 ;;    ;; define a global button, to be set whenever the minor mode is activated
 ;;    (button-lock-register-global-button "hello" 'beginning-of-line)
+;;
+;; Interface
+;;
+;; Button lock is intended to be used via the following functions
+;;
+;;    `button-lock-set-button'
+;;    `button-lock-unset-button'
+;;    `button-lock-extend-binding'
+;;    `button-lock-clear-all-buttons'
+;;    `button-lock-register-global-button'
+;;    `button-lock-unregister-global-button'
+;;    `button-lock-unregister-all-global-buttons'
 ;;
 ;; See Also
 ;;
@@ -196,6 +208,28 @@
 ;;    interpreted as representing official policies, either expressed
 ;;    or implied, of D Roland Walker.
 ;;
+;;; Change Log:
+;;
+;; 22 Aug 2012
+;; Rewrite.  Incompatible changes:
+;;
+;;    * `button-lock-pop-button' removed, replaced with the ability to
+;;      pass a button "object" to `button-lock-unset-button'.
+;;
+;;    * `button-lock-unset-all-buttons' replaced by
+;;      `button-lock-clear-all-buttons'.
+;;
+;;    * `button-lock-set-global-button' and `button-lock-unset-global-button'
+;;      replaced by `button-lock-register-global-button' and
+;;      `button-lock-unregister-global-button'.
+;;
+;;    * `button-lock-unset-all-global-buttons' replaced by
+;;      `button-lock-unregister-all-global-buttons'.
+;;
+;;    * `button-lock-pop-global-button' removed.
+;;
+;;    * lighter variable name and content changed.
+;;
 ;;; Code:
 ;;
 
@@ -212,7 +246,7 @@
 ;;;###autoload
 (defgroup button-lock nil
   "Clickable text defined by regular expression."
-  :version "0.8.2"
+  :version "0.9.5"
   :link '(emacs-commentary-link "button-lock")
   :prefix "button-lock-"
   :group 'navigation
