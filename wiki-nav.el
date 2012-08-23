@@ -611,6 +611,31 @@ If called with a negative ARG, deactivate wiki-nav mode in the buffer."
               (memq major-mode button-lock-exclude-modes)
               (string-match-p button-lock-exclude-pattern (buffer-name (current-buffer))))
     (wiki-nav-mode 1)))
+(defun wiki-nav-buffer-included-p (buf)
+  "Return BUF if global wiki-nav should enable wiki-nav in BUF."
+  (when (and (not noninteractive)
+             (bufferp buf)
+             (buffer-name buf))
+    (with-current-buffer buf
+      (when (and (not (minibufferp buf))
+                 (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
+                 (not (memq major-mode wiki-nav-exclude-modes))
+                 (not (string-match-p wiki-nav-buffer-name-exclude-pattern (buffer-name buf)))
+                 (catch 'success
+                   (dolist (filt wiki-nav-buffer-exclude-functions)
+                     (when (funcall filt buf)
+                       (throw 'success nil)))
+                   t)
+                 (catch 'failure
+                   (dolist (filt wiki-nav-buffer-include-functions)
+                     (unless (funcall filt buf)
+                       (throw 'failure nil)))
+                   t))
+        buf))))
+
+(defun wiki-nav-comment-only-mode-p ()
+  "Return true if links should be constrained to comments in the current mode."
+  (delq nil (mapcar 'derived-mode-p wiki-nav-comment-only-modes)))
 
 (defun wiki-nav-link-set (&optional arg)
   "Use button-lock to set up wiki-nav links in a buffer.
