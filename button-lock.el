@@ -521,26 +521,31 @@ keywords with the 'button-lock property."
 
 ;; button functions
 
+;;;###autoload
 (defun button-lock-button-p (button)
   "Return t if BUTTON is a button-lock button."
   (ignore-errors
     (car (memq 'button-lock (button-lock-button-properties button)))))
 
+;;;###autoload
 (defun button-lock-button-properties (button)
   "Return list of properties for BUTTON."
   (when (listp button)
     (cadr (cadr (cadr button)))))
 
+;;;###autoload
 (defun button-lock-button-pattern (button)
   "Return pattern for BUTTON."
   (when (listp button)
     (car button)))
 
+;;;###autoload
 (defun button-lock-button-grouping (button)
   "Return grouping for BUTTON."
   (when (listp button)
     (car (cadr button))))
 
+;;;###autoload
 (defun button-lock-find-extent (&optional pos property)
   "Find the extent of a button-lock property around some point.
 
@@ -619,6 +624,7 @@ If NO-REPLACE is set, no replacement is made for a duplicate button."
 
 ;;; principal external interface
 
+;;;###autoload
 (defun* button-lock-set-button (pattern action &key
 
                                  (face 'button-lock-face)
@@ -890,6 +896,7 @@ The button value can be passed to `button-lock-extend-binding'."
         (button-lock-remove-from-button-list fl-keyword)
       (button-lock-add-to-button-list fl-keyword no-replace))))
 
+;;;###autoload
 (defun button-lock-unset-button (&rest button)
   "Equivalent to running `button-lock-set-button' with :REMOVE set to true.
 
@@ -903,6 +910,7 @@ from `button-lock-set-button'."
       (button-lock-remove-from-button-list (car button))
     (apply 'button-lock-set-button (append button '(:remove t)))))
 
+;;;###autoload
 (defun button-lock-extend-binding (existing-button action mouse-binding &optional keyboard-binding)
   "Add a binding to an existing button.
 
@@ -936,6 +944,7 @@ to nil."
     (when button-lock-mode
       (font-lock-add-keywords nil (list existing-button)))))
 
+;;;###autoload
 (defun button-lock-clear-all-buttons ()
   "Remove and deactivate all button-lock buttons in the buffer.
 
@@ -953,6 +962,7 @@ mode is not active."
       (message "removed %d button patterns" num))
     num))
 
+;;;###autoload
 (defun button-lock-register-global-button (&rest button)
   "Register a global button-lock button definition.
 
@@ -965,6 +975,7 @@ To see an effect in any given buffer, button-lock mode must be
 deactivated and reactivated."
   (button-lock-add-to-global-button-list button))
 
+;;;###autoload
 (defun button-lock-unregister-global-button (&rest button)
   "Remove global button-lock BUTTON.
 
@@ -974,6 +985,7 @@ To see an effect in any given buffer, button-lock mode must be
 deactivated and reactivated."
   (button-lock-remove-from-global-button-list button))
 
+;;;###autoload
 (defun button-lock-unregister-all-global-buttons ()
   "Remove all global button-lock buttons definitions.
 
