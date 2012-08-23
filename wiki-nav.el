@@ -588,29 +588,24 @@ mode."
   nil nil nil
   :global t
   :group 'wiki-nav
+(defun wiki-nav-maybe-turn-on (&optional arg)
+  "Called by `global-wiki-nav-mode' to activate wiki-nav mode in a buffer if appropriate.
 
-  (if global-wiki-nav-mode
-      (progn
-         (dolist (buf (buffer-list))
-           (with-current-buffer buf
-             (maybe-local-wiki-nav)))
-         (add-hook 'after-change-major-mode-hook 'maybe-local-wiki-nav))
-    (remove-hook 'after-change-major-mode-hook  'maybe-local-wiki-nav)
-    (dolist (buf (buffer-list))
-      (with-current-buffer buf
-        (maybe-local-wiki-nav -1)))))
+wiki-nav mode will be activated in every buffer, except
 
-(defun maybe-local-wiki-nav (&optional arg)
-  "Called by global-wiki-nav-mode to activate wiki-nav mode in a buffer if appropriate.
+   minibuffers
+   buffers with names that begin with space
+   buffers excluded by `wiki-nav-exclude-modes'
+   buffers excluded by `button-lock-exclude-modes'
+   buffers excluded by `wiki-nav-buffer-name-exclude-pattern'
+   buffers excluded by `button-lock-buffer-name-exclude-pattern'
 
 If called with a negative ARG, deactivate wiki-nav mode in the buffer."
-  (setq arg (or arg 1))
-  (unless (or wiki-nav-mode
-              (or noninteractive (eq (aref (buffer-name) 0) ?\s))
-              (memq major-mode wiki-nav-exclude-modes)
-              (memq major-mode button-lock-exclude-modes)
-              (string-match-p button-lock-exclude-pattern (buffer-name (current-buffer))))
-    (wiki-nav-mode 1)))
+  (callf or arg 1)
+  (when (or (< arg 0)
+            (wiki-nav-buffer-included-p (current-buffer)))
+    (wiki-nav-mode arg)))
+
 (defun wiki-nav-buffer-included-p (buf)
   "Return BUF if global wiki-nav should enable wiki-nav in BUF."
   (when (and (not noninteractive)
