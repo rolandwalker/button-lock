@@ -779,7 +779,7 @@ mode is not active."
       (button-lock-maybe-fontify-buffer)
       (when (and
              (button-lock-called-interactively-p)
-             num)
+           (> num 0))
         (message "removed %d button patterns" num))
       num)))
 
