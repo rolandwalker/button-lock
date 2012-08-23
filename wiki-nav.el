@@ -638,9 +638,7 @@ If called with negative ARG, remove the link."
 
 (defun wiki-nav-point-before ()
   "Return the position before the current point, or (point-min) if the point is at the minimum."
-  (if (> (point-min) (- (point) 1))
-      (point-min)
-    (- (point) 1)))
+  (max (point-min) (1- (point))))
 
 ;; was doing this by scanning text properties, but that
 ;; fails when font-lock has not fontified the whole buffer
