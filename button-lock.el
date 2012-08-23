@@ -835,25 +835,13 @@ deactivated and reactivated."
 POS defaults to the current point.  PROPERTY defaults to
 'button-lock.
 
-Returns list containing the start and end, or nil if there is no
-such property around the point."
-  (setq pos (or pos (point)))
-  (let ((start nil)
-        (end nil))
-    (setq property (or property 'button-lock))
-    (if (not (get-text-property pos property))
-        nil
-      ;; else
-      (setq start pos)
-      (setq end pos)
-      (while (and (> start (point-min))
-                  (get-text-property (- start 1) property))
-        (setq start (- start 1)))
-      (while (and (< end (point-max))
-                  (get-text-property (+ end 1) property))
-        (setq end (+ end 1)))
-      (setq end (min (point-max) (+ end 1)))
-      (list start end))))
+Returns a cons in the form (START . END), or nil if there
+is no such PROPERTY around POS."
+  (callf or pos (point))
+  (callf or property 'button-lock)
+  (when (get-text-property pos property)
+    (cons (if (and (> pos (point-min)) (get-text-property (1- pos) property)) (previous-single-property-change pos property) pos)
+          (next-single-property-change pos property))))
 
 (defun button-lock-maybe-unbuttonify-buffer ()
   "This is a workaround for cperl mode, which clobbers `font-lock-unfontify-region-function'."
