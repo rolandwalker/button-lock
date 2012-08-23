@@ -643,8 +643,7 @@ If called with negative ARG, remove the links."
                                         :double-mouse-1 wiki-nav-multi-action-function
                                         :face 'wiki-nav-link-face :mouse-face 'wiki-nav-mouse-face :face-policy 'prepend
                                         :additional-property 'wiki-nav
-                                        :grouping 1
-                                        :remove (if (< arg 0) t nil))))
+                                                  :grouping 1))
     (dolist (key wiki-nav-activate-keys)
       (button-lock-extend-binding wiki-nav-button 'wiki-nav-keyboard-action         nil key))
     (dolist (key wiki-nav-skip-to-next-keys)
