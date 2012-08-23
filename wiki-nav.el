@@ -759,7 +759,7 @@ previous defined wiki-nav link."
         (case-fold-search t)
         (search-upper-case nil))
     (when bounds
-      (setq string (apply #'buffer-substring-no-properties bounds))
+      (setq string (buffer-substring-no-properties (car bounds) (cdr bounds)))
       (when (string-match-p "^[[:space:]]*<" string)
         (setq search-function 're-search-backward)
         (setq wrap-point (point-max))
@@ -865,7 +865,7 @@ previous defined wiki-nav link."
                    (message "followed link to new file")))
              ((or (not found)
                   (and (>= (point) (- (car bounds) (length wiki-nav-link-start)))
-                       (<= (point) (+ (cadr bounds) (length wiki-nav-link-stop)))))
+                        (<= (point) (+ (cdr bounds) (length wiki-nav-link-stop)))))
                  ;; give failure message even when wiki-nav-less-feedback is set
                  (message "no matching link found"))
              ((eq found :wrap)
