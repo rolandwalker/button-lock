@@ -630,7 +630,7 @@ If called with negative ARG, remove the link."
   (setq arg (or arg 1))
   (unless button-lock-mode
     (button-lock-mode 1))
-  (let ((button (button-lock-set-button (concat (if (member major-mode wiki-nav-comment-only-modes) "\\s<[^\n]*?" "")
+    (let ((button (button-lock-set-button (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                                 (regexp-quote wiki-nav-link-start)
                                                 "\\(" wiki-nav-link-text "\\)"
                                                 (regexp-quote wiki-nav-link-stop))
