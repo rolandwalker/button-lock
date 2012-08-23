@@ -4,11 +4,11 @@
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
 ;; URL: https://github.com/rolandwalker/button-lock/raw/master/wiki-nav.el
-;; Version: 0.6.0
+;; Version: 0.6.1
 ;; Last-Updated: 23 Aug 2012
 ;; EmacsWiki: WikiNavMode
 ;; Keywords: mouse, button, hypermedia, navigation
-;; Package-Requires: ((button-lock "0.9.5") (nav-flash "1.0.0") (back-button "0.5.0"))
+;; Package-Requires: ((button-lock "0.9.6") (nav-flash "1.0.0") (back-button "0.5.0"))
 ;;
 ;; Simplified BSD License
 ;;
@@ -308,7 +308,7 @@
 ;;;###autoload
 (defgroup wiki-nav nil
   "Simple file navigation using [[WikiStrings]]."
-  :version "0.6.0"
+  :version "0.6.1"
   :link '(emacs-commentary-link "wiki-nav")
   :prefix "wiki-nav-"
   :group 'button-lock
