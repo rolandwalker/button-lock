@@ -829,6 +829,27 @@ deactivated and reactivated."
   (dolist (button button-lock-global-button-list)
     (eval `(button-lock-set-button ,@button))))
 
+(defun button-lock-add-to-global-button-list (button &optional no-replace)
+  "Add BUTTON to `button-lock-global-button-list'.
+
+The regexp used by the button is checked against the existing
+data structure.  If the regexp duplicates that of an existing button,
+the existing duplicate is replaced.
+
+If NO-REPLACE is set, no replacement is made for a duplicate button."
+  (let ((conflict (catch 'hit
+                    (dolist (b button-lock-global-button-list)
+                      (when (equal (car b) (car button))
+                        (throw 'hit b))))))
+    (unless (and conflict no-replace)
+      (when (and conflict (not no-replace))
+        (button-lock-remove-from-global-button-list conflict))
+      (add-to-list 'button-lock-global-button-list button))))
+
+(defun button-lock-remove-from-global-button-list (button)
+  "Remove BUTTON from `button-lock-global-button-list'."
+  (callf2 delete button button-lock-global-button-list))
+
 (defun button-lock-find-extent (&optional pos property)
   "Find the extent of a button-lock property around some point.
 
