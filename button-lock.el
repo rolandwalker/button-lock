@@ -298,7 +298,8 @@ already provided by font-lock."
 The form is a list of lists, each member being a set of arguments
 to `button-lock-set-button'.
 
-This variable should be set by calling `button-lock-set-global-button' and friends.")
+This variable should be set by calling
+`button-lock-register-global-button' and friends.")
 
 (defvar button-lock-button-list nil
   "An internal variable used to keep track of button-lock buttons.")
