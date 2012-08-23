@@ -566,6 +566,8 @@ If NO-REPLACE is set, no replacement is made for a duplicate button."
                                  (face-policy 'append)
                                  help-echo
                                  help-text
+                                 kbd-help
+                                 kbd-help-multiline
 
                                  (grouping 0)
 
@@ -666,9 +668,15 @@ to `button-lock-mouse-face'.
 values are nil, 'keep, 'prepend, and 'append (the default).  See
 the documentation for OVERRIDE in `font-lock-keywords'.
 
-:HELP-ECHO is applied to the help-echo text property, and may
+:HELP-ECHO is applied to the 'help-echo text property, and may
 become visible in a tooltip depending on your Emacs setup.
 :HELP-TEXT is a deprecated synonym.
+
+:KBD-HELP is applied to the 'kbd-help text property, accessible
+to the user via `display-local-help',
+
+:KBD-HELP-MULTILINE is applied to the non-standard
+'kbd-help-multline text property.
 
 :GROUPING designates a subgroup in the pattern match to receive
 the new text properties.  Subgroups, delimited by parentheses,
@@ -796,6 +804,14 @@ The button value can be passed to `button-lock-extend-binding'."
     (when (or help-echo help-text)
       (callf append properties `(help-echo ,(or help-echo help-text)))
         (add-to-list 'font-lock-extra-managed-props 'help-echo))
+
+    (when kbd-help
+      (callf append properties `(kbd-help ,kbd-help))
+      (add-to-list 'font-lock-extra-managed-props 'kbd-help))
+
+    (when kbd-help-multiline
+      (callf append properties `(kbd-help-multiline ,kbd-help-multiline))
+      (add-to-list 'font-lock-extra-managed-props 'kbd-help-multiline))
 
     (unless rear-sticky
       (callf append properties `(rear-nonsticky t))
