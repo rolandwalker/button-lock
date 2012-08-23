@@ -77,10 +77,6 @@
 ;;
 ;;     Leading and trailing space inside a link is ignored.
 ;;
-;;     After navigating to a new location, wiki-nav gives a helpful
-;;     transient flash to help you find the cursor.  If you find this
-;;     annoying, it can be changed by customizing wiki-nav-flash-delay.
-;;
 ;;     From the keyboard:
 ;;
 ;;        control-c w   skip forward in the buffer to the next link
@@ -135,6 +131,7 @@
 ;; [[<See Also]]
 ;;
 ;;     M-x customize-group RET wiki-nav RET
+;;     M-x customize-group RET nav-flash RET
 ;;
 ;; [[<Prior Art]]
 ;;
