@@ -505,6 +505,9 @@ Set this value to the empty string to disable the feature entirely."
   :group 'wiki-nav-parsing
   :type 'string)
 
+(defvar wiki-nav-button nil "Holds the buffer-local button definition when the mode is active.")
+(make-variable-buffer-local 'wiki-nav-button)
+
 (defvar wiki-nav-mode-keymap
   (let ((map (make-sparse-keymap)))
     (dolist (key wiki-nav-find-any-link-keys)
@@ -630,7 +633,7 @@ If called with negative ARG, remove the link."
   (setq arg (or arg 1))
   (unless button-lock-mode
     (button-lock-mode 1))
-    (let ((button (button-lock-set-button (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
+    (setq wiki-nav-button (button-lock-set-button (concat (if (wiki-nav-comment-only-mode-p) "\\s<\\S>*?" "")
                                                 (regexp-quote wiki-nav-link-start)
                                                 "\\(" wiki-nav-link-text "\\)"
                                                 (regexp-quote wiki-nav-link-stop))
@@ -641,11 +644,11 @@ If called with negative ARG, remove the link."
                                         :grouping 1
                                         :remove (if (< arg 0) t nil))))
     (dolist (key wiki-nav-activate-keys)
-      (button-lock-extend-binding button 'wiki-nav-keyboard-action         nil key))
+      (button-lock-extend-binding wiki-nav-button 'wiki-nav-keyboard-action         nil key))
     (dolist (key wiki-nav-skip-to-next-keys)
-      (button-lock-extend-binding button 'wiki-nav-find-any-link           nil key))
+      (button-lock-extend-binding wiki-nav-button 'wiki-nav-find-any-link           nil key))
     (dolist (key wiki-nav-skip-to-previous-keys)
-      (button-lock-extend-binding button 'wiki-nav-find-any-previous-link  nil key))))
+      (button-lock-extend-binding wiki-nav-button 'wiki-nav-find-any-previous-link  nil key))))
 
 (defun wiki-nav-point-before ()
   "Return the position before the current point, or (point-min) if the point is at the minimum."
