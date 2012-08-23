@@ -794,27 +794,17 @@ mode is not active."
         (message "removed %d button patterns" num))
     num))
 
-(defun button-lock-set-global-button (args)
-  "Add a global button-lock button definition, to be applied each time the button-lock minor mode is activated.
+(defun button-lock-register-global-button (&rest button)
+  "Register a global button-lock button definition.
 
-ARGS is a list of arguments, following the form of
-`button-lock-set-button'.
+Arguments follow the form of `button-lock-set-button'.
 
-To see an effect, button-lock mode must be deactivated and
-reactivated."
-  (add-to-list 'button-lock-global-button-list args))
+The BUTTON defined here will applied each time the button-lock
+minor mode is activated in a buffer.
 
-(defun button-lock-unset-global-button (args)
-  "Remove a global button-lock button definition.
-
-ARGS is a list of arguments, following the form of
-`button-lock-set-button'.
-
-To see an effect, button-lock mode must be deactivated and
-reactivated."
-  (if (member args button-lock-global-button-list)
-      (setq button-lock-global-button-list (delete args button-lock-global-button-list))
-    nil))
+To see an effect in any given buffer, button-lock mode must be
+deactivated and reactivated."
+  (button-lock-add-to-global-button-list button))
 
 (defun button-lock-pop-global-button (&optional first)
 "Unset the most recently added global button-lock button definition.
