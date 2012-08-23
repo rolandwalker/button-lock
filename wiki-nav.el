@@ -186,6 +186,8 @@
 ;;
 ;; [[<Todo]]
 ;;
+;;    ido support - document and provide default bindings
+;;
 ;;    instead of comment-only modes, check if comment syntax is present
 ;;    in buffer as is done in fixmee-mode, and use syntax-ppss rather
 ;;    than regexp to detect comment context
