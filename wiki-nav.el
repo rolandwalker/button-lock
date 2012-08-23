@@ -561,18 +561,20 @@ match URLs and non-URL inner text.
 With no argument, this command toggles the mode.  Non-null prefix
 argument turns on the mode.  Null prefix argument turns off the
 mode."
-  nil wiki-nav-modestring wiki-nav-mode-keymap
-  (when (or noninteractive (eq (aref (buffer-name) 0) ?\s))  ; don't set up wiki-nav on hidden or noninteractive
-                                                             ; buffers, b/c there will be no font-lock
-    (setq wiki-nav-mode nil))
-  (if wiki-nav-mode
-      (progn
+  nil wiki-nav-mode-lighter wiki-nav-mode-keymap
+  (cond
+    ((and wiki-nav-mode
+          (or noninteractive                    ; never turn on wiki-nav where
+              (eq (aref (buffer-name) 0) ?\s))  ; there can be no font-lock
+          (setq wiki-nav-mode nil)))
+    (wiki-nav-mode
         (wiki-nav-link-set)
-        (when (button-lock-called-interactively-p)
+     (when (button-lock-called-interactively-p 'interactive)
           (message "wiki-nav mode enabled")))
+    (t
   (wiki-nav-link-set -1)
-  (when (button-lock-called-interactively-p)
-    (message "wiki-nav mode disabled"))))
+     (when (button-lock-called-interactively-p 'interactive)
+       (message "wiki-nav mode disabled")))))
 
 (define-minor-mode global-wiki-nav-mode
   "Toggle global `wiki-nav-mode'.
