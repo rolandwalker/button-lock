@@ -562,12 +562,6 @@ If successful, this function returns the button which was added
 or removed from `font-lock-keywords'. Otherwise it returns nil.
 The button value can be passed to `button-lock-extend-binding'."
 
-  (if (not button-lock-mode)
-      (progn
-        (message "button-lock mode is not active")
-        nil)
-
-    ;; else (not button-lock-mode)
     (let ((map (make-sparse-keymap))
           (properties nil)
           (fl-keyword nil))
