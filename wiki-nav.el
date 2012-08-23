@@ -132,6 +132,7 @@
 ;;
 ;;     M-x customize-group RET wiki-nav RET
 ;;     M-x customize-group RET nav-flash RET
+;;     M-x customize-group RET back-button RET
 ;;
 ;; [[<Prior Art]]
 ;;
@@ -152,6 +153,8 @@
 ;;     been modified, the link reverts to ordinary text.
 ;;
 ;; [[<Bugs]]
+;;
+;;     Only highlights first match on each comment line.
 ;;
 ;;     Double-square-brackets represent a valid construct in some
 ;;     programming languages (especially shell), and may be mistakenly
@@ -174,13 +177,36 @@
 ;;     the editor during keyboard navigation.  Tends to happen on first
 ;;     navigation, when key is pressed quickly?
 ;;
+;;     The global minor mode causes button-lock to be turned off/back
+;;     on for every buffer.
+;;
 ;; [[<Compatibility]]
 ;;
-;;     Tested on GNU Emacs 22 - 24.
+;;     Tested on GNU Emacs 24.1 only.
 ;;
 ;; [[<Todo]]
 ;;
-;;    remember position and undo last motion
+;;    instead of comment-only modes, check if comment syntax is present
+;;    in buffer as is done in fixmee-mode, and use syntax-ppss rather
+;;    than regexp to detect comment context
+;;
+;;    support kbd-help property
+;;
+;;    follow the doc for defgroup to find link functions which are
+;;    built-in to Emacs
+;;
+;;    these and other widgets are used in customize/help
+;;    wiki-nav should reuse the widget functions (wid-edit.el and others)
+;;       emacs-commentary-link
+;;       emacs-library-link
+;;    and the xref functions in help-mode.el
+;;
+;;    use a function matcher in font-lock keywords instead of regexp to
+;;    get comment-only matches to work perfectly.  fixmee.el has correct
+;;    code to match in comment
+;;
+;;    wiki-nav-external-link-pattern might be replaced with functions
+;;    from url-util
 ;;
 ;;    visit:-1 counts from end of file
 ;;
@@ -192,7 +218,8 @@
 ;;    like org-mode radio links
 ;;
 ;;    patch font-lock to support keyword searching in comment only,
-;;    like 'keep, only different
+;;    like 'keep, only different - maybe not needed if using a func
+;;    instead of a regexp in keyword
 ;;
 ;;    raised button style option
 ;;
@@ -202,6 +229,23 @@
 ;;       search:
 ;;       regexp:
 ;;       elisp:
+;;
+;;    wiki-nav-links can be optimized by tracking which buffers are
+;;    completely fontified - doesn't font-lock do that?
+;;
+;;    similarly, speed up wiki-nav-find-any-link by remembering if
+;;    the buffer is fontified, or switch to searching by regexp
+;;
+;;    version of wiki-nav-find-any-link that does not wrap
+;;
+;;    wiki-nav-ido can only go to one occurrence of a duplicate -
+;;    may not always be first
+;;
+;;    toggle key for switching to all buffers within wiki-nav-ido
+;;    prompt
+;;
+;;    sort recently-used items first in wiki-nav-ido - see
+;;    yas/insert-snippet for example
 ;;
 ;; [[<License]]
 ;;
