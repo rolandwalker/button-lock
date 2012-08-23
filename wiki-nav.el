@@ -678,7 +678,7 @@ If called with a negative ARG, deactivate wiki-nav mode in the buffer."
 If called with negative ARG, remove the links."
   (callf or arg 1)
   (when (and (>= arg 0)
-             (or (not boundp 'button-lock-mode)
+             (or (not (boundp 'button-lock-mode))
                  (not button-lock-mode)))
     (button-lock-mode 1))
 
