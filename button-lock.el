@@ -806,31 +806,14 @@ To see an effect in any given buffer, button-lock mode must be
 deactivated and reactivated."
   (button-lock-add-to-global-button-list button))
 
-(defun button-lock-pop-global-button (&optional first)
-"Unset the most recently added global button-lock button definition.
+(defun button-lock-unregister-global-button (&rest button)
+  "Remove global button-lock BUTTON.
 
-If FIRST is non-nil, instead unset the earliest-added button
-definition.
+Arguments follow the form of `button-lock-set-button'.
 
-To see an effect, button-lock mode must be deactivated and
-reactivated.
-
-When successful, this function returns the number of button
-definitions removed, which should always be 1."
-  (interactive)
-  (if (not button-lock-global-button-list)
-      nil
-    ;; else
-    (let ((num (length button-lock-global-button-list)))
-      (when first
-        (setq button-lock-global-button-list (nreverse button-lock-global-button-list)))
-      (pop button-lock-global-button-list)
-      (when first
-        (setq button-lock-global-button-list (nreverse button-lock-global-button-list)))
-      (setq num (- num (length button-lock-global-button-list)))
-      (when (button-lock-called-interactively-p)
-        (message "removed %d button patterns" num))
-      num)))
+To see an effect in any given buffer, button-lock mode must be
+deactivated and reactivated."
+  (button-lock-remove-from-global-button-list button))
 
 (defun button-lock-unregister-all-global-buttons ()
   "Remove all global button-lock buttons definitions.
