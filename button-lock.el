@@ -323,27 +323,36 @@ Button-lock uses `font-lock-mode' to create and maintain its text
 properties.  Therefore this mode can only be used where
 `font-lock-mode' is active.
 
-When button-lock mode is active, `button-lock-set-button' may be
-called to create a new button.  When button-lock mode is
-disabled, all button definition are cleared.
+`button-lock-set-button' may be called to create a new button.
+`button-lock-clear-all-buttons' may be called to clear all button
+definitions in a buffer.
 
-With no argument, this command toggles the mode. Non-null prefix
-argument turns on the mode.  Null prefix argument turns off the
-mode."
-  nil button-lock-modestring nil
-  (when (or noninteractive (eq (aref (buffer-name) 0) ?\s))  ; don't set up button-lock on hidden or noninteractive
-    (setq button-lock-mode nil))                             ; buffers, b/c there will be no font-lock
-   (if button-lock-mode
-       (progn
+When called interactively with no prefix argument, this command
+toggles the mode. When called interactively, with a prefix
+argument, it enables the mode if the argument is positive and
+otherwise disables it.  When called from Lisp, it enables the
+mode if the argument is omitted or nil, and toggles the mode if
+the argument is 'toggle."
+  nil button-lock-mode-lighter nil
+  (cond
+    ((and button-lock-mode
+          (or noninteractive                    ; never turn on button-lock where
+              (eq (aref (buffer-name) 0) ?\s))  ; there can be no font-lock
+          (setq button-lock-mode nil)))
+    (button-lock-mode
          (font-lock-mode 1)
+     (button-lock-merge-global-buttons-to-local)
+     (add-hook 'font-lock-mode-hook 'button-lock-do-tell nil t)
+     (button-lock-tell-font-lock)
          (button-lock-maybe-fontify-buffer)
-         (button-lock-maybe-activate-global-buttons)
      (when (button-lock-called-interactively-p 'interactive)
            (message "button-lock mode enabled")))
-     (button-lock-unset-all-buttons t)
+    (t
+     (button-lock-tell-font-lock 'forget)
+     (button-lock-maybe-unbuttonify-buffer)   ; cperl-mode workaround
      (button-lock-maybe-fontify-buffer)
-     (when (button-lock-called-interactively-p)
-       (message "button-lock mode disabled"))))
+     (when (button-lock-called-interactively-p 'interactive)
+       (message "button-lock mode disabled")))))
 
 ;; The define-globalized-minor-mode macro adds some complexity and causes some bugs.
 ;; Specifically, it will cause multiple cycles of on/off toggling at each open, particularly
