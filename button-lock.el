@@ -1,6 +1,6 @@
 ;;; button-lock.el --- Clickable text defined by regular expression
 ;;
-;; Copyright (c) 2011 D Roland Walker
+;; Copyright (c) 2011-12 D Roland Walker
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
 ;; URL: https://github.com/rolandwalker/button-lock/raw/master/button-lock.el
@@ -200,7 +200,7 @@
 ;;
 ;;    Simplified BSD License
 ;;
-;;    Copyright (c) 2011, D Roland Walker
+;;    Copyright (c) 2011-12, D Roland Walker
 ;;    All rights reserved.
 ;;
 ;;    Redistribution and use in source and binary forms, with or
