@@ -943,6 +943,65 @@ mouse event."
 
 
 
+(defun wiki-nav-links (&optional buffer)
+  "Return an alist of all wiki-nav links in BUFFER (defaults to current buffer).
+The return value is an alist of cells in the form (\"text\" buffer . start-pos)."
+  (callf or buffer (current-buffer))
+  (with-current-buffer buffer
+    (when wiki-nav-mode
+      (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
+            (pos nil)
+            (links nil))
+        (font-lock-fontify-buffer)
+        (setq pos (next-single-property-change (point-min) 'wiki-nav))
+        (while (and pos
+                    (< pos (point-max)))
+          (when (get-text-property pos 'wiki-nav)
+            (let ((start pos))
+              (while (and pos
+                          (< pos (point-max))
+                          (get-text-property pos 'wiki-nav))
+                (callf next-single-property-change pos 'wiki-nav))
+              (when (not (get-text-property pos 'wiki-nav))
+                (push (cons (buffer-substring-no-properties start pos) (cons buffer start)) links))))
+          (callf next-single-property-change pos 'wiki-nav))
+        links))))
+
+(defun wiki-nav-links-all-buffers ()
+  "Return an alist of wiki-nav links in all buffers.  See `wiki-nav-links."
+  (with-temp-message "Searching ..."                             ; fontifying every buffer can take seconds
+    (wiki-nav-alist-flatten (mapcar 'wiki-nav-links (buffer-list)))))
+
+(defun wiki-nav-alist-flatten (list)
+  "Flatten LIST which may contain other lists.  Do not flatten cons cells."
+  (cond
+    ((null list)
+     nil)
+    ((and (consp list)
+          (nthcdr (safe-length list) list))
+     (list list))
+    ((listp list)
+     (append (wiki-nav-alist-flatten (car list)) (wiki-nav-alist-flatten (cdr list))))
+    (t
+     (list list))))
+
+(defun wiki-nav-ido (arg)
+  "Navigate to wiki-nav strings using `ido-completing-read'.
+
+With universal prefix ARG, navigate to wiki-nav strings in all buffers."
+  (interactive "P")
+  (let* ((links (if (consp arg) (wiki-nav-links-all-buffers) (wiki-nav-links)))
+         (str-list (delete-dups (mapcar 'car links)))
+         (choice nil)
+         (ido-mode t))
+     (setq choice (ido-completing-read "WikiString: " str-list))
+     (when (and choice (assoc choice links))
+       (back-button-push-mark-local-and-global nil t)
+       (setq choice (cdr (assoc choice links)))
+       (switch-to-buffer (car choice))
+       (goto-char (cdr choice))
+       (when (fboundp 'nav-flash-show)
+         (nav-flash-show)))))
 
 (provide 'wiki-nav)
 ;;
