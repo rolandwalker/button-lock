@@ -1,4 +1,4 @@
-;;; wiki-nav.el --- simple file navigation using [[WikiStrings]]
+;;; wiki-nav.el --- Simple file navigation using [[WikiStrings]]
 ;;
 ;; Copyright (c) 2011 D Roland Walker
 ;;
@@ -72,7 +72,7 @@
 ;;     You can insert the '>' symbol, too, but that simply indicates
 ;;     the default forward-search navigation.
 ;;
-;;     Both foward and backward navigation will wrap around the ends
+;;     Both forward and backward navigation will wrap around the ends
 ;;     of the file without prompting.
 ;;
 ;;     Leading and trailing space inside a link is ignored.
@@ -83,7 +83,7 @@
 ;;
 ;;     From the keyboard:
 ;;
-;;        control-c w   skip foward in the buffer to the next link
+;;        control-c w   skip forward in the buffer to the next link
 ;;
 ;;        control-c W   skip backward in the buffer to the previous link
 ;;
@@ -125,7 +125,7 @@
 ;;
 ;;        [[visit:/etc/hosts:line:5]]
 ;;
-;;     Path names and simialar strings are subjected to URI-style
+;;     Path names and similar strings are subjected to URI-style
 ;;     unescaping before lookup.  To link a filename which contains a
 ;;     colon, substitute "%3A" for the colon character.
 ;;
@@ -372,7 +372,7 @@ The format for key sequences is as defined by `kbd'."
   :type '(repeat string))
 
 (defcustom wiki-nav-find-any-previous-link-keys '("C-c W")
-  "List of key sequences to search backward for the previous defined wiki-nav link.
+  "List of key sequences to search backward for the previous wiki-nav link.
 
 The search will automatically wrap past the beginning of the
 buffer.  The key binding is in effect anywhere in the buffer when
@@ -391,8 +391,8 @@ The format for key sequences is as defined by `kbd'."
   :group 'wiki-nav-keys
   :type '(repeat string))
 
-(defcustom wiki-nav-skip-to-next-keys '("TAB")
-  "List of key sequences to skip forward from a wiki-nav link to the next defined link.
+(defcustom wiki-nav-skip-to-next-keys '("<tab>")
+  "List of key sequences to skip forward from a wiki-nav link to the next link.
 
 The key binding is active only when the point is on a wiki-nav link.
 
@@ -401,7 +401,7 @@ The format for key sequences is as defined by `kbd'."
   :type '(repeat string))
 
 (defcustom wiki-nav-skip-to-previous-keys '("S-TAB" "S-<tab>" "<backtab>" "S-<iso-lefttab>")
-  "List of key sequences to skip backward from a wiki-nav link to the previous defined link.
+  "List of key sequences to skip back from a wiki-nav link to the previous link.
 
 The key binding is active only when the point is on a wiki-nav link.
 
@@ -411,7 +411,7 @@ The format for key sequences is as defined by `kbd'."
 
 ;;;###autoload
 (defgroup wiki-nav-faces nil
-  "Strings and regular expressions used by wiki-nav to define links."
+  "Faces used by wiki-nav."
   :group 'wiki-nav)
 
 (defface wiki-nav-link-face
@@ -432,34 +432,40 @@ The format for key sequences is as defined by `kbd'."
 (defcustom wiki-nav-link-start   "[["
 "A string (not a regular expression) which open a wiki-style navigation link.
 
-Since the construct [[text]] can show up for other reasons, you might change this to \"[[[\"."
-  :group 'wiki-nav-parsing
-  :type 'string)
+Since the construct [[text]] can show up for other reasons, you
+might change this to \"[[[\"."
+  :type 'string
+  :group 'wiki-nav-parsing)
 
 (defcustom wiki-nav-link-stop   "]]"
-"A string (not a regular expression) which closes a wiki-style navigation link.
+  "A string (not a regexp) which closes a wiki-style navigation link.
 
-Since the construct [[text]] can show up for other reasons, you might change this to \"]]]\"."
-  :group 'wiki-nav-parsing
-  :type 'string)
+Since the construct [[text]] can show up for other reasons, you
+might change this to \"]]]\"."
+  :type 'string
+  :group 'wiki-nav-parsing)
 
 (defcustom wiki-nav-link-text  "[^][\n]+"
 "A regular expression defining the text inside wiki-style navigation links.
 
 The value should exclude newlines and start/stop delimiters."
-  :group 'wiki-nav-parsing
-  :type 'string)
+  :type 'regexp
+  :group 'wiki-nav-parsing)
 
 (defcustom wiki-nav-external-link-pattern "\\`[a-zA-Z]+:[^[:space:]]+"
 "A regular expression for recognizing URLs inside wiki-style navigation links.
 
-The default is very permissive. To be stricter, try \"^[a-zA-Z]+://[^[:space:]]+\",
-or \"^http://[^[:space:]]+\".
+The default is very permissive.  To be more strict, try
+
+   \"\\\\`[a-zA-Z]+://[^[:space:]]+\",
+or
+
+   \"\\\\`http://[^[:space:]]+\".
 
 Setting the value to the empty string will disable the feature
 entirely, suppressing the recognition of external URLs."
-  :group 'wiki-nav-parsing
-  :type 'string)
+  :type 'regexp
+  :group 'wiki-nav-parsing)
 
 (defcustom wiki-nav-visit-link-pattern "\\`visit:\\([^:\n]+?\\)\\(?:\\|:\\([^\n]*\\)\\)\\'"
 "A regular expression for recognizing wiki-nav links outside the current file.
@@ -472,17 +478,17 @@ The format defined by the default expression is delimited by colons
 
    visit:/posix/path/to/another/file:WikiString
 
-Other interally recognized link schemes may be substititued for
+Other internally recognized link schemes may be substituted for
 the WikiString
 
    visit:/posix/path/to/another/file:line:10
 
 Set this value to the empty string to disable the feature entirely."
-  :group 'wiki-nav-parsing
-  :type 'string)
+  :type 'regexp
+  :group 'wiki-nav-parsing)
 
-"A regular expression for recognizing wiki-nav links that point to function definitions.
 (defcustom wiki-nav-function-link-pattern "\\`func\\(?:tion\\)?:\\([^\n]+\\)\\'"
+  "A regexp identifying wiki-nav links which point to function definitions.
 
 The format defined by the default expression is delimited by colons
 
@@ -491,19 +497,19 @@ The format defined by the default expression is delimited by colons
 Imenu is used to find the function definition.
 
 Set this value to the empty string to disable the feature entirely."
-  :group 'wiki-nav-parsing
-  :type 'string)
+  :type 'regexp
+  :group 'wiki-nav-parsing)
 
-"A regular expression for recognizing wiki-nav links that point to line numbers.
 (defcustom wiki-nav-line-number-link-pattern "\\`line:\\([0-9]+\\)\\'"
+  "A regexp for identifying wiki-nav links which point to line numbers.
 
 The format defined by the default expression is delimited by colons
 
    line:111
 
 Set this value to the empty string to disable the feature entirely."
-  :group 'wiki-nav-parsing
-  :type 'string)
+  :type 'regexp
+  :group 'wiki-nav-parsing)
 
 (defvar wiki-nav-button nil "Holds the buffer-local button definition when the mode is active.")
 (make-variable-buffer-local 'wiki-nav-button)
@@ -526,8 +532,8 @@ moved to the location of the match.
 
 If the string looks like it might be a URL (starts with
 alphabetical characters followed by a colon), an external browser
-will be spawned on the URL.  This bevavior can be controlled by the
-custommizable variable `wiki-nav-external-link-pattern'.
+will be spawned on the URL.  This behavior can be controlled by the
+customizable variable `wiki-nav-external-link-pattern'.
 
 If `multi-occur' is installed (standard with recent Emacs),
 double-clicking a wiki-nav link will search for matching links in
@@ -545,7 +551,7 @@ If the link follows the form
 
    func:FunctionName
 
-the link will lead to the defintion of the given function, as
+the link will lead to the definition of the given function, as
 defined by imenu. This behavior can be controlled by the
 customizable variable `wiki-nav-function-link-pattern'.
 
@@ -725,7 +731,9 @@ previous defined wiki-nav link."
   (wiki-nav-find-any-link -1))
 
 (defun wiki-nav-mouse-action (event)
-  "Dispatch the default navigation action for the wiki-nav link at the mouse cursor."
+  "Dispatch the default action for the wiki-nav link at the mouse location.
+
+Mouse location is defined by the mouse event EVENT."
   (interactive "e")
   (wiki-nav-action-1 (posn-point (event-end event))))
 
@@ -865,7 +873,10 @@ previous defined wiki-nav link."
     found))
 
 (defun wiki-nav-default-multi-action (event)
-  "Dispatch the default double-click navigation action for the wiki-nav link at POS."
+  "Dispatch the default double-click navigation action.
+
+The link used is that identified by the position at EVENT, a
+mouse event."
   (interactive "e")
   (let ((bounds (button-lock-find-extent (posn-point (event-end event)) 'wiki-nav))
         (str-val nil)
