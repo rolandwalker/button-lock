@@ -281,14 +281,26 @@ Setting this to zero will turn off the indicator."
   :group 'wiki-nav
   :type 'string)
 
-(defcustom wiki-nav-comment-only-modes '(cperl-mode perl-mode sh-mode ruby-mode python-mode lisp-mode emacs-lisp-mode)
-"A list of major modes for which to attempt to find navigation links in comments only.
+(defcustom wiki-nav-comment-only-modes '(
+                                         cperl-mode
+                                         emacs-lisp-mode
+                                         lisp-mode
+                                         perl-mode
+                                         prog-mode
+                                         python-mode
+                                         ruby-mode
+                                         sh-mode
+                                         )
+  "List of major modes for which to constrain navigation links to comments only.
 
-Because this functionality is not built into font-lock, the
-comment-only search must be less exact and/or less efficient.
-This method is particularly inexact, but avoids being slow.
+The constraint also applies to any major mode which is derived
+from one of these modes.
 
-It will not work for c-mode and many other modes that have
+Because the comment-only search is not built into font-lock, the
+search must be less exact and/or less efficient.  This method is
+particularly inexact, but avoids being slow.
+
+It will not work for `c-mode' and many other modes which have
 multi-line comments or multi-character comment delimiters."
   :group 'wiki-nav
   :type '(repeat symbol))
