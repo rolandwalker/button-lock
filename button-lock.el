@@ -401,6 +401,8 @@ buffer."
                                  keyboard-binding
                                  keyboard-action
                                  additional-property
+                                 rear-sticky
+
                                  remove
 
                                  mouse-2
@@ -524,8 +526,12 @@ an alternate ACTION, as can :M-MOUSE-1 ..., :A-MOUSE-1 ...,
 not exhaustive.  For a general method of adding alternate
 bindings, see `button-lock-extend-binding'.
 
-If :REMOVE is non-nil, any button matching the exact properties
-given will be removed and forgotten by font-lock.
+If :REAR-STICKY is non-nil, the rear-nonsticky text property will
+not be added, as it is by default.  Changing this setting is not
+recommended.
+
+If :REMOVE is non-nil, any existing button using PATTERN will
+be removed and forgotten by font-lock.
 
 If successful, this function returns the button which was added
 or removed from `font-lock-keywords'. Otherwise it returns nil.
@@ -619,6 +625,10 @@ The button value can be passed to `button-lock-extend-binding'."
       (when help-text
       (callf append properties `(help-echo ,help-text))
         (add-to-list 'font-lock-extra-managed-props 'help-echo))
+
+    (unless rear-sticky
+      (callf append properties `(rear-nonsticky t))
+      (add-to-list 'font-lock-extra-managed-props 'rear-nonsticky))
 
     (setq fl-keyword `(,pattern (,grouping ',properties ,face-policy)))
 
