@@ -381,6 +381,7 @@ in GNU Emacs 24.1 or higher."
 
 ;;; minor-mode definition
 
+;;;###autoload
 (define-minor-mode button-lock-mode
   "Toggle button-lock-mode, a minor mode for making text clickable.
 
@@ -419,6 +420,7 @@ the argument is 'toggle."
      (when (button-lock-called-interactively-p 'interactive)
        (message "button-lock mode disabled")))))
 
+;;;###autoload
 (define-globalized-minor-mode global-button-lock-mode button-lock-mode button-lock-maybe-turn-on
   :group 'button-lock)
 

@@ -743,6 +743,7 @@ seconds to complete."
     (wiki-nav-alist-flatten l-alist)))
 
 ;; bindable action dispatch commands
+;;;###autoload
 (defun wiki-nav-default-multi-action (event)
   "Dispatch the default double-click navigation action.
 
@@ -764,6 +765,7 @@ mouse event."
                                           (regexp-quote wiki-nav-link-stop))
                                           t)))))
 
+;;;###autoload
 (defun wiki-nav-mouse-action (event)
   "Dispatch the default action for the wiki-nav link at the mouse location.
 
@@ -771,6 +773,7 @@ Mouse location is defined by the mouse event EVENT."
   (interactive "e")
   (wiki-nav-action-1 (posn-point (event-end event))))
 
+;;;###autoload
 (defun wiki-nav-keyboard-action ()
   "Dispatch the default navigation action for the wiki-nav link under the point."
   (interactive)
@@ -913,6 +916,7 @@ Mouse location is defined by the mouse event EVENT."
 
 ;;; minor mode definition
 
+;;;###autoload
 (define-minor-mode wiki-nav-mode
   "Turn on navigation by bracketed [[WikiStrings]] within a document.
 
@@ -976,11 +980,13 @@ mode."
      (when (button-lock-called-interactively-p 'interactive)
        (message "wiki-nav mode disabled")))))
 
+;;;###autoload
 (define-globalized-minor-mode global-wiki-nav-mode wiki-nav-mode wiki-nav-maybe-turn-on
   :group 'wiki-nav)
 
 ;;; interactive commands
 
+;;;###autoload
 (defun wiki-nav-find-any-link (&optional arg)
   "Skip forward to the next defined wiki-nav link.
 
@@ -1047,6 +1053,7 @@ previous defined wiki-nav link."
           (when (fboundp 'nav-flash-show)
             (nav-flash-show)))))))
 
+;;;###autoload
 (defun wiki-nav-find-any-previous-link ()
   "Skip backward to the previous defined wiki-nav link.
 
@@ -1057,6 +1064,7 @@ previous defined wiki-nav link."
   (interactive)
   (wiki-nav-find-any-link -1))
 
+;;;###autoload
 (defun wiki-nav-ido (arg)
   "Navigate to wiki-nav strings using `ido-completing-read'.
 
