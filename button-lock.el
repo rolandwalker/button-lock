@@ -140,12 +140,9 @@
 ;;     Return value for button-lock-register-global-button is inconsistent
 ;;     with button-lock-set-button.  The global function does not
 ;;     return a button which could be later passed to
-;;     button-lock-extend-binding.  The other global functions are
-;;     similarly inconsistent; they can only be depended on to return
-;;     nil on failure.
-;;
-;;     button-lock-mode gets activated twice for each buffer when
-;;     global-button-lock-mode is on.
+;;     button-lock-extend-binding, nor are the arguments parsed and
+;;     checked for validity.  Any errors for global buttons are also
+;;     deferred until the mode is activated.
 ;;
 ;; TODO
 ;;
