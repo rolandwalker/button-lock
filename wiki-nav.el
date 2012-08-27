@@ -24,7 +24,7 @@
 ;; [[Prior Art]]
 ;; [[Notes]]
 ;; [[Bugs]]
-;; [[Compatibility]]
+;; [[Compatibility and Requirements]]
 ;; [[Todo]]
 ;; [[License]]
 ;; [[Code]]
@@ -179,9 +179,13 @@
 ;;     The global minor mode causes button-lock to be turned off/back
 ;;     on for every buffer.
 ;;
-;; [[<Compatibility]]
+;; [[<Compatibility and Requirements]]
 ;;
 ;;     Tested on GNU Emacs 24.1 only.
+;;
+;;     Requires button-lock.el
+;;
+;;     Uses if present: nav-flash.el, back-button.el
 ;;
 ;; [[<Todo]]
 ;;

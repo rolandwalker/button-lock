@@ -139,9 +139,11 @@
 ;;         buttons.  Button-lock.el is for changing all matching text
 ;;         into a button.
 ;;
-;; Compatibility
+;; Compatibility and Requirements
 ;;
 ;;     Tested only on GNU Emacs version 24.1
+;;
+;;     No external dependencies
 ;;
 ;; Bugs
 ;;
