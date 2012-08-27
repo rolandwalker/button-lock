@@ -294,6 +294,7 @@
 
 ;; for callf, let*
 (eval-when-compile
+  (defvar button-lock-mode)
   (require 'cl))
 
 (require 'font-lock)
@@ -301,6 +302,14 @@
 (require 'back-button nil t)
 
 (autoload 'button-lock-mode "button-lock" "Toggle button-lock-mode, a minor mode for making text clickable." nil)
+
+(declare-function back-button-push-mark                   "back-button.el")
+(declare-function back-button-push-mark-local-and-global  "back-button.el")
+(declare-function button-lock-unset-button                "button-lock.el")
+(declare-function button-lock-set-button                  "button-lock.el")
+(declare-function button-lock-extend-binding              "button-lock.el")
+(declare-function button-lock-find-extent                 "button-lock.el")
+(declare-function button-lock-called-interactively-p      "button-lock.el")
 
 ;;; customizable variables
 
@@ -558,6 +567,8 @@ Set this value to the empty string to disable the feature entirely."
   :group 'wiki-nav-parsing)
 
 ;;; variables
+
+(defvar wiki-nav-mode nil "Mode variable for wiki-nav.")
 
 (defvar wiki-nav-button nil "Holds the buffer-local button definition when the mode is active.")
 (make-variable-buffer-local 'wiki-nav-button)

@@ -267,6 +267,8 @@
 
 (require 'font-lock)
 
+(declare-function union "cl-seq.el")
+
 ;;; customizable variables
 
 ;;;###autoload
@@ -375,9 +377,9 @@ This variable should be set by calling
 
 Optional KIND is as documented at `called-interactively-p'
 in GNU Emacs 24.1 or higher."
-  `(if (eq 0 (cdr (subr-arity (symbol-function 'called-interactively-p))))
-      (called-interactively-p)
-    (called-interactively-p ,kind)))
+  (if (eq 0 (cdr (subr-arity (symbol-function 'called-interactively-p))))
+      '(called-interactively-p)
+    `(called-interactively-p ,kind)))
 
 ;;; minor-mode definition
 
@@ -1007,6 +1009,7 @@ deactivated and reactivated."
 ;; mangle-whitespace: t
 ;; require-final-newline: t
 ;; coding: utf-8
+;; byte-compile-warnings: (not cl-functions)
 ;; End:
 ;;
 ;; LocalWords: ButtonLockMode mouseable mybutton keymap propertize
