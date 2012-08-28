@@ -7,7 +7,7 @@
 ;; Version: 0.9.7
 ;; Last-Updated: 27 Aug 2012
 ;; EmacsWiki: ButtonLockMode
-;; Keywords: mouse, button, hypermedia
+;; Keywords: mouse, button, hypermedia, extensions
 ;;
 ;; Simplified BSD License
 ;;
