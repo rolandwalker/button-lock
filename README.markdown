@@ -117,5 +117,4 @@ Compatibility and Requirements
 ------------------------------
 Tested only on GNU Emacs version 24.1
 
-Uses if present: nav-flash.el
-
+Uses if present: [nav-flash.el](http://github.com/rolandwalker/nav-flash)
