@@ -3,7 +3,8 @@
 ;; Copyright (c) 2011-12 D Roland Walker
 ;;
 ;; Author: D Roland Walker <walker@pobox.com>
-;; URL: https://github.com/rolandwalker/button-lock/raw/master/wiki-nav.el
+;; Homepage: http://github.com/rolandwalker/button-lock
+;; URL: http://raw.github.com/rolandwalker/button-lock/master/wiki-nav.el
 ;; Version: 0.6.3
 ;; Last-Updated: 27 Aug 2012
 ;; EmacsWiki: WikiNavMode
@@ -42,7 +43,7 @@
 ;; font-lock.el.  Font-lock.el is provided with Emacs.
 ;; Button-lock.el is available here
 ;;
-;;    https://github.com/rolandwalker/button-lock
+;;    http://github.com/rolandwalker/button-lock
 ;;
 ;; [[<Example usage]]
 ;;
