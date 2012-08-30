@@ -407,8 +407,8 @@ the argument is 'toggle."
   (cond
     ((and button-lock-mode
           (or noninteractive                    ; never turn on button-lock where
-              (eq (aref (buffer-name) 0) ?\s))  ; there can be no font-lock
-          (setq button-lock-mode nil)))
+              (eq (aref (buffer-name) 0) ?\s))) ; there can be no font-lock
+     (setq button-lock-mode nil))
     (button-lock-mode
      (font-lock-mode 1)
      (button-lock-merge-global-buttons-to-local)
