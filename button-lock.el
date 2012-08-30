@@ -660,11 +660,23 @@ If NO-REPLACE is set, no replacement is made for a duplicate button."
                                  wheel-down
                                  wheel-up
 
+                                 down-mouse-1
+                                 down-mouse-2
+                                 down-mouse-3
+                                 down-mouse-4
+                                 down-mouse-5
+
                                  double-mouse-1
                                  double-mouse-2
                                  double-mouse-3
                                  double-mouse-4
                                  double-mouse-5
+
+                                 triple-mouse-1
+                                 triple-mouse-2
+                                 triple-mouse-3
+                                 triple-mouse-4
+                                 triple-mouse-5
 
                                  A-mouse-1
                                  A-mouse-2
@@ -816,11 +828,23 @@ The button value can be passed to `button-lock-extend-binding'."
                      wheel-down
                      wheel-up
 
+                     down-mouse-1
+                     down-mouse-2
+                     down-mouse-3
+                     down-mouse-4
+                     down-mouse-5
+
                      double-mouse-1
                      double-mouse-2
                      double-mouse-3
                      double-mouse-4
                      double-mouse-5
+
+                     triple-mouse-1
+                     triple-mouse-2
+                     triple-mouse-3
+                     triple-mouse-4
+                     triple-mouse-5
 
                      A-mouse-1
                      A-mouse-2
