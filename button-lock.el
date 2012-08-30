@@ -782,10 +782,9 @@ set.
 
 As a convenience, :MOUSE-2 through :MOUSE-5 can be used to attach
 an alternate ACTION, as can :M-MOUSE-1 ..., :A-MOUSE-1 ...,
-:DOUBLE-MOUSE-1 ..., :WHEEL-UP..., and :WHEEL-DOWN... The list is
-not exhaustive.  For a general method of adding alternate
-bindings, pass a keymap for :ACTION or use
- `button-lock-extend-binding'.
+:DOUBLE-MOUSE-1 ..., :WHEEL-UP..., and :WHEEL-DOWN... The list is not
+exhaustive.  For a general method of adding alternate bindings, pass
+a keymap for :ACTION or use `button-lock-extend-binding'.
 
 If :REAR-STICKY is non-nil, the rear-nonsticky text property will
 not be added, as it is by default.  Changing this setting is not
