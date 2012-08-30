@@ -305,7 +305,7 @@
 (require 'nav-flash nil t)
 (require 'back-button nil t)
 
-(autoload 'button-lock-mode "button-lock" "Toggle button-lock-mode, a minor mode for making text clickable." nil)
+(autoload 'button-lock-mode "button-lock" "Toggle button-lock-mode, a minor mode for making text clickable.")
 
 (declare-function back-button-push-mark                   "back-button.el")
 (declare-function back-button-push-mark-local-and-global  "back-button.el")
