@@ -983,8 +983,8 @@ mode."
   (cond
     ((and wiki-nav-mode
           (or noninteractive                    ; never turn on wiki-nav where
-              (eq (aref (buffer-name) 0) ?\s))  ; there can be no font-lock
-          (setq wiki-nav-mode nil)))
+              (eq (aref (buffer-name) 0) ?\s))) ; there can be no font-lock
+     (setq wiki-nav-mode nil))
     (wiki-nav-mode
      (wiki-nav-link-set)
      (when (button-lock-called-interactively-p 'interactive)
