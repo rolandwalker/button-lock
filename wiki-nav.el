@@ -648,9 +648,9 @@ Returns `point-min' if the point is at the minimum."
 
 ;; buffer functions
 (defun wiki-nav-maybe-turn-on (&optional arg)
-  "Called by `global-wiki-nav-mode' to activate wiki-nav mode in a buffer.
+  "Called by `global-wiki-nav-mode' to activate `wiki-nav-mode' in a buffer.
 
-wiki-nav mode will be activated in every buffer, except
+`wiki-nav-mode' will be activated in every buffer, except
 
    minibuffers
    buffers with names that begin with space
@@ -659,7 +659,7 @@ wiki-nav mode will be activated in every buffer, except
    buffers excluded by `wiki-nav-buffer-name-exclude-pattern'
    buffers excluded by `button-lock-buffer-name-exclude-pattern'
 
-If called with a negative ARG, deactivate wiki-nav mode in the buffer."
+If called with a negative ARG, deactivate `wiki-nav-mode' in the buffer."
   (callf or arg 1)
   (when (or (< arg 0)
             (wiki-nav-buffer-included-p (current-buffer)))
@@ -689,7 +689,7 @@ If called with a negative ARG, deactivate wiki-nav mode in the buffer."
 
 ;; link functions
 (defun wiki-nav-link-set (&optional arg)
-  "Use button-lock to set up wiki-nav links in a buffer.
+  "Use `button-lock-mode' to set up wiki-nav links in a buffer.
 
 If called with negative ARG, remove the links."
   (callf or arg 1)
