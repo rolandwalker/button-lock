@@ -330,8 +330,8 @@
 
 (defcustom wiki-nav-less-feedback nil
   "Give less echo area feedback."
-  :group 'wiki-nav
-  :type 'boolean)
+  :type 'boolean
+  :group 'wiki-nav)
 
 (defcustom wiki-nav-mode-lighter " wikn"
   "This string appears in the mode-line when `wiki-nav-mode' is active.
@@ -363,8 +363,8 @@ particularly inexact, but avoids being slow.
 
 It will not work for `c-mode' and many other modes which have
 multi-line comments or multi-character comment delimiters."
-  :group 'wiki-nav
-  :type '(repeat symbol))
+  :type '(repeat symbol)
+  :group 'wiki-nav)
 
 (defcustom wiki-nav-exclude-modes  '(
                                      fundamental-mode
@@ -428,8 +428,8 @@ The key binding is in effect anywhere in the buffer when wiki-nav
 mode is active.
 
 The format for key sequences is as defined by `kbd'."
-  :group 'wiki-nav-keys
-  :type '(repeat string))
+  :type '(repeat string)
+  :group 'wiki-nav-keys)
 
 (defcustom wiki-nav-find-any-previous-link-keys '("C-c W")
   "List of key sequences to search backward for the previous wiki-nav link.
@@ -439,8 +439,8 @@ buffer.  The key binding is in effect anywhere in the buffer when
 wiki-nav mode is active.
 
 The format for key sequences is as defined by `kbd'."
-  :group 'wiki-nav-keys
-  :type '(repeat string))
+  :type '(repeat string)
+  :group 'wiki-nav-keys)
 
 (defcustom wiki-nav-activate-keys '("RET")
   "List of key sequences to activate a wiki-nav link under the point.
@@ -448,8 +448,8 @@ The format for key sequences is as defined by `kbd'."
 The key binding is active only when the point is on a wiki-nav link.
 
 The format for key sequences is as defined by `kbd'."
-  :group 'wiki-nav-keys
-  :type '(repeat string))
+  :type '(repeat string)
+  :group 'wiki-nav-keys)
 
 (defcustom wiki-nav-skip-to-next-keys '("<tab>")
   "List of key sequences to skip forward from a wiki-nav link to the next link.
@@ -457,8 +457,8 @@ The format for key sequences is as defined by `kbd'."
 The key binding is active only when the point is on a wiki-nav link.
 
 The format for key sequences is as defined by `kbd'."
-  :group 'wiki-nav-keys
-  :type '(repeat string))
+  :type '(repeat string)
+  :group 'wiki-nav-keys)
 
 (defcustom wiki-nav-skip-to-previous-keys '("S-TAB" "S-<tab>" "<backtab>" "S-<iso-lefttab>")
   "List of key sequences to skip back from a wiki-nav link to the previous link.
@@ -466,8 +466,8 @@ The format for key sequences is as defined by `kbd'."
 The key binding is active only when the point is on a wiki-nav link.
 
 The format for key sequences is as defined by `kbd'."
-  :group 'wiki-nav-keys
-  :type '(repeat string))
+  :type '(repeat string)
+  :group 'wiki-nav-keys)
 
 ;;;###autoload
 (defgroup wiki-nav-faces nil
