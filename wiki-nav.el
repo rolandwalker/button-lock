@@ -324,9 +324,9 @@
   :version "0.6.3"
   :link '(emacs-commentary-link "wiki-nav")
   :prefix "wiki-nav-"
-  :group 'button-lock
   :group 'navigation
-  :group 'extensions)
+  :group 'mouse
+  :group 'convenience)
 
 (defcustom wiki-nav-less-feedback nil
   "Give less echo area feedback."

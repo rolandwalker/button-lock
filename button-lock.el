@@ -281,6 +281,7 @@
   :link '(emacs-commentary-link "button-lock")
   :prefix "button-lock-"
   :group 'navigation
+  :group 'mouse
   :group 'extensions)
 
 (defcustom button-lock-exclude-modes '(
