@@ -412,7 +412,7 @@ Set this value to nil to disable."
 
 (defcustom wiki-nav-multi-action-function 'wiki-nav-default-multi-action
   "Function to run on double-click of a wiki-nav link."
-  :type 'symbol
+  :type 'function
   :group 'wiki-nav)
 
 ;;;###autoload
