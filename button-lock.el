@@ -15,18 +15,18 @@
 ;;; Commentary:
 ;;
 ;; Button-lock is a minor mode which provides simple facilities to
-;; define clickable text based regular expressions.  Button-lock.el
+;; define clickable text based on regular expressions.  Button-lock.el
 ;; piggybacks on font-lock.el, and is efficient.  Overlays are not
 ;; used.
 ;;
 ;; Button-lock buttons (links) can execute any function.
 ;;
 ;; There is little user-level interface for button-lock.el, which is
-;; intended to be used from Emacs Lisp.  See wiki-nav.el for a
-;; user-friendly library built on top of button-lock.el.  Wiki-nav.el
-;; is available here:
+;; intended to be used from Emacs Lisp.  For a user-friendly library
+;; built on top of button-lock.el, see wiki-nav.el or fixmee.el
 ;;
-;;    http://github.com/rolandwalker/button-lock
+;;    http://github.com/rolandwalker/button-lock/blob/master/wiki-nav.el
+;;    http://github.com/rolandwalker/fixmee
 ;;
 ;; Example usage
 ;;
@@ -91,7 +91,7 @@
 ;;
 ;; Interface
 ;;
-;; Button lock is intended to be used via the following functions
+;; Button-lock is intended to be used via the following functions
 ;;
 ;;    `button-lock-set-button'
 ;;    `button-lock-unset-button'

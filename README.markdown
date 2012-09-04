@@ -28,7 +28,7 @@ However, button-lock does not create any buttons by default.  You must write
 some Lisp code to make it do anything.
 
 For much more information, see [the source for button-lock.el](https://github.com/rolandwalker/button-lock/blob/master/button-lock.el)
-and the doc string for button-lock-set-button (`C-h f button-lock-set-button`).
+and the doc string for `button-lock-set-button` (`C-h f button-lock-set-button`).
 
 wiki-nav
 --------
