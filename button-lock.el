@@ -961,7 +961,7 @@ When passing a prepared keymap for ACTION, set MOUSE-BINDING
 to nil."
   (when (not (member existing-button button-lock-button-list))
     (error "No such button"))
-  (let ((map (memq 'keymap (button-lock-button-properties (car (member existing-button button-lock-button-list))))))
+  (let ((map (cadr (memq 'keymap (button-lock-button-properties (car (member existing-button button-lock-button-list)))))))
     (when button-lock-mode
       (font-lock-remove-keywords nil (list existing-button)))
     (if (keymapp action)
