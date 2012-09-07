@@ -45,6 +45,7 @@
 ;;    (button-lock-unset-button mybutton)
 ;;
 ;;    ;; create a fancy raised button
+;;    (require 'cus-edit)
 ;;    (button-lock-set-button "hello" #'(lambda ()
 ;;                                              (interactive)
 ;;                                              (save-match-data
