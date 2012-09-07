@@ -182,7 +182,7 @@
 ;;
 ;; [[<Compatibility and Requirements]]
 ;;
-;;     Tested on GNU Emacs 24.1 only.
+;;     Tested on GNU Emacs versions 23.3 and 24.1
 ;;
 ;;     Requires button-lock.el
 ;;
