@@ -1,6 +1,10 @@
 Overview
 ========
 
+Mouseable text in Emacs.
+
+![wiki-nav example](https://raw.github.com/rolandwalker/button-lock/master/wiki_nav_example.png)
+
 Modern people using modern Emacs usually look at screens marked up with
 font-lock (aka syntax highlighting).  Sometimes modern people even use a
 mouse.
@@ -12,6 +16,15 @@ This package provides
 * *wiki-nav:* a user-friendly library for making text mouseable
 
 Because these packages are based on font-lock, they are efficient.
+
+Quickstart
+----------
+
+	(require 'wiki-nav)
+
+	(global-wiki-nav-mode 1)
+
+	Sprinkle double-bracketed [[links]] in your code comments
 
 button-lock
 -----------
@@ -41,8 +54,9 @@ to jump between sections, between files, or open external URLs.
 Example usage:
 
 1. Put `button-lock.el` and `wiki-nav.el` on your Emacs `load-path`
-directory.  If you've never heard of a `load-path` directory, create a new
-directory named `~/.emacs.d/lisp`, and add this code to your `~/.emacs` file
+   directory.  If you've never heard of a `load-path` directory, create a
+   new directory named `~/.emacs.d/lisp`, and add this code to your
+   `~/.emacs` file
 
 		(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 
@@ -59,7 +73,8 @@ directory named `~/.emacs.d/lisp`, and add this code to your `~/.emacs` file
 	may be all you need.  When you click on `[[links]]`, Emacs jumps forward in
 	the file to the next matching wiki-nav link.
 
-Advanced usage:
+Advanced usage
+--------------
 
 Bracketed links may contain external URLs:
 
@@ -67,21 +82,21 @@ Bracketed links may contain external URLs:
 
 Or they may use various internally-recognized URI schemes:
 
-* visit: navigates to another file
+* `visit:` navigates to another file
 
 		[[visit:/etc/hosts]]
 
 		[[visit:/path/to/another/file:NameOfLink]]
 
-* func: navigates to the definition of a function
+* `func:` navigates to the definition of a function
 
 		[[func:main]]
 
-* line: navigates to a line number
+* `line:` navigates to a line number
 
 		[[line:12]]
 
-* visit: may be combined with other schemes:
+* `visit:` may be combined with other schemes:
 
 		[[visit:/path/to/another/file.c:func:main]]
 
@@ -96,6 +111,7 @@ and the doc string for wiki-nav-mode (`C-h f wiki-nav-mode`).
 
 Prior Art
 ---------
+
 The following packages provide functionality that is similar to button-lock
 or wiki-nav:
 
@@ -113,8 +129,15 @@ org-mode
 [http://orgmode.org](http://orgmode.org)   
 Carsten Dominik &lt;carsten at orgmode dot org&gt;
 
+Other Libraries Built on Button-lock
+------------------------------------
+
+[Fixmee-mode](http://github.com/rolandwalker/fixmee)
+
+
 Compatibility and Requirements
 ------------------------------
+
 Tested on GNU Emacs versions 23.3 and 24.1
 
-Uses if present: [nav-flash.el](http://github.com/rolandwalker/nav-flash)
+Uses if present: [nav-flash.el](http://github.com/rolandwalker/nav-flash), [back-button.el](http://github.com/rolandwalker/back-button)
