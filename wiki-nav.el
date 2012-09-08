@@ -651,8 +651,11 @@ Returns `point-min' if the point is at the minimum."
     ((and (consp list)
           (nthcdr (safe-length list) list))
      (list list))
-    ((listp list)
+    ((and (listp list)
+          (consp (car list)))
      (append (wiki-nav-alist-flatten (car list)) (wiki-nav-alist-flatten (cdr list))))
+    ((listp list)
+     (cons (car list) (wiki-nav-alist-flatten (cdr list))))
     (t
      (list list))))
 
@@ -764,7 +767,7 @@ seconds to complete."
         (progress-reporter-update reporter (incf counter)))
       (push (wiki-nav-links buf) l-alist))
     (progress-reporter-done reporter)
-    (wiki-nav-alist-flatten l-alist)))
+    (delq nil (wiki-nav-alist-flatten l-alist))))
 
 ;; bindable action dispatch commands
 ;;;###autoload
