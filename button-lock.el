@@ -279,12 +279,9 @@
 ;;; requires
 
 ;; for callf, callf2, defun*, union
-(eval-when-compile
-  (require 'cl))
+(require 'cl)
 
 (require 'font-lock)
-
-(declare-function union "cl-seq.el")
 
 ;;; customizable variables
 

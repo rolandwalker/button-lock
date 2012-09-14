@@ -306,10 +306,8 @@
 
 ;;; requires
 
-;; for callf, let*
-(eval-when-compile
-  (defvar button-lock-mode)
-  (require 'cl))
+;; for callf
+(require 'cl)
 
 (require 'font-lock)
 (require 'nav-flash nil t)
@@ -324,6 +322,10 @@
 (declare-function button-lock-extend-binding              "button-lock.el")
 (declare-function button-lock-find-extent                 "button-lock.el")
 (declare-function button-lock-called-interactively-p      "button-lock.el")
+
+(eval-when-compile
+  ;; declarations for byte compiler
+  (defvar button-lock-mode))
 
 ;;; customizable variables
 
@@ -1121,6 +1123,7 @@ buffers."
 ;; mangle-whitespace: t
 ;; require-final-newline: t
 ;; coding: utf-8
+;; byte-compile-warnings: (not cl-functions)
 ;; End:
 ;;
 
