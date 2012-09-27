@@ -76,12 +76,12 @@ Example usage:
 ```
 
 3. Sprinkle double-bracketed
-
+   
 		[[links]]
-
-	in your files.  That's it.  There's more functionality, but simple `[[links]]`
-	may be all you need.  When you click on `[[links]]`, Emacs jumps forward in
-	the file to the next matching wiki-nav link.
+   
+   in your files.  That's it.  There's more functionality, but simple `[[links]]`
+   be all you need.  When you click on `[[links]]`, Emacs jumps forward in
+   file to the next matching wiki-nav link.
 
 Advanced usage
 --------------
@@ -143,7 +143,6 @@ Other Libraries Built on Button-lock
 ------------------------------------
 
 [Fixmee-mode](http://github.com/rolandwalker/fixmee)
-
 
 Compatibility and Requirements
 ------------------------------
