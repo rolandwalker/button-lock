@@ -662,23 +662,6 @@ Returns `point-min' if the point is at the minimum."
      (list list))))
 
 ;; buffer functions
-(defun wiki-nav-maybe-turn-on (&optional arg)
-  "Called by `global-wiki-nav-mode' to activate `wiki-nav-mode' in a buffer.
-
-`wiki-nav-mode' will be activated in every buffer, except
-
-   minibuffers
-   buffers with names that begin with space
-   buffers excluded by `wiki-nav-exclude-modes'
-   buffers excluded by `button-lock-exclude-modes'
-   buffers excluded by `wiki-nav-buffer-name-exclude-pattern'
-   buffers excluded by `button-lock-buffer-name-exclude-pattern'
-
-If called with a negative ARG, deactivate `wiki-nav-mode' in the buffer."
-  (callf or arg 1)
-  (when (or (< arg 0)
-            (wiki-nav-buffer-included-p (current-buffer)))
-    (wiki-nav-mode arg)))
 
 (defun wiki-nav-buffer-included-p (buf)
   "Return BUF if global wiki-nav should enable wiki-nav in BUF."
@@ -793,20 +776,6 @@ mouse event."
                                           "[[:space:]<>]*" str-val "[[:space:]]*"
                                           (regexp-quote wiki-nav-link-stop))
                                           t)))))
-
-;;;###autoload
-(defun wiki-nav-mouse-action (event)
-  "Dispatch the default action for the wiki-nav link at the mouse location.
-
-Mouse location is defined by the mouse event EVENT."
-  (interactive "e")
-  (wiki-nav-action-1 (posn-point (event-end event))))
-
-;;;###autoload
-(defun wiki-nav-keyboard-action ()
-  "Dispatch the default navigation action for the wiki-nav link under the point."
-  (interactive)
-  (wiki-nav-action-1 (point)))
 
 ;; Monolithic function to dispatch any link action.
 (defun wiki-nav-action-1 (pos)
@@ -943,6 +912,20 @@ Mouse location is defined by the mouse event EVENT."
                  (message wrap-message))))))))
     found))
 
+;;;###autoload
+(defun wiki-nav-mouse-action (event)
+  "Dispatch the default action for the wiki-nav link at the mouse location.
+
+Mouse location is defined by the mouse event EVENT."
+  (interactive "e")
+  (wiki-nav-action-1 (posn-point (event-end event))))
+
+;;;###autoload
+(defun wiki-nav-keyboard-action ()
+  "Dispatch the default navigation action for the wiki-nav link under the point."
+  (interactive)
+  (wiki-nav-action-1 (point)))
+
 ;;; minor mode definition
 
 ;;;###autoload
@@ -1008,6 +991,26 @@ mode."
      (wiki-nav-link-set -1)
      (when (button-lock-called-interactively-p 'interactive)
        (message "wiki-nav mode disabled")))))
+
+;;; global minor-mode definition
+
+(defun wiki-nav-maybe-turn-on (&optional arg)
+  "Called by `global-wiki-nav-mode' to activate `wiki-nav-mode' in a buffer.
+
+`wiki-nav-mode' will be activated in every buffer, except
+
+   minibuffers
+   buffers with names that begin with space
+   buffers excluded by `wiki-nav-exclude-modes'
+   buffers excluded by `button-lock-exclude-modes'
+   buffers excluded by `wiki-nav-buffer-name-exclude-pattern'
+   buffers excluded by `button-lock-buffer-name-exclude-pattern'
+
+If called with a negative ARG, deactivate `wiki-nav-mode' in the buffer."
+  (callf or arg 1)
+  (when (or (< arg 0)
+            (wiki-nav-buffer-included-p (current-buffer)))
+    (wiki-nav-mode arg)))
 
 ;;;###autoload
 (define-globalized-minor-mode global-wiki-nav-mode wiki-nav-mode wiki-nav-maybe-turn-on
