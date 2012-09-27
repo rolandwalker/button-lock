@@ -22,11 +22,13 @@ Because these packages are based on font-lock, they are efficient.
 Quickstart
 ----------
 
-	(require 'wiki-nav)
-
-	(global-wiki-nav-mode 1)
-
-	Sprinkle double-bracketed [[links]] in your code comments
+```lisp
+(require 'wiki-nav)
+ 
+(global-wiki-nav-mode 1)
+ 
+;; Sprinkle double-bracketed [[links]] in your code comments
+```
 
 button-lock
 -----------
@@ -37,7 +39,9 @@ text properties.
 
 Button-lock has a simple interface that works like this
 
-	(button-lock-set-button "http://google.com" 'browse-url-at-mouse)
+```lisp
+(button-lock-set-button "http://google.com" 'browse-url-at-mouse)
+```
 
 However, button-lock does not create any buttons by default.  You must write
 some Lisp code to make it do anything.
@@ -60,12 +64,16 @@ Example usage:
    new directory named `~/.emacs.d/lisp`, and add this code to your
    `~/.emacs` file
 
-		(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
+```lisp
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
+```
 
 2. Add the following to your `~/.emacs` file
 
-		(require 'wiki-nav)
-		(global-wiki-nav-mode 1)
+```lisp
+(require 'wiki-nav)
+(global-wiki-nav-mode 1)
+```
 
 3. Sprinkle double-bracketed
 
