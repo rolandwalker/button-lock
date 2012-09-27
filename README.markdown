@@ -63,22 +63,20 @@ Example usage:
    directory.  If you've never heard of a `load-path` directory, create a
    new directory named `~/.emacs.d/lisp`, and add this code to your
    `~/.emacs` file
-
 ```lisp
 	(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 ```
 
 2. Add the following to your `~/.emacs` file
-
 ```lisp
 	(require 'wiki-nav)
 	(global-wiki-nav-mode 1)
 ```
 
 3. Sprinkle double-bracketed
-   
+
 		[[links]]
-   
+
    in your files.  That's it.  There's more functionality, but simple `[[links]]`
    be all you need.  When you click on `[[links]]`, Emacs jumps forward in
    file to the next matching wiki-nav link.
