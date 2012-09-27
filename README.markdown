@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/rolandwalker/button-lock.png)](http://travis-ci.org/rolandwalker/button-lock)
+
 Overview
 ========
 
