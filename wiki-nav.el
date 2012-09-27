@@ -585,6 +585,7 @@ Set this value to the empty string to disable the feature entirely."
 ;;; variables
 
 (defvar wiki-nav-mode nil "Mode variable for wiki-nav.")
+(make-variable-buffer-local 'wiki-nav-mode)
 
 (defvar wiki-nav-button nil "Holds the buffer-local button definition when the mode is active.")
 (make-variable-buffer-local 'wiki-nav-button)

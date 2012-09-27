@@ -382,6 +382,10 @@ This variable should be set by calling
 (defvar button-lock-button-list nil
   "An internal variable used to keep track of button-lock buttons.")
 
+(defvar button-lock-mode nil
+  "Mode variable for `button-lock-mode'.")
+
+(make-variable-buffer-local 'button-lock-mode)
 (make-variable-buffer-local 'button-lock-button-list)
 (put 'button-lock-button-list 'permanent-local t)
 
