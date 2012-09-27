@@ -66,14 +66,14 @@ Example usage:
 
        ```lisp
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
-```
+       ```
 
 2. Add the following to your `~/.emacs` file
 
        ```lisp
 (require 'wiki-nav)
 (global-wiki-nav-mode 1)
-```
+       ```
 
 3. Sprinkle double-bracketed
    
