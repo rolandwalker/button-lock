@@ -64,13 +64,13 @@ Example usage:
    new directory named `~/.emacs.d/lisp`, and add this code to your
    `~/.emacs` file
 
-```lisp
+       ```lisp
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 ```
 
 2. Add the following to your `~/.emacs` file
 
-```lisp
+       ```lisp
 (require 'wiki-nav)
 (global-wiki-nav-mode 1)
 ```
