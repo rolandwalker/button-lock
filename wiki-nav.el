@@ -324,7 +324,6 @@
 (declare-function button-lock-set-button                  "button-lock.el")
 (declare-function button-lock-extend-binding              "button-lock.el")
 (declare-function button-lock-find-extent                 "button-lock.el")
-(declare-function button-lock-called-interactively-p      "button-lock.el")
 
 (eval-when-compile
   ;; declarations for byte compiler
@@ -600,6 +599,17 @@ Set this value to the empty string to disable the feature entirely."
     (dolist (key wiki-nav-find-any-previous-link-keys)
       (define-key map (read-kbd-macro key) 'wiki-nav-find-any-previous-link))
     map))
+
+;;; macros
+
+(defmacro wiki-nav-called-interactively-p (&optional kind)
+  "A backward-compatible version of `called-interactively-p'.
+
+Optional KIND is as documented at `called-interactively-p'
+in GNU Emacs 24.1 or higher."
+  (if (eq 0 (cdr (subr-arity (symbol-function 'called-interactively-p))))
+      '(called-interactively-p)
+    `(called-interactively-p ,kind)))
 
 ;;; compatibility functions
 
@@ -989,11 +999,11 @@ mode."
      (setq wiki-nav-mode nil))
     (wiki-nav-mode
      (wiki-nav-link-set)
-     (when (button-lock-called-interactively-p 'interactive)
+     (when (wiki-nav-called-interactively-p 'interactive)
        (message "wiki-nav mode enabled")))
     (t
      (wiki-nav-link-set -1)
-     (when (button-lock-called-interactively-p 'interactive)
+     (when (wiki-nav-called-interactively-p 'interactive)
        (message "wiki-nav mode disabled")))))
 
 ;;; global minor-mode definition
