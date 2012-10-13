@@ -25,6 +25,7 @@ WIKI_USERNAME=roland.walker
 CURL=curl --silent
 EDITOR=runemacs -no_wait
 WORK_DIR=$(shell pwd)
+# overriding PACKAGE_NAME can be useful for run-pristine, run-pristine-local, upload-wiki
 PACKAGE_NAME=$(shell basename $(WORK_DIR))
 AUTOLOADS_FILE=$(PACKAGE_NAME)-autoloads.el
 TRAVIS_FILE=.travis.yml
