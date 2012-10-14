@@ -1,10 +1,40 @@
 
-;; requires and setup
+;;; requires and setup
 
 (require 'button-lock)
 (require 'wiki-nav)
 
 ;;; this is a stub - no tests defined
+
+;;; wiki-nav-point-before ()
+
+;;; wiki-nav-comment-only-mode-p ()
+
+;;; wiki-nav-alist-flatten (list)
+
+;;; wiki-nav-buffer-included-p (buf)
+
+;;; wiki-nav-link-set (&optional arg)
+
+;;; wiki-nav-links (&optional buffer)
+
+;;; wiki-nav-links-all-buffers ()
+
+;;; wiki-nav-default-multi-action (event)
+
+;;; wiki-nav-action-1 (pos)
+
+;;; wiki-nav-mouse-action (event)
+
+;;; wiki-nav-keyboard-action ()
+
+;;; wiki-nav-maybe-turn-on (&optional arg)
+
+;;; wiki-nav-find-any-link (&optional arg)
+
+;;; wiki-nav-find-any-previous-link ()
+
+;;; wiki-nav-ido (arg)
 
 ;;
 ;; Emacs
