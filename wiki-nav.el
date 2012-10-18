@@ -685,6 +685,7 @@ Returns `point-min' if the point is at the minimum."
     (with-current-buffer buf
       (when (and (not (minibufferp buf))
                  (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
+                 (not (memq major-mode button-lock-exclude-modes))
                  (not (memq major-mode wiki-nav-exclude-modes))
                  (not (string-match-p wiki-nav-buffer-name-exclude-pattern (buffer-name buf)))
                  (catch 'success
