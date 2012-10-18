@@ -328,6 +328,7 @@
 (declare-function button-lock-find-extent                 "button-lock.el")
 
 (eval-when-compile
+  (defvar button-lock-exclude-modes)
   (defvar button-lock-mode))
 
 ;;; customizable variables
@@ -683,6 +684,7 @@ Returns `point-min' if the point is at the minimum."
   (when (and (not noninteractive)
              (bufferp buf)
              (buffer-name buf))
+    (require 'button-lock)
     (with-current-buffer buf
       (when (and (not (minibufferp buf))
                  (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
