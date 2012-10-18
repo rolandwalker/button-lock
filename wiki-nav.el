@@ -318,6 +318,8 @@
 
 (autoload 'button-lock-mode "button-lock" "Toggle button-lock-mode, a minor mode for making text clickable.")
 
+;;; declarations
+
 (declare-function back-button-push-mark                   "back-button.el")
 (declare-function back-button-push-mark-local-and-global  "back-button.el")
 (declare-function button-lock-unset-button                "button-lock.el")
@@ -326,7 +328,6 @@
 (declare-function button-lock-find-extent                 "button-lock.el")
 
 (eval-when-compile
-  ;; declarations for byte compiler
   (defvar button-lock-mode))
 
 ;;; customizable variables
