@@ -279,7 +279,7 @@
 ;;; Code:
 ;;
 
-;;; requires
+;;; requirements
 
 ;; for callf, callf2, defun*, union
 (require 'cl)
