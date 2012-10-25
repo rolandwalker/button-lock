@@ -47,7 +47,7 @@ However, button-lock does not create any buttons by default.  You must write
 some Lisp code to make it do anything.
 
 For much more information, see [the source for button-lock.el](https://github.com/rolandwalker/button-lock/blob/master/button-lock.el)
-and the doc string for `button-lock-set-button` (`C-h f button-lock-set-button`).
+and the docstring for `button-lock-set-button` (`C-h f button-lock-set-button`).
 
 wiki-nav
 --------
@@ -78,8 +78,8 @@ Example usage:
 		[[links]]
 
    in your files.  That's it.  There's more functionality, but simple `[[links]]`
-   be all you need.  When you click on `[[links]]`, Emacs jumps forward in
-   file to the next matching wiki-nav link.
+   may be all you need.  When you click on `[[links]]`, the point jumps forward
+   in the buffer to the next matching wiki-nav link.
 
 Advanced usage
 --------------
@@ -115,7 +115,7 @@ lookup.  To link to a filename which contains a colon, substitute "%3A" for
 the colon character.
 
 For much more information, see [the source for wiki-nav.el](https://github.com/rolandwalker/button-lock/blob/master/wiki-nav.el)
-and the doc string for wiki-nav-mode (`C-h f wiki-nav-mode`).
+and the docstring for `wiki-nav-mode` (`C-h f wiki-nav-mode`).
 
 Prior Art
 ---------

@@ -786,7 +786,7 @@ become visible in a tooltip depending on your Emacs setup.
 to the user via `display-local-help',
 
 :KBD-HELP-MULTILINE is applied to the non-standard
-'kbd-help-multline text property.
+'kbd-help-multiline text property.
 
 :GROUPING designates a subgroup in the pattern match to receive
 the new text properties.  Subgroups, delimited by parentheses,
@@ -1060,7 +1060,8 @@ deactivated and reactivated."
 ;; End:
 ;;
 ;; LocalWords: ButtonLockMode mouseable mybutton keymap propertize
-;; LocalWords: callf cperl nonsticky
+;; LocalWords: callf cperl nonsticky setq fixmee devel uncompiled
+;; LocalWords: MULTILINE multiline Koppelman Bader
 ;;
 
 ;;; button-lock.el ends here
