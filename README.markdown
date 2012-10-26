@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/rolandwalker/button-lock.png)](http://travis-ci.org/rolandwalker/button-lock)
+[![Build Status](https://secure.travis-ci.org/rolandwalker/button-lock.png?branch=master)](http://travis-ci.org/rolandwalker/button-lock)
 
 Overview
 ========
