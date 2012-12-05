@@ -337,7 +337,9 @@
 (defgroup wiki-nav nil
   "Simple file navigation using [[WikiStrings]]."
   :version "0.6.4"
-  :link '(emacs-commentary-link "wiki-nav")
+  :link '(emacs-commentary-link :tag "Commentary" "wiki-nav")
+  :link '(url-link :tag "Github" "http://github.com/rolandwalker/button-lock")
+  :link '(url-link :tag "EmacsWiki" "http://emacswiki.org/emacs/WikiNavMode")
   :prefix "wiki-nav-"
   :group 'navigation
   :group 'mouse
