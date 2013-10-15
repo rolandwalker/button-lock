@@ -36,6 +36,10 @@
 
 ;;; wiki-nav-ido (arg)
 
+;;; wiki-nav-mode
+
+;;; global-wiki-nav-mode
+
 ;;
 ;; Emacs
 ;;

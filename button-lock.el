@@ -293,7 +293,7 @@
   "Clickable text defined by regular expression."
   :version "0.9.10"
   :link '(emacs-commentary-link :tag "Commentary" "button-lock")
-  :link '(url-link :tag "Github" "http://github.com/rolandwalker/button-lock")
+  :link '(url-link :tag "GitHub" "http://github.com/rolandwalker/button-lock")
   :link '(url-link :tag "EmacsWiki" "http://emacswiki.org/emacs/ButtonLockMode")
   :prefix "button-lock-"
   :group 'navigation

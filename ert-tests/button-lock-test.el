@@ -51,6 +51,10 @@
 
 ;;; button-lock-unregister-all-global-buttons ()
 
+;;; button-lock-mode
+
+;;; global-button-lock-mode
+
 ;;
 ;; Emacs
 ;;
