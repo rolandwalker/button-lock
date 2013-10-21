@@ -355,7 +355,8 @@
 
 Set to nil or the empty string to disable the mode-line
 lighter for `wiki-nav-mode'."
-  :risky t
+  (when (>= emacs-major-version 23) :risky)
+  (when (>= emacs-major-version 23) t)
   :group 'wiki-nav
   :type 'string)
 
