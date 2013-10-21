@@ -355,10 +355,9 @@
 
 Set to nil or the empty string to disable the mode-line
 lighter for `wiki-nav-mode'."
-  (when (>= emacs-major-version 23) :risky)
-  (when (>= emacs-major-version 23) t)
   :group 'wiki-nav
   :type 'string)
+(put 'wiki-nav-mode-lighter 'risky-local-variable t)
 
 (defcustom wiki-nav-comment-only-modes '(
                                          cperl-mode

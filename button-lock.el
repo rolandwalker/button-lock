@@ -355,9 +355,8 @@ Set this value to nil to disable."
 Set to nil or the empty string to disable the mode-line
 lighter for `button-lock-mode'."
   :type 'string
-  (when (>= emacs-major-version 23) :risky)
-  (when (>= emacs-major-version 23) t)
   :group 'button-lock)
+(put 'button-lock-mode-lighter 'risky-local-variable t)
 
 ;;; faces
 
