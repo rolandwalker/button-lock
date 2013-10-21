@@ -5,8 +5,8 @@
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/button-lock
 ;; URL: http://raw.github.com/rolandwalker/button-lock/master/button-lock.el
-;; Version: 0.9.10
-;; Last-Updated: 14 Sep 2012
+;; Version: 1.0.0
+;; Last-Updated: 21 Oct 2013
 ;; EmacsWiki: ButtonLockMode
 ;; Keywords: mouse, button, hypermedia, extensions
 ;;
@@ -292,7 +292,7 @@
 ;;;###autoload
 (defgroup button-lock nil
   "Clickable text defined by regular expression."
-  :version "0.9.10"
+  :version "1.0.0"
   :link '(emacs-commentary-link :tag "Commentary" "button-lock")
   :link '(url-link :tag "GitHub" "http://github.com/rolandwalker/button-lock")
   :link '(url-link :tag "EmacsWiki" "http://emacswiki.org/emacs/ButtonLockMode")
