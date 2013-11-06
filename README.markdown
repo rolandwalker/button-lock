@@ -130,11 +130,11 @@ buttons.el
 Miles Bader <miles@gnu.org>
 
 linkd.el   
-[http://dto.github.com/notebook/linkd.html](http://dto.github.com/notebook/linkd.html)   
+<http://dto.github.com/notebook/linkd.html>   
 David O'Toole <dto@gnu.org>
 
 org-mode   
-[http://orgmode.org](http://orgmode.org)   
+<http://orgmode.org>   
 Carsten Dominik &lt;carsten at orgmode dot org&gt;
 
 Other Libraries Built on Button-lock
