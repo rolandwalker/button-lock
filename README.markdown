@@ -5,7 +5,7 @@ Overview
 
 Mouseable text in Emacs.
 
-![wiki-nav example](https://raw.github.com/rolandwalker/button-lock/master/wiki_nav_example.png)
+![wiki-nav example](https://raw.githubusercontent.com/rolandwalker/button-lock/master/wiki_nav_example.png)
 
 Modern people using modern Emacs usually look at screens marked up with
 font-lock (aka syntax highlighting).  Sometimes modern people even use a

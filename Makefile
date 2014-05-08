@@ -22,7 +22,7 @@ EMACS_BATCH=$(EMACS_CLEAN) --batch
 TESTS=
 WIKI_USERNAME=roland.walker
 
-CURL=curl --silent
+CURL=curl --location --silent
 EDITOR=runemacs -no_wait
 WORK_DIR=$(shell pwd)
 # overriding PACKAGE_NAME can be useful for run-pristine, run-pristine-local, upload-wiki

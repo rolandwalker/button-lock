@@ -4,7 +4,7 @@
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/button-lock
-;; URL: http://raw.github.com/rolandwalker/button-lock/master/wiki-nav.el
+;; URL: http://raw.githubusercontent.com/rolandwalker/button-lock/master/wiki-nav.el
 ;; Version: 1.0.0
 ;; Last-Updated: 21 Oct 2013
 ;; EmacsWiki: WikiNavMode
