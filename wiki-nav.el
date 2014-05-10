@@ -373,6 +373,7 @@ lighter for `wiki-nav-mode'."
                                          python-mode
                                          ruby-mode
                                          sh-mode
+                                         prog-mode
                                          )
   "List of major modes for which to constrain navigation links to comments only.
 
