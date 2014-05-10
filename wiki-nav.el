@@ -438,7 +438,7 @@ Set this value to nil to disable."
   "Keyboard bindings used by wiki-nav"
   :group 'wiki-nav)
 
-(defcustom wiki-nav-find-any-link-keys '("C-c w")
+(defcustom wiki-nav-find-any-link-keys '("C-c C-w")
   "List of key sequences to search forward for the next defined wiki-nav link.
 
 The search will automatically wrap past the end of the buffer.
@@ -449,7 +449,7 @@ The format for key sequences is as defined by `kbd'."
   :type '(repeat string)
   :group 'wiki-nav-keys)
 
-(defcustom wiki-nav-find-any-previous-link-keys '("C-c W")
+(defcustom wiki-nav-find-any-previous-link-keys '("C-c C-W")
   "List of key sequences to search backward for the previous wiki-nav link.
 
 The search will automatically wrap past the beginning of the
