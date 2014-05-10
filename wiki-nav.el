@@ -89,9 +89,13 @@
 ;;
 ;;     From the keyboard:
 ;;
-;;         control-c w   skip forward in the buffer to the next link
+;;         control-c control-w
 ;;
-;;         control-c W   skip backward in the buffer to the previous link
+;;                       skip forward in the buffer to the next link
+;;
+;;         control-c control-W
+;;
+;;                       skip backward in the buffer to the previous link
 ;;
 ;;         return        if positioned on a link, activate it
 ;;
