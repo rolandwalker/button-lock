@@ -22,7 +22,7 @@ Because these packages are based on font-lock, they are efficient.
 Quickstart
 ----------
 
-```lisp
+```elisp
 (require 'wiki-nav)
  
 (global-wiki-nav-mode 1)
@@ -39,7 +39,7 @@ text properties.
 
 Button-lock has a simple interface that works like this
 
-```lisp
+```elisp
 (button-lock-set-button "http://google.com" 'browse-url-at-mouse)
 ```
 
@@ -62,16 +62,18 @@ Example usage:
 1. Put `button-lock.el` and `wiki-nav.el` on your Emacs `load-path`
    directory.  If you've never heard of a `load-path` directory, create a
    new directory named `~/.emacs.d/lisp`, and add this code to your
-   `~/.emacs` file
-```lisp
+   `~/.emacs` file:
+
+	```elisp
 	(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
-```
+	```
 
 2. Add the following to your `~/.emacs` file
-```lisp
+
+	```elisp
 	(require 'wiki-nav)
 	(global-wiki-nav-mode 1)
-```
+	```
 
 3. Sprinkle double-bracketed
 
