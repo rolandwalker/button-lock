@@ -1,7 +1,6 @@
 [![Build Status](https://secure.travis-ci.org/rolandwalker/button-lock.png?branch=master)](http://travis-ci.org/rolandwalker/button-lock)
 
-Overview
-========
+# Overview
 
 Mouseable text in Emacs.
 
@@ -19,8 +18,7 @@ This package provides
 
 Because these packages are based on font-lock, they are efficient.
 
-Quickstart
-----------
+## Quickstart
 
 ```elisp
 (require 'wiki-nav)
@@ -30,8 +28,7 @@ Quickstart
 ;; Sprinkle double-bracketed [[links]] in your code comments
 ```
 
-button-lock
------------
+## button-lock
 
 Button-lock uses font-lock to make text clickable.  In Emacs-speak: it
 creates font-lock keywords which have mouse bindings added to their
@@ -49,8 +46,7 @@ some Lisp code to make it do anything.
 For much more information, see [the source for button-lock.el](https://github.com/rolandwalker/button-lock/blob/master/button-lock.el)
 and the docstring for `button-lock-set-button` (`C-h f button-lock-set-button`).
 
-wiki-nav
---------
+## wiki-nav
 
 Wiki-nav is a user-friendly high-level interface to button-lock.  It
 provides a minor mode which recognizes [[wiki-style]] double-bracketed
@@ -83,8 +79,7 @@ Example usage:
    may be all you need.  When you click on `[[links]]`, the point jumps forward
    in the buffer to the next matching wiki-nav link.
 
-Advanced usage
---------------
+## Advanced usage
 
 Bracketed links may contain external URLs:
 
@@ -119,8 +114,7 @@ the colon character.
 For much more information, see [the source for wiki-nav.el](https://github.com/rolandwalker/button-lock/blob/master/wiki-nav.el)
 and the docstring for `wiki-nav-mode` (`C-h f wiki-nav-mode`).
 
-Prior Art
----------
+## Prior Art
 
 The following packages provide functionality that is similar to button-lock
 or wiki-nav:
@@ -139,13 +133,11 @@ org-mode
 <http://orgmode.org>   
 Carsten Dominik &lt;carsten at orgmode dot org&gt;
 
-Other Libraries Built on Button-lock
-------------------------------------
+## Other Libraries Built on Button-lock
 
 [Fixmee-mode](http://github.com/rolandwalker/fixmee)
 
-Compatibility and Requirements
-------------------------------
+## Compatibility and Requirements
 
 	GNU Emacs version 24.4-devel     : yes, at the time of writing
 	GNU Emacs version 24.3           : yes
