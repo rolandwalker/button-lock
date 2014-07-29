@@ -119,18 +119,18 @@ and the docstring for `wiki-nav-mode` (<kbd>C-h</kbd> <kbd>f</kbd> <kbd>wiki-nav
 The following packages provide functionality that is similar to button-lock
 or wiki-nav:
 
-hi-lock.el   
+hi-lock  
 David M. Koppelman <koppel@ece.lsu.edu>
 
-buttons.el   
+buttons.el  
 Miles Bader <miles@gnu.org>
 
-linkd.el   
-<http://dto.github.com/notebook/linkd.html>   
+linkd  
+<http://dto.github.com/notebook/linkd.html>  
 David O'Toole <dto@gnu.org>
 
-org-mode   
-<http://orgmode.org>   
+org-mode  
+<http://orgmode.org>  
 Carsten Dominik &lt;carsten at orgmode dot org&gt;
 
 ## Other Libraries Built on Button-lock
