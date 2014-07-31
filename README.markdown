@@ -12,11 +12,19 @@ mouse.
 
 This package provides
 
-* *button-lock:* a programmer-friendly library for making text mouseable
+ * *button-lock:* a programmer-friendly library for making text mouseable
 
-* *wiki-nav:* a user-friendly library for making text mouseable
+ * *wiki-nav:* a user-friendly library for making text mouseable
 
 Because these packages are based on font-lock, they are efficient.
+
+ * [Quickstart](#quickstart)
+ * [button-lock](#button-lock)
+ * [wiki-nav](#wiki-nav)
+ * [Advanced usage](#advanced-usage)
+ * [Prior Art](#prior-art)
+ * [Other Libraries Built on Button-lock](#other-libraries-built-on-button-lock)
+ * [Compatibility and Requirements](#compatibility-and-requirements)
 
 ## Quickstart
 
@@ -87,21 +95,21 @@ Bracketed links may contain external URLs:
 
 Or they may use various internally-recognized URI schemes:
 
-* `visit:` navigates to another file
+ * `visit:` navigates to another file
 
 		[[visit:/etc/hosts]]
 
 		[[visit:/path/to/another/file:NameOfLink]]
 
-* `func:` navigates to the definition of a function
+ * `func:` navigates to the definition of a function
 
 		[[func:main]]
 
-* `line:` navigates to a line number
+ * `line:` navigates to a line number
 
 		[[line:12]]
 
-* `visit:` may be combined with other schemes:
+ * `visit:` may be combined with other schemes:
 
 		[[visit:/path/to/another/file.c:func:main]]
 
