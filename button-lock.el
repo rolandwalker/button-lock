@@ -1,12 +1,12 @@
 ;;; button-lock.el --- Clickable text defined by regular expression
 ;;
-;; Copyright (c) 2011-14 Roland Walker
+;; Copyright (c) 2011-15 Roland Walker
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/button-lock
 ;; URL: http://raw.githubusercontent.com/rolandwalker/button-lock/master/button-lock.el
-;; Version: 1.0.0
-;; Last-Updated: 21 Oct 2013
+;; Version: 1.0.2
+;; Last-Updated: 21 Feb 2015
 ;; EmacsWiki: ButtonLockMode
 ;; Keywords: mouse, button, hypermedia, extensions
 ;;
@@ -221,7 +221,7 @@
 ;;
 ;; Simplified BSD License
 ;;
-;; Copyright (c) 2011-12, Roland Walker
+;; Copyright (c) 2011-15, Roland Walker
 ;; All rights reserved.
 ;;
 ;; Redistribution and use in source and binary forms, with or
@@ -292,7 +292,7 @@
 ;;;###autoload
 (defgroup button-lock nil
   "Clickable text defined by regular expression."
-  :version "1.0.0"
+  :version "1.0.2"
   :link '(emacs-commentary-link :tag "Commentary" "button-lock")
   :link '(url-link :tag "GitHub" "http://github.com/rolandwalker/button-lock")
   :link '(url-link :tag "EmacsWiki" "http://emacswiki.org/emacs/ButtonLockMode")
