@@ -306,11 +306,15 @@
                                        Buffer-menu-mode
                                        bm-show-mode
                                        dired-mode
-                                       eshell-mode
+                                       wdired-mode
                                        gnus-article-mode
                                        mime/viewer-mode
                                        rmail-mode
                                        term-mode
+                                       comint-mode
+                                       shell-mode
+                                       eshell-mode
+                                       inferior-emacs-lisp-mode
                                        )
   "Modes for which global button-lock will not be activated.
 
