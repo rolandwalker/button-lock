@@ -314,7 +314,7 @@
 
 ;;; requirements
 
-;; for callf
+;; for callf, intersection
 (require 'cl)
 
 (require 'font-lock)
@@ -394,6 +394,9 @@ multi-line comments or multi-character comment delimiters."
                                      org-mode
                                      )
   "List of major modes in which global wiki-nav will not be activated.
+
+A buffer will also be excluded if its major mode is derived from a mode in
+this list.
 
 This is in addition to any modes listed in `button-lock-exclude-modes'.
 
@@ -704,6 +707,8 @@ Returns `point-min' if the point is at the minimum."
                  (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
                  (not (memq major-mode button-lock-exclude-modes))
                  (not (memq major-mode wiki-nav-exclude-modes))
+                 (not (intersection (button-lock--parent-modes) button-lock-exclude-modes))
+                 (not (intersection (button-lock--parent-modes) wiki-nav-exclude-modes))
                  (not (string-match-p wiki-nav-buffer-name-exclude-pattern (buffer-name buf)))
                  (catch 'success
                    (dolist (filt wiki-nav-buffer-exclude-functions)
