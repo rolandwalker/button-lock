@@ -389,6 +389,20 @@ multi-line comments or multi-character comment delimiters."
   :type '(repeat symbol)
   :group 'wiki-nav)
 
+(defcustom wiki-nav-rear-nonsticky t
+  "Whether to set the 'rear-nonsticky property on wiki-nav buttons.
+
+This value may be unset to stop `wiki-nav-mode' from attempting
+to manage the 'rear-nonsticky text property, which may improve
+compatibility with other modes that depend on setting the same
+property (Example: ielm).
+
+The default, t, is better for most users, because it keeps the
+properties of the button from spuriously attaching to other
+text."
+  :type 'boolean
+  :group 'wiki-nav)
+
 (defcustom wiki-nav-exclude-modes  '(
                                      fundamental-mode
                                      org-mode
@@ -743,6 +757,7 @@ If called with negative ARG, remove the links."
                                                   :double-mouse-1 wiki-nav-multi-action-function
                                                   :face 'wiki-nav-link-face :mouse-face 'wiki-nav-mouse-face :face-policy 'prepend
                                                   :additional-property 'wiki-nav
+                                                  :rear-sticky wiki-nav-rear-nonsticky
                                                   :grouping 1))
     (dolist (key wiki-nav-activate-keys)
       (button-lock-extend-binding wiki-nav-button 'wiki-nav-keyboard-action         nil key))
