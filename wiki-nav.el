@@ -1,6 +1,6 @@
 ;;; wiki-nav.el --- Simple file navigation using [[WikiStrings]]
 ;;
-;; Copyright (c) 2011-14 Roland Walker
+;; Copyright (c) 2011-15 Roland Walker
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/button-lock
@@ -275,7 +275,7 @@
 ;;
 ;; Simplified BSD License
 ;;
-;; Copyright (c) 2011-12, Roland Walker
+;; Copyright (c) 2011-15, Roland Walker
 ;; All rights reserved.
 ;;
 ;; Redistribution and use in source and binary forms, with or
