@@ -1,12 +1,12 @@
 ;;; button-lock.el --- Clickable text defined by regular expression
 ;;
-;; Copyright (c) 2011-14 Roland Walker
+;; Copyright (c) 2011-15 Roland Walker
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/button-lock
 ;; URL: http://raw.githubusercontent.com/rolandwalker/button-lock/master/button-lock.el
-;; Version: 1.0.0
-;; Last-Updated: 21 Oct 2013
+;; Version: 1.0.2
+;; Last-Updated: 21 Feb 2015
 ;; EmacsWiki: ButtonLockMode
 ;; Keywords: mouse, button, hypermedia, extensions
 ;;
@@ -221,7 +221,7 @@
 ;;
 ;; Simplified BSD License
 ;;
-;; Copyright (c) 2011-12, Roland Walker
+;; Copyright (c) 2011-15, Roland Walker
 ;; All rights reserved.
 ;;
 ;; Redistribution and use in source and binary forms, with or
@@ -282,7 +282,7 @@
 
 ;;; requirements
 
-;; for callf, callf2, defun*, union
+;; for callf, callf2, defun*, union, intersection
 (require 'cl)
 
 (require 'font-lock)
@@ -292,7 +292,7 @@
 ;;;###autoload
 (defgroup button-lock nil
   "Clickable text defined by regular expression."
-  :version "1.0.0"
+  :version "1.0.2"
   :link '(emacs-commentary-link :tag "Commentary" "button-lock")
   :link '(url-link :tag "GitHub" "http://github.com/rolandwalker/button-lock")
   :link '(url-link :tag "EmacsWiki" "http://emacswiki.org/emacs/ButtonLockMode")
@@ -306,13 +306,20 @@
                                        Buffer-menu-mode
                                        bm-show-mode
                                        dired-mode
-                                       eshell-mode
+                                       wdired-mode
                                        gnus-article-mode
                                        mime/viewer-mode
                                        rmail-mode
                                        term-mode
+                                       comint-mode
+                                       shell-mode
+                                       eshell-mode
+                                       inferior-emacs-lisp-mode
                                        )
   "Modes for which global button-lock will not be activated.
+
+A buffer will also be excluded if its major mode is derived from
+a mode in this list.
 
 Modes may be excluded for reasons of security (since buttons can
 execute arbitrary functions), efficiency, or to avoid conflicts
@@ -388,6 +395,9 @@ This variable should be set by calling
 (defvar button-lock-button-list nil
   "An internal variable used to keep track of button-lock buttons.")
 
+(defvar button-lock--parent-modes-hash (make-hash-table)
+  "A hash for memoizing `button-lock--parent-modes'.")
+
 (defvar button-lock-mode nil
   "Mode variable for `button-lock-mode'.")
 
@@ -423,6 +433,20 @@ in GNU Emacs 24.1 or higher."
 
 ;;; utility functions
 
+;; general functions
+
+(defun button-lock--parent-modes ()
+  "Return all parent modes for the current major mode.
+
+Returns nil if the current major mode is not a derived mode."
+  (let ((this-mode major-mode)
+        (parent-modes nil))
+    (unless (setq parent-modes (gethash major-mode button-lock--parent-modes-hash))
+      (while (setq this-mode (get this-mode 'derived-mode-parent))
+        (push this-mode parent-modes))
+      (puthash major-mode (if parent-modes parent-modes :none) button-lock--parent-modes-hash))
+    (if (eql parent-modes :none) nil parent-modes)))
+
 ;; buffer functions
 
 (defun button-lock-buffer-included-p (buf)
@@ -434,6 +458,7 @@ in GNU Emacs 24.1 or higher."
       (when (and (not (minibufferp buf))
                  (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
                  (not (memq major-mode button-lock-exclude-modes))
+                 (not (intersection (button-lock--parent-modes) button-lock-exclude-modes))
                  (not (string-match-p button-lock-buffer-name-exclude-pattern (buffer-name buf)))
                  (catch 'success
                    (dolist (filt button-lock-buffer-exclude-functions)
