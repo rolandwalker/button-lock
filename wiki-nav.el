@@ -403,53 +403,6 @@ text."
   :type 'boolean
   :group 'wiki-nav)
 
-(defcustom wiki-nav-exclude-modes  '(
-                                     fundamental-mode
-                                     org-mode
-                                     )
-  "List of major modes in which global wiki-nav will not be activated.
-
-A buffer will also be excluded if its major mode is derived from a mode in
-this list.
-
-This is in addition to any modes listed in `button-lock-exclude-modes'.
-
-Modes may be excluded for reasons of security (since buttons can
-execute arbitrary functions), efficiency, or to avoid conflicts
-with modes that provide similar functionality."
-  :type '(repeat symbol)
-  :group 'wiki-nav)
-
-(defcustom wiki-nav-buffer-name-exclude-pattern "\\`[* ]"
-  "Do not activate minor made in buffers matching this regular expression.
-
-Buffers may be excluded for reasons of security (since buttons
-can execute arbitrary functions), efficiency, or to avoid
-conflicts with modes that provide similar functionality.
-
-The default pattern is designed to match buffers which are
-programatically generated or internal to Emacs."
-  :type 'regexp
-  :group 'wiki-nav)
-
-(defcustom wiki-nav-buffer-include-functions '()
-  "Do not activate minor mode in a buffer unless all functions evaluate non-nil.
-
-Each function should take a single argument (a buffer).
-
-Set this value to nil to disable."
-  :type '(repeat function)
-  :group 'wiki-nav)
-
-(defcustom wiki-nav-buffer-exclude-functions '()
-  "Do not activate minor mode in a buffer if any function evaluates non-nil.
-
-Each function should take a single argument (a buffer).
-
-Set this value to nil to disable."
-  :type '(repeat function)
-  :group 'wiki-nav)
-
 (defcustom wiki-nav-multi-action-function 'wiki-nav-default-multi-action
   "Function to run on double-click of a wiki-nav link."
   :type 'function
@@ -610,6 +563,58 @@ The format defined by the default expression is delimited by colons
 Set this value to the empty string to disable the feature entirely."
   :type 'regexp
   :group 'wiki-nav-parsing)
+
+;;;###autoload
+(defgroup wiki-nav-global nil
+  "Settings for `global-wiki-nav-mode'."
+  :group 'wiki-nav)
+
+(defcustom wiki-nav-exclude-modes  '(
+                                     fundamental-mode
+                                     org-mode
+                                     )
+  "List of major modes in which global wiki-nav will not be activated.
+
+A buffer will also be excluded if its major mode is derived from a mode in
+this list.
+
+This is in addition to any modes listed in `button-lock-exclude-modes'.
+
+Modes may be excluded for reasons of security (since buttons can
+execute arbitrary functions), efficiency, or to avoid conflicts
+with modes that provide similar functionality."
+  :type '(repeat symbol)
+  :group 'wiki-nav-global)
+
+(defcustom wiki-nav-buffer-name-exclude-pattern "\\`[* ]"
+  "Do not activate minor made in buffers matching this regular expression.
+
+Buffers may be excluded for reasons of security (since buttons
+can execute arbitrary functions), efficiency, or to avoid
+conflicts with modes that provide similar functionality.
+
+The default pattern is designed to match buffers which are
+programatically generated or internal to Emacs."
+  :type 'regexp
+  :group 'wiki-nav-global)
+
+(defcustom wiki-nav-buffer-include-functions '()
+  "Do not activate minor mode in a buffer unless all functions evaluate non-nil.
+
+Each function should take a single argument (a buffer).
+
+Set this value to nil to disable."
+  :type '(repeat function)
+  :group 'wiki-nav-global)
+
+(defcustom wiki-nav-buffer-exclude-functions '()
+  "Do not activate minor mode in a buffer if any function evaluates non-nil.
+
+Each function should take a single argument (a buffer).
+
+Set this value to nil to disable."
+  :type '(repeat function)
+  :group 'wiki-nav-global)
 
 ;;; variables
 
