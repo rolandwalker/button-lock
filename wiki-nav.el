@@ -329,6 +329,7 @@
 (declare-function button-lock-set-button                  "button-lock.el")
 (declare-function button-lock-extend-binding              "button-lock.el")
 (declare-function button-lock-find-extent                 "button-lock.el")
+(declare-function button-lock-parent-modes                "button-lock.el")
 
 (eval-when-compile
   (defvar button-lock-exclude-modes)
