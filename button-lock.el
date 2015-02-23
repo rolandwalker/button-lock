@@ -623,6 +623,7 @@ the argument is 'toggle."
      (setq button-lock-mode nil))
     (button-lock-mode
      (font-lock-mode 1)
+     (make-local-variable 'font-lock-extra-managed-props)
      (button-lock-merge-global-buttons-to-local)
      (add-hook 'font-lock-mode-hook 'button-lock-do-tell nil t)
      (button-lock-tell-font-lock)
@@ -630,6 +631,7 @@ the argument is 'toggle."
      (when (button-lock-called-interactively-p 'interactive)
        (message "button-lock mode enabled")))
     (t
+     (kill-local-variable 'font-lock-extra-managed-props)
      (button-lock-tell-font-lock 'forget)
      (button-lock-maybe-unbuttonify-buffer)   ; cperl-mode workaround
      (button-lock-maybe-fontify-buffer)
