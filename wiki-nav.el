@@ -727,8 +727,8 @@ Returns `point-min' if the point is at the minimum."
                  (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
                  (not (memq major-mode button-lock-exclude-modes))
                  (not (memq major-mode wiki-nav-exclude-modes))
-                 (not (intersection (button-lock--parent-modes) button-lock-exclude-modes))
-                 (not (intersection (button-lock--parent-modes) wiki-nav-exclude-modes))
+                 (not (intersection (button-lock-parent-modes) button-lock-exclude-modes))
+                 (not (intersection (button-lock-parent-modes) wiki-nav-exclude-modes))
                  (not (string-match-p wiki-nav-buffer-name-exclude-pattern (buffer-name buf)))
                  (catch 'success
                    (dolist (filt wiki-nav-buffer-exclude-functions)

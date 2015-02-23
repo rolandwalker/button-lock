@@ -396,8 +396,8 @@ This variable should be set by calling
 (defvar button-lock-button-list nil
   "An internal variable used to keep track of button-lock buttons.")
 
-(defvar button-lock--parent-modes-hash (make-hash-table)
-  "A hash for memoizing `button-lock--parent-modes'.")
+(defvar button-lock-parent-modes-hash (make-hash-table)
+  "A hash for memoizing `button-lock-parent-modes'.")
 
 (defvar button-lock-mode nil
   "Mode variable for `button-lock-mode'.")
@@ -436,16 +436,16 @@ in GNU Emacs 24.1 or higher."
 
 ;; general functions
 
-(defun button-lock--parent-modes ()
+(defun button-lock-parent-modes ()
   "Return all parent modes for the current major mode.
 
 Returns nil if the current major mode is not a derived mode."
   (let ((this-mode major-mode)
         (parent-modes nil))
-    (unless (setq parent-modes (gethash major-mode button-lock--parent-modes-hash))
+    (unless (setq parent-modes (gethash major-mode button-lock-parent-modes-hash))
       (while (setq this-mode (get this-mode 'derived-mode-parent))
         (push this-mode parent-modes))
-      (puthash major-mode (if parent-modes parent-modes :none) button-lock--parent-modes-hash))
+      (puthash major-mode (if parent-modes parent-modes :none) button-lock-parent-modes-hash))
     (if (eql parent-modes :none) nil parent-modes)))
 
 ;; buffer functions
@@ -459,7 +459,7 @@ Returns nil if the current major mode is not a derived mode."
       (when (and (not (minibufferp buf))
                  (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
                  (not (memq major-mode button-lock-exclude-modes))
-                 (not (intersection (button-lock--parent-modes) button-lock-exclude-modes))
+                 (not (intersection (button-lock-parent-modes) button-lock-exclude-modes))
                  (not (string-match-p button-lock-buffer-name-exclude-pattern (buffer-name buf)))
                  (catch 'success
                    (dolist (filt button-lock-buffer-exclude-functions)
