@@ -83,9 +83,9 @@ Example usage:
 
 		[[links]]
 
-   in your files.  That's it.  There's more functionality, but simple `[[links]]`
-   may be all you need.  When you click on `[[links]]`, the point jumps forward
-   in the buffer to the next matching wiki-nav link.
+	in your files.  That's it.  There's more functionality, but simple `[[links]]`
+	may be all you need.  When you click on `[[links]]`, the point jumps forward
+	in the buffer to the next matching wiki-nav link.
 
 ## Advanced usage
 
