@@ -945,8 +945,8 @@ mouse event."
                  (forward-line (1- ln))
                  (when (fboundp 'nav-flash-show)
                    (nav-flash-show))
-                 (if (= (line-number-at-pos) ln)
-                     (setq found :line))))
+                 (when (= (line-number-at-pos) ln)
+                   (setq found :line))))
               (t
                (setq str-val (regexp-quote (url-unhex-string str-val)))
                (deactivate-mark)
