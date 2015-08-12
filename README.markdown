@@ -105,9 +105,11 @@ Or they may use various internally-recognized URI schemes:
 
 		[[func:main]]
 
- * `line:` navigates to a line number
+ * `line:` navigates to a line number, with negative integers
+   counting backward from the last line
 
 		[[line:12]]
+		[[line:-12]]
 
  * `visit:` may be combined with other schemes:
 
