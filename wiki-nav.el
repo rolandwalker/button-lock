@@ -202,13 +202,6 @@
 ;;
 ;; [[<Compatibility and Requirements]]
 ;;
-;;     GNU Emacs version 24.5-devel     : not tested
-;;     GNU Emacs version 24.4           : yes
-;;     GNU Emacs version 24.3           : yes
-;;     GNU Emacs version 23.3           : yes
-;;     GNU Emacs version 22.2           : yes, with some limitations
-;;     GNU Emacs version 21.x and lower : unknown
-;;
 ;;     Requires button-lock.el
 ;;
 ;;     Uses if present: nav-flash.el, back-button.el
@@ -262,8 +255,8 @@
 ;;         regexp:
 ;;         elisp:
 ;;
-;;     consider speeding up wiki-nav-find-any-link by remembering by
-;;     switching to direct regexp search, if the optimization of
+;;     consider speeding up wiki-nav-find-any-link by switching to
+;;     direct regexp search, if the optimization of
 ;;     `wiki-nav-maybe-fontify-entire-buffer' is not sufficient.
 ;;
 ;;     version of wiki-nav-find-any-link that does not wrap
