@@ -785,7 +785,7 @@ The return value is an alist of cells in the form (\"text\" buffer . start-pos).
       (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
             (pos nil)
             (links nil))
-        (font-lock-fontify-buffer)
+        (font-lock-ensure)
         (setq pos (next-single-property-change (point-min) 'wiki-nav))
         (while (and pos
                     (< pos (point-max)))
@@ -1100,7 +1100,7 @@ previous defined wiki-nav link."
 
       ;; This is slow, but otherwise links get missed.  There
       ;; must be a better way.
-      (font-lock-fontify-buffer)
+      (font-lock-ensure)
 
       (when (and arg
                  (< arg 0))
