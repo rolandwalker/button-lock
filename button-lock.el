@@ -286,8 +286,8 @@
 
 ;;; requirements
 
-;; for callf, callf2, defun*, union, intersection
-(require 'cl)
+;; for cl-callf, cl-callf2, cl-defun, cl-union, cl-intersection
+(require 'cl-lib)
 
 (require 'font-lock)
 
@@ -462,7 +462,7 @@ Returns nil if the current major mode is not a derived mode."
       (when (and (not (minibufferp buf))
                  (not (eq (aref (buffer-name) 0) ?\s))           ; overlaps with exclude-pattern
                  (not (memq major-mode button-lock-exclude-modes))
-                 (not (intersection (button-lock-parent-modes) button-lock-exclude-modes))
+                 (not (cl-intersection (button-lock-parent-modes) button-lock-exclude-modes))
                  (not (string-match-p button-lock-buffer-name-exclude-pattern (buffer-name buf)))
                  (catch 'success
                    (dolist (filt button-lock-buffer-exclude-functions)
@@ -527,8 +527,8 @@ POS defaults to the current point.  PROPERTY defaults to
 
 Returns a cons in the form (START . END), or nil if there
 is no such PROPERTY around POS."
-  (callf or pos (point))
-  (callf or property 'button-lock)
+  (cl-callf or pos (point))
+  (cl-callf or property 'button-lock)
   (when (get-text-property pos property)
     (cons (if (and (> pos (point-min)) (get-text-property (1- pos) property)) (previous-single-property-change pos property) pos)
           (next-single-property-change pos property))))
@@ -546,7 +546,7 @@ keywords with the 'button-lock property."
         (when (eq t (car keywords))
           ;; get uncompiled keywords
           (setq keywords (cadr keywords)))
-        (dolist (kw (union keywords button-lock-button-list))
+        (dolist (kw (cl-union keywords button-lock-button-list))
           (when (button-lock-button-p kw)
             (font-lock-remove-keywords nil (list kw)))))
   (unless button-lock-mode
@@ -570,7 +570,7 @@ keywords with the 'button-lock property."
     (font-lock-remove-keywords nil (list button))
     (button-lock-maybe-unbuttonify-buffer)     ; cperl-mode workaround
     (button-lock-maybe-fontify-buffer))
-  (callf2 delete button button-lock-button-list)
+  (cl-callf2 delete button button-lock-button-list)
   nil)
 
 (defun button-lock-add-to-button-list (button &optional no-replace)
@@ -599,7 +599,7 @@ If NO-REPLACE is set, no replacement is made for a duplicate button."
 
 (defun button-lock-remove-from-global-button-list (button)
   "Remove BUTTON from `button-lock-global-button-list'."
-  (callf2 delete button button-lock-global-button-list))
+  (cl-callf2 delete button button-lock-global-button-list))
 
 (defun button-lock-add-to-global-button-list (button &optional no-replace)
   "Add BUTTON to `button-lock-global-button-list'.
@@ -681,7 +681,7 @@ button-lock mode will be activated in every buffer, except
 
 If called with a negative ARG, deactivate button-lock mode in the
 buffer."
-  (callf or arg 1)
+  (cl-callf or arg 1)
   (when (or (< arg 0)
             (button-lock-buffer-included-p (current-buffer)))
     (button-lock-mode arg)))
@@ -693,7 +693,7 @@ buffer."
 ;;; principal external interface
 
 ;;;###autoload
-(defun* button-lock-set-button (pattern action &key
+(cl-defun button-lock-set-button (pattern action &key
 
                                  (face 'button-lock-face)
                                  (mouse-face 'button-lock-mouse-face)
@@ -958,27 +958,27 @@ The button value can be passed to `button-lock-extend-binding'."
     (add-to-list 'font-lock-extra-managed-props 'button-lock)
 
     (when additional-property
-      (callf append properties `(,additional-property t))
+      (cl-callf append properties `(,additional-property t))
       (add-to-list 'font-lock-extra-managed-props additional-property))
 
     (when mouse-face
-      (callf append properties `(mouse-face ,mouse-face))
+      (cl-callf append properties `(mouse-face ,mouse-face))
       (add-to-list 'font-lock-extra-managed-props 'mouse-face))
 
     (when (or help-echo help-text)
-      (callf append properties `(help-echo ,(or help-echo help-text)))
+      (cl-callf append properties `(help-echo ,(or help-echo help-text)))
       (add-to-list 'font-lock-extra-managed-props 'help-echo))
 
     (when kbd-help
-      (callf append properties `(kbd-help ,kbd-help))
+      (cl-callf append properties `(kbd-help ,kbd-help))
       (add-to-list 'font-lock-extra-managed-props 'kbd-help))
 
     (when kbd-help-multiline
-      (callf append properties `(kbd-help-multiline ,kbd-help-multiline))
+      (cl-callf append properties `(kbd-help-multiline ,kbd-help-multiline))
       (add-to-list 'font-lock-extra-managed-props 'kbd-help-multiline))
 
     (unless rear-sticky
-      (callf append properties `(rear-nonsticky t))
+      (cl-callf append properties `(rear-nonsticky t))
       (add-to-list 'font-lock-extra-managed-props 'rear-nonsticky))
 
     (setq fl-keyword `(,pattern (,grouping ',properties ,face-policy)))
@@ -1096,7 +1096,6 @@ deactivated and reactivated."
 ;; mangle-whitespace: t
 ;; require-final-newline: t
 ;; coding: utf-8
-;; byte-compile-warnings: (not cl-functions redefine)
 ;; End:
 ;;
 ;; LocalWords: ButtonLockMode mouseable mybutton keymap propertize
