@@ -262,11 +262,9 @@
 ;;         regexp:
 ;;         elisp:
 ;;
-;;     wiki-nav-links can be optimized by tracking which buffers are
-;;     completely fontified - doesn't font-lock do that?
-;;
-;;     similarly, speed up wiki-nav-find-any-link by remembering if
-;;     the buffer is fontified, or switch to searching by regexp
+;;     consider speeding up wiki-nav-find-any-link by remembering by
+;;     switching to direct regexp search, if the optimization of
+;;     `wiki-nav-maybe-fontify-entire-buffer' is not sufficient.
 ;;
 ;;     version of wiki-nav-find-any-link that does not wrap
 ;;
@@ -639,6 +637,16 @@ Set this value to nil to disable."
       (define-key map (read-kbd-macro key) 'wiki-nav-find-any-previous-link))
     map))
 
+(defvar wiki-nav-fontify-entire-buffer-function 'font-lock-default-fontify-buffer
+  "Function to fontify the entire buffer.")
+
+(defvar wiki-nav-entire-buffer-fontified nil
+  "Whether the entire buffer has been fontified.
+
+Needed because variable `font-lock-fontified' is faked for e.g.
+`jit-lock-mode'.")
+(make-variable-buffer-local 'wiki-nav-entire-buffer-fontified)
+
 ;;; macros
 
 (defmacro wiki-nav-called-interactively-p (&optional kind)
@@ -747,6 +755,26 @@ Returns `point-min' if the point is at the minimum."
                    t))
         buf))))
 
+;; font-lock utility functions
+(defun wiki-nav-maybe-fontify-entire-buffer (&optional buffer force)
+  "Fontify the entire buffer BUFFER, but only once.
+
+BUFFER is optional, and defaults to `current-buffer'.
+
+After the first complete fontification, assume that the support
+mode (such as `jit-lock-mode') keeps up with all edits.
+
+When optional FORCE is non-nil, unconditionally re-fontify."
+  (cl-callf or buffer (current-buffer))
+  (with-current-buffer buffer
+    (when force
+      (setq wiki-nav-entire-buffer-fontified nil))
+    (unless wiki-nav-entire-buffer-fontified
+      (let ((font-lock-fontify-buffer-function wiki-nav-fontify-entire-buffer-function))
+        (font-lock-flush)
+        (font-lock-ensure)
+        (setq wiki-nav-entire-buffer-fontified t)))))
+
 ;;; link functions
 
 (defun wiki-nav-link-set (&optional arg)
@@ -785,10 +813,9 @@ The return value is an alist of cells in the form (\"text\" buffer . start-pos).
   (cl-callf or buffer (current-buffer))
   (with-current-buffer buffer
     (when wiki-nav-mode
-      (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
-            (pos nil)
+      (wiki-nav-maybe-fontify-entire-buffer buffer)
+      (let ((pos nil)
             (links nil))
-        (font-lock-ensure)
         (setq pos (next-single-property-change (point-min) 'wiki-nav))
         (while (and pos
                     (< pos (point-max)))
@@ -806,8 +833,8 @@ The return value is an alist of cells in the form (\"text\" buffer . start-pos).
 (defun wiki-nav-links-all-buffers ()
   "Return an alist of wiki-nav links in all buffers.  See `wiki-nav-links'.
 
-Note that this function fontifies every buffer, which can take
-seconds to complete."
+Note that this function fontifies every buffer on the first
+invocation, which can take seconds to complete."
   (let ((reporter (make-progress-reporter "Searching ..." 0 (length (buffer-list))))
         (counter 0)
         (l-alist nil))
@@ -1095,19 +1122,17 @@ With a negative prefix argument ARG, skip backward to the
 previous defined wiki-nav link."
   (interactive "p")
   (when wiki-nav-mode
-    (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
-          (newpos nil)
+
+    ;; This is slow, but is constrained to happen only once per buffer.
+    (wiki-nav-maybe-fontify-entire-buffer)
+
+    (let ((newpos nil)
           (orig-pos (point))
           (skip-function 'next-single-property-change)
           (search-function 're-search-forward)
           (look-function 'point)
           (wrap-point (point-min))
           (bounds nil))
-
-      ;; This is slow, but otherwise links get missed.  There
-      ;; must be a better way.
-      (font-lock-ensure)
-
       (when (and arg
                  (< arg 0))
         (setq skip-function 'previous-single-property-change)
