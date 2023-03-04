@@ -87,12 +87,12 @@ test-tests :
 test-prep : build test-dep-1 test-autoloads test-travis test-tests
 
 test-batch :
-	@cd '$(TEST_DIR)'                                 && \
-	(for test_lib in *-test.el; do                       \
-	   $(RESOLVED_EMACS) $(EMACS_BATCH) -L . -L .. -l cl \
-	   -l '$(TEST_DEP_1)' -l "$$test_lib" --eval         \
-	    "(progn                                          \
-	      (fset 'ert--print-backtrace 'ignore)           \
+	@cd '$(TEST_DIR)'                                 &&     \
+	(for test_lib in *-test.el; do                           \
+	   $(RESOLVED_EMACS) $(EMACS_BATCH) -L . -L .. -l cl-lib \
+	   -l '$(TEST_DEP_1)' -l "$$test_lib" --eval             \
+	    "(progn                                              \
+	      (fset 'ert--print-backtrace 'ignore)               \
 	      (ert-run-tests-batch-and-exit '(and \"$(TESTS)\" (not (tag :interactive)))))" || exit 1; \
 	done)
 
@@ -105,7 +105,7 @@ test-interactive : test-prep
 	      (setq dired-use-ls-dired nil)                              \
 	      (setq frame-title-format \"TEST SESSION $$test_lib\")      \
 	      (setq enable-local-variables :safe))"                      \
-	    -L . -L .. -l cl -l '$(TEST_DEP_1)' -l "$$test_lib"          \
+	    -L . -L .. -l cl-lib -l '$(TEST_DEP_1)' -l "$$test_lib"      \
 	    --visit "$$test_lib" --eval                                  \
 	    "(progn                                                      \
 	      (when (> (length \"$(TESTS)\") 0)                          \

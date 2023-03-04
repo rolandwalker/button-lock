@@ -1,12 +1,12 @@
 ;;; wiki-nav.el --- Simple file navigation using [[WikiStrings]]
 ;;
-;; Copyright (c) 2011-2015 Roland Walker
+;; Copyright (c) 2011-2023 Roland Walker
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/button-lock
 ;; URL: http://raw.githubusercontent.com/rolandwalker/button-lock/master/wiki-nav.el
 ;; Version: 1.0.2
-;; Last-Updated: 23 Feb 2015
+;; Last-Updated: 4 Mar 2023
 ;; EmacsWiki: WikiNavMode
 ;; Keywords: mouse, button, hypermedia, navigation
 ;; Package-Requires: ((button-lock "1.0.2") (nav-flash "1.0.0"))
@@ -219,6 +219,9 @@
 ;;     in buffer as is done in fixmee-mode, and use syntax-ppss rather
 ;;     than regexp to detect comment context
 ;;
+;;     avoid mistaking common construct if [[ ... for a link in commented-
+;;     out shell code
+;;
 ;;     support kbd-help property
 ;;
 ;;     follow the doc for defgroup to find link functions which are
@@ -259,11 +262,9 @@
 ;;         regexp:
 ;;         elisp:
 ;;
-;;     wiki-nav-links can be optimized by tracking which buffers are
-;;     completely fontified - doesn't font-lock do that?
-;;
-;;     similarly, speed up wiki-nav-find-any-link by remembering if
-;;     the buffer is fontified, or switch to searching by regexp
+;;     consider speeding up wiki-nav-find-any-link by remembering by
+;;     switching to direct regexp search, if the optimization of
+;;     `wiki-nav-maybe-fontify-entire-buffer' is not sufficient.
 ;;
 ;;     version of wiki-nav-find-any-link that does not wrap
 ;;
@@ -284,14 +285,14 @@
 ;; without modification, are permitted provided that the following
 ;; conditions are met:
 ;;
-;;    1. Redistributions of source code must retain the above
-;;       copyright notice, this list of conditions and the following
-;;       disclaimer.
+;;   1. Redistributions of source code must retain the above
+;;      copyright notice, this list of conditions and the following
+;;      disclaimer.
 ;;
-;;    2. Redistributions in binary form must reproduce the above
-;;       copyright notice, this list of conditions and the following
-;;       disclaimer in the documentation and/or other materials
-;;       provided with the distribution.
+;;   2. Redistributions in binary form must reproduce the above
+;;      copyright notice, this list of conditions and the following
+;;      disclaimer in the documentation and/or other materials
+;;      provided with the distribution.
 ;;
 ;; This software is provided by Roland Walker "AS IS" and any express
 ;; or implied warranties, including, but not limited to, the implied
@@ -472,12 +473,12 @@ The format for key sequences is as defined by `kbd'."
   :group 'wiki-nav)
 
 (defface wiki-nav-link-face
-   '((t (:inherit link)))
+  '((t (:inherit link)))
   "Face to show wiki-nav links"
   :group 'wiki-nav-faces)
 
 (defface wiki-nav-mouse-face
-   '((t (:inherit button-lock-mouse-face)))
+  '((t (:inherit button-lock-mouse-face)))
   "Face to highlight wiki-nav link mouseovers"
   :group 'wiki-nav-faces)
 
@@ -514,10 +515,10 @@ The value should exclude newlines and start/stop delimiters."
 
 The default is very permissive.  To be more strict, try
 
-   \"\\\\`[a-zA-Z]+://[^[:space:]]+\",
+    \"\\\\`[a-zA-Z]+://[^[:space:]]+\",
 or
 
-   \"\\\\`http://[^[:space:]]+\".
+    \"\\\\`http://[^[:space:]]+\".
 
 Setting the value to the empty string will disable the feature
 entirely, suppressing the recognition of external URLs."
@@ -529,16 +530,16 @@ entirely, suppressing the recognition of external URLs."
 
 The format defined by the default expression is delimited by colons
 
-   visit:/posix/path/to/another/file
+    visit:/posix/path/to/another/file
 
-      or
+        or
 
-   visit:/posix/path/to/another/file:WikiString
+    visit:/posix/path/to/another/file:WikiString
 
 Other internally recognized link schemes may be substituted for
 the WikiString
 
-   visit:/posix/path/to/another/file:line:10
+    visit:/posix/path/to/another/file:line:10
 
 Set this value to the empty string to disable the feature entirely."
   :type 'regexp
@@ -549,7 +550,7 @@ Set this value to the empty string to disable the feature entirely."
 
 The format defined by the default expression is delimited by colons
 
-   func:function_name
+    func:function_name
 
 Imenu is used to find the function definition.
 
@@ -562,7 +563,7 @@ Set this value to the empty string to disable the feature entirely."
 
 The format defined by the default expression is delimited by colons
 
-   line:111
+    line:111
 
 Set this value to the empty string to disable the feature entirely."
   :type 'regexp
@@ -635,6 +636,16 @@ Set this value to nil to disable."
     (dolist (key wiki-nav-find-any-previous-link-keys)
       (define-key map (read-kbd-macro key) 'wiki-nav-find-any-previous-link))
     map))
+
+(defvar wiki-nav-fontify-entire-buffer-function 'font-lock-default-fontify-buffer
+  "Function to fontify the entire buffer.")
+
+(defvar wiki-nav-entire-buffer-fontified nil
+  "Whether the entire buffer has been fontified.
+
+Needed because variable `font-lock-fontified' is faked for e.g.
+`jit-lock-mode'.")
+(make-variable-buffer-local 'wiki-nav-entire-buffer-fontified)
 
 ;;; macros
 
@@ -717,8 +728,7 @@ Returns `point-min' if the point is at the minimum."
     (t
      (list list))))
 
-;; buffer functions
-
+;; buffer utility functions
 (defun wiki-nav-buffer-included-p (buf)
   "Return BUF if global wiki-nav should enable wiki-nav in BUF."
   (when (and (not noninteractive)
@@ -745,7 +755,28 @@ Returns `point-min' if the point is at the minimum."
                    t))
         buf))))
 
-;; link functions
+;; font-lock utility functions
+(defun wiki-nav-maybe-fontify-entire-buffer (&optional buffer force)
+  "Fontify the entire buffer BUFFER, but only once.
+
+BUFFER is optional, and defaults to `current-buffer'.
+
+After the first complete fontification, assume that the support
+mode (such as `jit-lock-mode') keeps up with all edits.
+
+When optional FORCE is non-nil, unconditionally re-fontify."
+  (cl-callf or buffer (current-buffer))
+  (with-current-buffer buffer
+    (when force
+      (setq wiki-nav-entire-buffer-fontified nil))
+    (unless wiki-nav-entire-buffer-fontified
+      (let ((font-lock-fontify-buffer-function wiki-nav-fontify-entire-buffer-function))
+        (font-lock-flush)
+        (font-lock-ensure)
+        (setq wiki-nav-entire-buffer-fontified t)))))
+
+;;; link functions
+
 (defun wiki-nav-link-set (&optional arg)
   "Use `button-lock-mode' to set up wiki-nav links in a buffer.
 
@@ -782,10 +813,9 @@ The return value is an alist of cells in the form (\"text\" buffer . start-pos).
   (cl-callf or buffer (current-buffer))
   (with-current-buffer buffer
     (when wiki-nav-mode
-      (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
-            (pos nil)
+      (wiki-nav-maybe-fontify-entire-buffer buffer)
+      (let ((pos nil)
             (links nil))
-        (font-lock-ensure)
         (setq pos (next-single-property-change (point-min) 'wiki-nav))
         (while (and pos
                     (< pos (point-max)))
@@ -803,8 +833,8 @@ The return value is an alist of cells in the form (\"text\" buffer . start-pos).
 (defun wiki-nav-links-all-buffers ()
   "Return an alist of wiki-nav links in all buffers.  See `wiki-nav-links'.
 
-Note that this function fontifies every buffer, which can take
-seconds to complete."
+Note that this function fontifies every buffer on the first
+invocation, which can take seconds to complete."
   (let ((reporter (make-progress-reporter "Searching ..." 0 (length (buffer-list))))
         (counter 0)
         (l-alist nil))
@@ -815,7 +845,8 @@ seconds to complete."
     (progress-reporter-done reporter)
     (delq nil (wiki-nav-alist-flatten l-alist))))
 
-;; bindable action dispatch commands
+;;; bindable action dispatch commands
+
 ;;;###autoload
 (defun wiki-nav-default-multi-action (event)
   "Dispatch the default double-click navigation action.
@@ -1009,7 +1040,7 @@ all open file buffers.
 
 If the link follows the form
 
-   visit:/path/name:WikiString
+    visit:/path/name:WikiString
 
 Emacs will visit the named file, and search for the navigation
 string there.  This behavior can be controlled by the customizable
@@ -1017,7 +1048,7 @@ variable `wiki-nav-visit-link-pattern'.
 
 If the link follows the form
 
-   func:FunctionName
+    func:FunctionName
 
 the link will lead to the definition of the given function, as
 defined by imenu. This behavior can be controlled by the
@@ -1025,7 +1056,7 @@ customizable variable `wiki-nav-function-link-pattern'.
 
 If the link follows the form
 
-   line:<digits>
+    line:<digits>
 
 the link will lead to the given line number.  This behavior can
 be controlled by the customizable variable
@@ -1038,7 +1069,9 @@ match URLs and non-URL inner text.
 With no argument, this command toggles the mode.  Non-null prefix
 argument turns on the mode.  Null prefix argument turns off the
 mode."
-  nil wiki-nav-mode-lighter wiki-nav-mode-keymap
+  :init-value nil
+  :lighter wiki-nav-mode-lighter
+  :keymap wiki-nav-mode-keymap
   (cond
     ((and wiki-nav-mode
           (or noninteractive                    ; never turn on wiki-nav where
@@ -1060,12 +1093,12 @@ mode."
 
 `wiki-nav-mode' will be activated in every buffer, except
 
-   minibuffers
-   buffers with names that begin with space
-   buffers excluded by `wiki-nav-exclude-modes'
-   buffers excluded by `button-lock-exclude-modes'
-   buffers excluded by `wiki-nav-buffer-name-exclude-pattern'
-   buffers excluded by `button-lock-buffer-name-exclude-pattern'
+    minibuffers
+    buffers with names that begin with space
+    buffers excluded by `wiki-nav-exclude-modes'
+    buffers excluded by `button-lock-exclude-modes'
+    buffers excluded by `wiki-nav-buffer-name-exclude-pattern'
+    buffers excluded by `button-lock-buffer-name-exclude-pattern'
 
 If called with a negative ARG, deactivate `wiki-nav-mode' in the buffer."
   (cl-callf or arg 1)
@@ -1089,19 +1122,17 @@ With a negative prefix argument ARG, skip backward to the
 previous defined wiki-nav link."
   (interactive "p")
   (when wiki-nav-mode
-    (let ((font-lock-fontify-buffer-function 'font-lock-default-fontify-buffer)
-          (newpos nil)
+
+    ;; This is slow, but is constrained to happen only once per buffer.
+    (wiki-nav-maybe-fontify-entire-buffer)
+
+    (let ((newpos nil)
           (orig-pos (point))
           (skip-function 'next-single-property-change)
           (search-function 're-search-forward)
           (look-function 'point)
           (wrap-point (point-min))
           (bounds nil))
-
-      ;; This is slow, but otherwise links get missed.  There
-      ;; must be a better way.
-      (font-lock-ensure)
-
       (when (and arg
                  (< arg 0))
         (setq skip-function 'previous-single-property-change)

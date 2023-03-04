@@ -1,12 +1,12 @@
 ;;; button-lock.el --- Clickable text defined by regular expression
 ;;
-;; Copyright (c) 2011-2015 Roland Walker
+;; Copyright (c) 2011-2023 Roland Walker
 ;;
 ;; Author: Roland Walker <walker@pobox.com>
 ;; Homepage: http://github.com/rolandwalker/button-lock
 ;; URL: http://raw.githubusercontent.com/rolandwalker/button-lock/master/button-lock.el
 ;; Version: 1.0.2
-;; Last-Updated: 21 Feb 2015
+;; Last-Updated: 4 Mar 2023
 ;; EmacsWiki: ButtonLockMode
 ;; Keywords: mouse, button, hypermedia, extensions
 ;;
@@ -232,14 +232,14 @@
 ;; without modification, are permitted provided that the following
 ;; conditions are met:
 ;;
-;;    1. Redistributions of source code must retain the above
-;;       copyright notice, this list of conditions and the following
-;;       disclaimer.
+;;   1. Redistributions of source code must retain the above
+;;      copyright notice, this list of conditions and the following
+;;      disclaimer.
 ;;
-;;    2. Redistributions in binary form must reproduce the above
-;;       copyright notice, this list of conditions and the following
-;;       disclaimer in the documentation and/or other materials
-;;       provided with the distribution.
+;;   2. Redistributions in binary form must reproduce the above
+;;      copyright notice, this list of conditions and the following
+;;      disclaimer in the documentation and/or other materials
+;;      provided with the distribution.
 ;;
 ;; Ths software is provided by Roland Walker "AS IS" and any express
 ;; or implied warranties, including, but not limited to, the implied
@@ -373,17 +373,17 @@ lighter for `button-lock-mode'."
 ;;; faces
 
 (defface button-lock-button-face
-    '((t nil))
-    "Face used to show active button-lock buttons.
+  '((t nil))
+  "Face used to show active button-lock buttons.
 
 The default is for buttons to inherit whatever properties are
 already provided by font-lock."
     :group 'button-lock)
 
 (defface button-lock-mouse-face
-   '((t (:inherit highlight)))
-   "Face used to highlight button-lock buttons when the mouse hovers over."
-   :group 'button-lock)
+  '((t (:inherit highlight)))
+  "Face used to highlight button-lock buttons when the mouse hovers over."
+  :group 'button-lock)
 
 ;;; variables
 
@@ -477,7 +477,7 @@ Returns nil if the current major mode is not a derived mode."
         buf))))
 
 (defun button-lock-maybe-unbuttonify-buffer ()
-  "This is a workaround for cperl mode, which clobbers `font-lock-unfontify-region-function'."
+  "For cperl mode, which clobbers `font-lock-unfontify-region-function'."
   (when (and (boundp 'font-lock-fontified)
              font-lock-fontified
              (not (eq font-lock-unfontify-region-function 'font-lock-default-unfontify-region)))
@@ -644,7 +644,9 @@ argument, it enables the mode if the argument is positive and
 otherwise disables it.  When called from Lisp, it enables the
 mode if the argument is omitted or nil, and toggles the mode if
 the argument is 'toggle."
-  nil button-lock-mode-lighter nil
+  :init-value nil
+  :lighter button-lock-mode-lighter
+  :keymap nil
   (cond
     ((and button-lock-mode
           (or noninteractive                    ; never turn on button-lock where
@@ -674,10 +676,10 @@ the argument is 'toggle."
 
 button-lock mode will be activated in every buffer, except
 
-   minibuffers
-   buffers with names that begin with space
-   buffers excluded by `button-lock-exclude-modes'
-   buffers excluded by `button-lock-buffer-name-exclude-pattern'
+    minibuffers
+    buffers with names that begin with space
+    buffers excluded by `button-lock-exclude-modes'
+    buffers excluded by `button-lock-buffer-name-exclude-pattern'
 
 If called with a negative ARG, deactivate button-lock mode in the
 buffer."
