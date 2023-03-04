@@ -1038,7 +1038,9 @@ match URLs and non-URL inner text.
 With no argument, this command toggles the mode.  Non-null prefix
 argument turns on the mode.  Null prefix argument turns off the
 mode."
-  nil wiki-nav-mode-lighter wiki-nav-mode-keymap
+  :init-value nil
+  :lighter wiki-nav-mode-lighter
+  :keymap wiki-nav-mode-keymap
   (cond
     ((and wiki-nav-mode
           (or noninteractive                    ; never turn on wiki-nav where

@@ -477,7 +477,7 @@ Returns nil if the current major mode is not a derived mode."
         buf))))
 
 (defun button-lock-maybe-unbuttonify-buffer ()
-  "This is a workaround for cperl mode, which clobbers `font-lock-unfontify-region-function'."
+  "For cperl mode, which clobbers `font-lock-unfontify-region-function'."
   (when (and (boundp 'font-lock-fontified)
              font-lock-fontified
              (not (eq font-lock-unfontify-region-function 'font-lock-default-unfontify-region)))
@@ -644,7 +644,9 @@ argument, it enables the mode if the argument is positive and
 otherwise disables it.  When called from Lisp, it enables the
 mode if the argument is omitted or nil, and toggles the mode if
 the argument is 'toggle."
-  nil button-lock-mode-lighter nil
+  :init-value nil
+  :lighter button-lock-mode-lighter
+  :keymap nil
   (cond
     ((and button-lock-mode
           (or noninteractive                    ; never turn on button-lock where
