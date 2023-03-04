@@ -156,13 +156,6 @@
 ;;
 ;; Compatibility and Requirements
 ;;
-;;     GNU Emacs version 24.5-devel     : not tested
-;;     GNU Emacs version 24.4           : yes
-;;     GNU Emacs version 24.3           : yes
-;;     GNU Emacs version 23.3           : yes
-;;     GNU Emacs version 22.2           : yes, with some limitations
-;;     GNU Emacs version 21.x and lower : unknown
-;;
 ;;     No external dependencies
 ;;
 ;; Bugs

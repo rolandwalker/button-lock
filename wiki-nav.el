@@ -125,9 +125,11 @@
 ;;
 ;;         [[func:main]]
 ;;
-;;     line: navigates to a line number
+;;     line: navigates to a line number, with negative integers
+;;     counting backward from the last line
 ;;
 ;;         [[line:12]]
+;;         [[line:-12]]
 ;;
 ;;     visit: may be combined with other schemes:
 ;;
@@ -200,13 +202,6 @@
 ;;
 ;; [[<Compatibility and Requirements]]
 ;;
-;;     GNU Emacs version 24.5-devel     : not tested
-;;     GNU Emacs version 24.4           : yes
-;;     GNU Emacs version 24.3           : yes
-;;     GNU Emacs version 23.3           : yes
-;;     GNU Emacs version 22.2           : yes, with some limitations
-;;     GNU Emacs version 21.x and lower : unknown
-;;
 ;;     Requires button-lock.el
 ;;
 ;;     Uses if present: nav-flash.el, back-button.el
@@ -240,8 +235,6 @@
 ;;     wiki-nav-external-link-pattern might be replaced with functions
 ;;     from url-util
 ;;
-;;     visit:-1 counts from end of file
-;;
 ;;     keyboard analog for double-click
 ;;
 ;;     right-click context menu
@@ -262,8 +255,8 @@
 ;;         regexp:
 ;;         elisp:
 ;;
-;;     consider speeding up wiki-nav-find-any-link by remembering by
-;;     switching to direct regexp search, if the optimization of
+;;     consider speeding up wiki-nav-find-any-link by switching to
+;;     direct regexp search, if the optimization of
 ;;     `wiki-nav-maybe-fontify-entire-buffer' is not sufficient.
 ;;
 ;;     version of wiki-nav-find-any-link that does not wrap
@@ -558,7 +551,7 @@ Set this value to the empty string to disable the feature entirely."
   :type 'regexp
   :group 'wiki-nav-parsing)
 
-(defcustom wiki-nav-line-number-link-pattern "\\`line:\\([0-9]+\\)\\'"
+(defcustom wiki-nav-line-number-link-pattern "\\`line:\\(-?[0-9]+\\)\\'"
   "A regexp for identifying wiki-nav links which point to line numbers.
 
 The format defined by the default expression is delimited by colons
@@ -938,15 +931,25 @@ mouse event."
                     (string-match wiki-nav-line-number-link-pattern str-val))
                ;; For line-number scheme, go as far as possible, but don't set found unless successful.
                ;; Don't worry about returning to original buffer on failure.
-               (let ((ln (string-to-number (match-string-no-properties 1 str-val))))
+               (let ((ln (string-to-number (match-string-no-properties 1 str-val)))
+                     (abs-ln nil))
                  (widen)
                  (back-button-push-mark-local-and-global point-start t)
-                 (goto-char (point-min))
-                 (forward-line (1- ln))
+                 (if (< ln 0)
+                     (progn
+                       (goto-char (point-max))
+                       (forward-line (1+ ln)))
+                   ;; else
+                   (goto-char (point-min))
+                   (forward-line (1- ln)))
                  (when (fboundp 'nav-flash-show)
                    (nav-flash-show))
-                 (if (= (line-number-at-pos) ln)
-                     (setq found :line))))
+                 (setq abs-ln (if (< ln 0)
+                                  (+ 1 ln (line-number-at-pos (point-max)))
+                                ;; else
+                                ln))
+                 (when (= (line-number-at-pos) abs-ln)
+                   (setq found :line))))
               (t
                (setq str-val (regexp-quote (url-unhex-string str-val)))
                (deactivate-mark)
@@ -1056,10 +1059,11 @@ customizable variable `wiki-nav-function-link-pattern'.
 
 If the link follows the form
 
-    line:<digits>
+    line:<integer>
 
-the link will lead to the given line number.  This behavior can
-be controlled by the customizable variable
+the link will lead to the given line number, with negative integers
+counting from the last line of the buffer.  The behavior of line:
+links can be controlled by the customizable variable
 `wiki-nav-line-number-link-pattern'.
 
 The leading and trailing delimiters which define the navigation
